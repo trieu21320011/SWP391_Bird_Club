@@ -10,7 +10,7 @@ import './css/style.css';
 import './charts/ChartjsConfig';
 
 // Import pages
-// demo
+// demo lan 2
 import Dashboard from './pages/Dashboard';
 import Analytics from './pages/Analytics';
 import Fintech from './pages/Fintech';
