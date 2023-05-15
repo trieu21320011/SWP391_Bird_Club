@@ -43,11 +43,11 @@ function MeetupsPost() {
               {/* Content */}
               <div>
                 <div className="mb-6">
-                  <Link className="btn-sm px-3 bg-white border-slate-200 hover:border-slate-300 text-slate-600" to="/community/meetups">
+                  <Link className="btn-sm px-3 bg-white border-slate-200 hover:border-slate-300 text-slate-600" to="/activity/meetups">
                     <svg className="fill-current text-slate-400 mr-2" width="7" height="12" viewBox="0 0 7 12">
                       <path d="M5.4.6 6.8 2l-4 4 4 4-1.4 1.4L0 6z" />
                     </svg>
-                    <span>Back To Meetups</span>
+                    <span>Back To Events</span>
                   </Link>
                 </div>
                 <div className="text-sm font-semibold text-indigo-500 uppercase mb-2">Mon 27 Dec, 2021 - 9:00 PM -&gt; 10:00 PM</div>

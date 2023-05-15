@@ -1,0 +1,1 @@
+export const baseURL = 'https://bird-club.azurewebsites.net/api/v1';

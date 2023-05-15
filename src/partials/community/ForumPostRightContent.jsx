@@ -39,7 +39,7 @@ function ForumPostRightContent() {
             
             {/* Block 2 */}
             <div className="bg-slate-50 p-4 rounded border border-slate-200">
-              <div className="text-xs font-semibold text-slate-400 uppercase mb-4">Popular Stories</div>
+              <div className="text-xs font-semibold text-slate-400 uppercase mb-4">Popular Blogs</div>
               <ul className="space-y-3">
                 <li>
                   <div className="text-sm mb-1">
