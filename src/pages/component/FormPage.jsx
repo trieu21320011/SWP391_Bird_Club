@@ -42,7 +42,7 @@ function FormPage() {
                         <label className="block text-sm font-medium mb-1" htmlFor="default">
                           Default
                         </label>
-                        <input id="default" className="form-input w-full" type="text" />
+                        <input id="default" className="form-input w-full" type="date" />
                       </div>
                       {/* End */}
                     </div>

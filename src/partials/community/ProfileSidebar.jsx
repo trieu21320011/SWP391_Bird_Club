@@ -66,7 +66,7 @@ function ProfileSidebar({
             </form>
             {/* Team members */}
             <div className="mt-4">
-              <div className="text-xs font-semibold text-slate-400 uppercase mb-3">Team members</div>
+              <div className="text-xs font-semibold text-slate-400 uppercase mb-3">Staff members</div>
               <ul className="mb-6">
                 <li className="-mx-2">
                   <button className="w-full p-2 rounded bg-indigo-100" onClick={() => setProfileSidebarOpen(false)}>
