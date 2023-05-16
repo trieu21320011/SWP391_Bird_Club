@@ -47,7 +47,7 @@ function DropdownSwitch({
       >
         <img className="w-8 h-8 rounded-full mr-2" src={DropdownImage} width="32" height="32" alt="Group 01" />
         <div className="truncate">
-          <span className="text-sm font-medium">Acme Inc.</span>
+          <span className="text-sm font-medium">GUEST</span>
         </div>
         <svg className="w-3 h-3 shrink-0 ml-1 fill-current text-slate-400" viewBox="0 0 12 12">
           <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
@@ -73,7 +73,7 @@ function DropdownSwitch({
               <div className="flex items-center justify-between">
                 <div className="grow flex items-center truncate">
                   <img className="w-7 h-7 rounded-full mr-2" src={DropdownImage01} width="28" height="28" alt="Channel 01" />
-                  <div className="truncate">Acme Inc.</div>
+                  <div className="truncate">GUEST</div>
                 </div>
                 <svg className="w-3 h-3 shrink-0 fill-current text-indigo-500 ml-1" viewBox="0 0 12 12">
                   <path d="M10.28 1.28L3.989 7.575 1.695 5.28A1 1 0 00.28 6.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 1.28z" />

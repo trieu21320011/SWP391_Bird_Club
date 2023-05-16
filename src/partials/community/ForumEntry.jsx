@@ -7,6 +7,7 @@ import UserImage02 from '../../images/user-28-02.jpg';
 import UserImage05 from '../../images/user-28-05.jpg';
 import UserImage09 from '../../images/user-28-09.jpg';
 import UserImage10 from '../../images/user-28-10.jpg';
+import FeedImage01 from '../../images/feed-image-01.jpg';
 
 function ForumEntry() {
   return (
@@ -15,7 +16,7 @@ function ForumEntry() {
       <div className="mb-2">
         <ul className="inline-flex flex-wrap text-sm font-medium">
           <li className="flex items-center">
-            <Link className="text-slate-500 hover:text-indigo-500" to="/community/forum">
+            <Link className="text-slate-500 hover:text-indigo-500" to="/activity/forum">
               Home
             </Link>
             <svg className="h-4 w-4 fill-current text-slate-400 mx-2" viewBox="0 0 16 16">
@@ -62,6 +63,17 @@ function ForumEntry() {
       {/* Content */}
       <div className="space-y-4 mb-6">
         <p>Looking for new ideas to get users, receive feedback, and increase exposure! Besides PH, where else do you showcase your product?</p>
+        <div className="relative !my-4">
+            <img className="block w-full" src={FeedImage01} width="590" height="332" alt="Feed 01" />
+            <div className="absolute left-0 right-0 bottom-0 p-4 bg-black bg-opacity-25 backdrop-blur-md">
+              <div className="flex items-center justify-between">
+                <div className="text-xs font-medium text-slate-300">togethernature.com</div>
+                <a className="text-xs font-medium text-indigo-400 hover:text-indigo-300" href="#0">
+                  Learn More -&gt;
+                </a>
+              </div>
+            </div>
+          </div>
         <p>Please advise 🙌</p>
       </div>
       {/* Comment form */}

@@ -2,15 +2,19 @@ import React, { useEffect } from 'react';
 import {
   Routes,
   Route,
-  useLocation
+  useLocation,
+  Link,
+  Navigate,
+  Outlet,
 } from 'react-router-dom';
 
 import './css/style.css';
 
 import './charts/ChartjsConfig';
+import { Component } from 'react';
 
 // Import pages
-// demo
+// demo lan 2
 import Dashboard from './pages/Dashboard';
 import Analytics from './pages/Analytics';
 import Fintech from './pages/Fintech';
@@ -76,10 +80,14 @@ import AvatarPage from './pages/component/AvatarPage';
 import TooltipPage from './pages/component/TooltipPage';
 import AccordionPage from './pages/component/AccordionPage';
 import IconsPage from './pages/component/IconsPage';
+import { authentication } from './pages/hooks/authentication';
+import { Role } from './pages/enum/roleEnum';
 
 function App() {
 
   const location = useLocation();
+  const jwt = localStorage.getItem('accessToken')
+  const role = localStorage.getItem('role')
 
   useEffect(() => {
     document.querySelector('html').style.scrollBehavior = 'auto'
@@ -91,32 +99,70 @@ function App() {
     <>
       <Routes>
         <Route exact path="/" element={<Dashboard />} />
-        <Route path="/dashboard/analytics" element={<Analytics />} />
+        <Route path="/dashboard/analytics" element={
+          <ProtectedRoute
+            redirectPath="*"
+            isAllowed={!!authentication.isAuthentication() && role === Role.manager || role === Role.admin}
+          >
+            <Analytics />
+          </ProtectedRoute>
+        } />
         <Route path="/dashboard/fintech" element={<Fintech />} />
-        <Route path="/ecommerce/customers" element={<Customers />} />
-        <Route path="/ecommerce/orders" element={<Orders />} />
-        <Route path="/ecommerce/invoices" element={<Invoices />} />
-        <Route path="/ecommerce/shop" element={<Shop />} />
-        <Route path="/ecommerce/shop-2" element={<Shop2 />} />
+        <Route path="/ecommerce/customers" element={
+          <ProtectedRoute
+            redirectPath="*"
+            isAllowed={!!authentication.isAuthentication() && role === Role.admin}
+          >
+            <Customers />
+          </ProtectedRoute>
+        } />
+        <Route path="/ecommerce/orders" element={
+          <ProtectedRoute
+            redirectPath="*"
+            isAllowed={!!authentication.isAuthentication() && role === Role.admin}
+          >
+            <Orders />
+          </ProtectedRoute>
+        } />
+        <Route path="/ecommerce/invoices" element={
+          <ProtectedRoute
+            redirectPath="*"
+            isAllowed={!!authentication.isAuthentication() && role === Role.admin}
+          >
+            <Invoices />
+          </ProtectedRoute>
+
+        } />
+
+        <Route path="/ecommerce/shop-2" element={
+          <ProtectedRoute
+            redirectPath="*"
+            isAllowed={!!authentication.isAuthentication() && role === Role.admin}
+          >
+            <Shop2 />
+          </ProtectedRoute>
+        } />
+        {/* <Route path="/ecommerce/shop" element={<Shop />} />
+        
         <Route path="/ecommerce/product" element={<Product />} />
         <Route path="/ecommerce/cart" element={<Cart />} />
         <Route path="/ecommerce/cart-2" element={<Cart2 />} />
         <Route path="/ecommerce/cart-3" element={<Cart3 />} />
-        <Route path="/ecommerce/pay" element={<Pay />} />
+        <Route path="/ecommerce/pay" element={<Pay />} /> */}
         <Route path="/campaigns" element={<Campaigns />} />
-        <Route path="/community/users-tabs" element={<UsersTabs />} />
-        <Route path="/community/users-tiles" element={<UsersTiles />} />
-        <Route path="/community/profile" element={<Profile />} />
-        <Route path="/community/feed" element={<Feed />} />
-        <Route path="/community/forum" element={<Forum />} />
-        <Route path="/community/forum-post" element={<ForumPost />} />
-        <Route path="/community/meetups" element={<Meetups />} />
-        <Route path="/community/meetups-post" element={<MeetupsPost />} />
+        <Route path="/job/users-tabs" element={<UsersTabs />} />
+        <Route path="/job/users-tiles" element={<UsersTiles />} />
+        <Route path="/job/profile" element={<Profile />} />
+        <Route path="/activity/feed" element={<Feed />} />
+        <Route path="/activity/forum" element={<Forum />} />
+        <Route path="/activity/forum-post" element={<ForumPost />} />
+        <Route path="/activity/meetups" element={<Meetups />} />
+        <Route path="/activity/meetups-post" element={<MeetupsPost />} />
         <Route path="/finance/cards" element={<CreditCards />} />
         <Route path="/finance/transactions" element={<Transactions />} />
         <Route path="/finance/transaction-details" element={<TransactionDetails />} />
         <Route path="/job/job-listing" element={<JobListing />} />
-        <Route path="/job/job-post" element={<JobPost />} />
+        <Route path="/club" element={<JobPost />} />
         <Route path="/job/company-profile" element={<CompanyProfile />} />
         <Route path="/messages" element={<Messages />} />
         <Route path="/tasks/kanban" element={<TasksKanban />} />
@@ -161,4 +207,17 @@ function App() {
   );
 }
 
+const ProtectedRoute = ({
+  isAllowed,
+  redirectPath = '/',
+  children,
+}) => {
+  if (!isAllowed) {
+    return <Navigate to={redirectPath} replace />;
+  }
+
+  return children ? children : <Outlet />;
+};
+
 export default App;
+// authentication.isAuthentication() ?

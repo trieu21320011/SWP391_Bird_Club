@@ -1,10 +1,72 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { baseURL } from './baseUrl';
 
 import AuthImage from '../images/auth-image.jpg';
 import AuthDecoration from '../images/auth-decoration.png';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
+
 
 function Signin() {
+
+  const navigateTo = useNavigate();
+
+  const onSignup = (e) => {
+
+    e.preventDefault()
+    console.log(e);
+    const email = e.target.email.value
+    const password = e.target.password.value
+
+    Swal.fire({
+      title: 'Xác nhận thông tin',
+      html: 'This will close in a minutes',
+
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading()
+        const b = Swal.getHtmlContainer().querySelector('b')
+      },
+    })
+    var data = JSON.stringify({
+      "email": email,
+      "password": password,
+    });
+
+    var config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseURL + '/auth',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(response);
+        localStorage.setItem('accessToken',response.data.jwtToken)
+        localStorage.setItem('name',response.data.displayName)
+        localStorage.setItem('role',response.data.userType)
+        localStorage.setItem('uid',response.data.userId)
+        Swal.close()
+        Swal.fire(
+          "Good job!",
+          "You login susccess!",
+          "success"
+       );
+       navigateTo('/')
+
+      })
+      .catch(function (error) {
+        console.log();
+        Swal.close()
+        Swal.fire("Oops", "Wrong id or password!", "error");
+      });
+  }
   return (
     <main className="bg-white">
 
@@ -42,7 +104,7 @@ function Signin() {
             <div className="max-w-sm mx-auto px-4 py-8">
               <h1 className="text-3xl text-slate-800 font-bold mb-6">Welcome back! ✨</h1>
               {/* Form */}
-              <form>
+              <form onSubmit={e => onSignup(e)}>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium mb-1" htmlFor="email">Email Address</label>
@@ -57,7 +119,7 @@ function Signin() {
                   <div className="mr-1">
                     <Link className="text-sm underline hover:no-underline" to="/reset-password">Forgot Password?</Link>
                   </div>
-                  <Link className="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3" to="/">Sign In</Link>
+                  <button type='submit' className="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3" >Sign In</button>
                 </div>
               </form>
               {/* Footer */}

@@ -53,24 +53,21 @@ function Signup() {
                     <input id="name" className="form-input w-full" type="text" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1" htmlFor="role">Your Role <span className="text-rose-500">*</span></label>
-                    <select id="role" className="form-select w-full">
-                      <option>Designer</option>
-                      <option>Developer</option>
-                      <option>Accountant</option>
-                    </select>
+                    <label className="block text-sm font-medium mb-1" htmlFor="Birthday">Birthday <span className="text-rose-500">*</span></label>
+                    <input id="default" className="form-input w-full" type="date" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1" htmlFor="password">Password</label>
                     <input id="password" className="form-input w-full" type="password" autoComplete="on" />
                   </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1" htmlFor="password1">Verify Password</label>
+                    <input id="password1" className="form-input w-full" type="password" autoComplete="on" />
+                  </div>
                 </div>
                 <div className="flex items-center justify-between mt-6">
                   <div className="mr-1">
-                    <label className="flex items-center">
-                      <input type="checkbox" className="form-checkbox" />
-                      <span className="text-sm ml-2">Email me about product news.</span>
-                    </label>
+                    
                   </div>
                   <Link className="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3 whitespace-nowrap" to="/">Sign Up</Link>
                 </div>

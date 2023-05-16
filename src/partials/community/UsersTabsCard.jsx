@@ -35,7 +35,8 @@ function UsersTabsCard(props) {
               </Link>
             </div>
             <div className="text-center">
-              <Link className="inline-flex text-slate-800 hover:text-slate-900" to={props.link}>
+              <Link className="inline-flex text-slate-800 hover:text-slate-900" to='/job/job-post'>
+              {/* {props.link} */}
                 <h2 className="text-xl leading-snug justify-center font-semibold">{props.name}</h2>
               </Link>
             </div>

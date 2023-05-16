@@ -24,7 +24,7 @@ function ForumEntries() {
           <div className="grow">
             {/* Title */}
             <h2 className="font-semibold text-slate-800 mb-2">
-              <Link to="/community/forum-post">Share Your Startup - December 2021 - Upvote This For Maximum Visibility!</Link>
+              <Link to="/activity/forum-post">Share Your Startup - December 2021 - Upvote This For Maximum Visibility!</Link>
             </h2>
             {/* Footer */}
             <footer className="flex flex-wrap text-sm">
@@ -69,7 +69,7 @@ function ForumEntries() {
           <div className="grow">
             {/* Title */}
             <h2 className="font-semibold text-slate-800 mb-2">
-              <Link to="/community/forum-post">Failed for the past 12 years as a tech entrepreneur. My key takeaways.</Link>
+              <Link to="/activity/forum-post">Failed for the past 12 years as a tech entrepreneur. My key takeaways.</Link>
             </h2>
             {/* Footer */}
             <footer className="flex flex-wrap text-sm">
@@ -109,7 +109,7 @@ function ForumEntries() {
           <div className="grow">
             {/* Title */}
             <h2 className="font-semibold text-slate-800 mb-2">
-              <Link to="/community/forum-post">Besides Product Hunt, where else should I promote my new project? 🤔</Link>
+              <Link to="/activity/forum-post">Besides Product Hunt, where else should I promote my new project? 🤔</Link>
             </h2>
             {/* Footer */}
             <footer className="flex flex-wrap text-sm">
@@ -149,7 +149,7 @@ function ForumEntries() {
           <div className="grow">
             {/* Title */}
             <h2 className="font-semibold text-slate-800 mb-2">
-              <Link to="/community/forum-post">
+              <Link to="/activity/forum-post">
                 I built and sold 2 small SaaS products and quit my job in the last two years — AMA.
               </Link>
             </h2>
@@ -191,7 +191,7 @@ function ForumEntries() {
           <div className="grow">
             {/* Title */}
             <h2 className="font-semibold text-slate-800 mb-2">
-              <Link to="/community/forum-post">
+              <Link to="/activity/forum-post">
                 Had a full-time job, bootstrapped a side project to 7 digit ARR, now building another side project—AMA
               </Link>
             </h2>
@@ -240,7 +240,7 @@ function ForumEntries() {
           <div className="grow">
             {/* Title */}
             <h2 className="font-semibold text-slate-800 mb-2">
-              <Link to="/community/forum-post">
+              <Link to="/activity/forum-post">
                 💸 Trade crypto, fiat, and stablecoins with Crypto.io. Low fees and incredible performance!
               </Link>
             </h2>
@@ -270,7 +270,7 @@ function ForumEntries() {
           <div className="grow">
             {/* Title */}
             <h2 className="font-semibold text-slate-800 mb-2">
-              <Link to="/community/forum-post">Which are the main channels you use to drive traffic to your website? 📈</Link>
+              <Link to="/activity/forum-post">Which are the main channels you use to drive traffic to your website? 📈</Link>
             </h2>
             {/* Footer */}
             <footer className="flex flex-wrap text-sm">
@@ -310,7 +310,7 @@ function ForumEntries() {
           <div className="grow">
             {/* Title */}
             <h2 className="font-semibold text-slate-800 mb-2">
-              <Link to="/community/forum-post">
+              <Link to="/activity/forum-post">
                 How to build a following on Twitter as a founder - A guide to growing your audience 🚀
               </Link>
             </h2>
@@ -352,7 +352,7 @@ function ForumEntries() {
           <div className="grow">
             {/* Title */}
             <h2 className="font-semibold text-slate-800 mb-2">
-              <Link to="/community/forum-post">What's the best way to get started building web 3 social products?</Link>
+              <Link to="/activity/forum-post">What's the best way to get started building web 3 social products?</Link>
             </h2>
             {/* Footer */}
             <footer className="flex flex-wrap text-sm">
@@ -392,7 +392,7 @@ function ForumEntries() {
           <div className="grow">
             {/* Title */}
             <h2 className="font-semibold text-slate-800 mb-2">
-              <Link to="/community/forum-post">How important is customer feedback for the improvement of a product?</Link>
+              <Link to="/activity/forum-post">How important is customer feedback for the improvement of a product?</Link>
             </h2>
             {/* Footer */}
             <footer className="flex flex-wrap text-sm">
