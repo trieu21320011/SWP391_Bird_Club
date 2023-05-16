@@ -10,8 +10,11 @@ import Image04 from '../../images/company-icon-07.svg';
 import Image05 from '../../images/company-icon-08.svg';
 import Image06 from '../../images/company-icon-01.svg';
 import { useNavigate } from 'react-router-dom';
+import ModalBasic from '../../components/ModalBasic';
+
 function JobPost() {
 
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false)
     const items = [
       {
         id: 3,
@@ -70,14 +73,6 @@ function JobPost() {
             <div className="max-w-5xl mx-auto flex flex-col lg:flex-row lg:space-x-8 xl:space-x-16">
               {/* Content */}
               <div>
-                <div className="mb-6">
-                  <Link className="btn-sm px-3 bg-white border-slate-200 hover:border-slate-300 text-slate-600" to="/job/job-listing">
-                    <svg className="fill-current text-slate-400 mr-2" width="7" height="12" viewBox="0 0 7 12">
-                      <path d="M5.4.6 6.8 2l-4 4 4 4-1.4 1.4L0 6z" />
-                    </svg>
-                    <span>Back To </span>
-                  </Link>
-                </div>
                 <div className="text-sm text-slate-500 italic mb-2">Posted Jan 6, 2022</div>
                 <header className="mb-4">
                   {/* Title */}
@@ -94,8 +89,8 @@ function JobPost() {
                     <div className="text-sm text-slate-500 italic">179 Jobs Posted</div>
                   </div>
                   <div className="space-y-2 sm:flex sm:space-y-0 sm:space-x-2">
-                    <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white">Join Club -&gt;</button>
-                    <button className="btn w-full border-slate-200 hover:border-slate-300 text-slate-600" onClick={e => handleOnClick(e)}>Club Members</button>
+                    <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white">Becoming a staff  -&gt;</button>
+                    <button className="btn w-full border-slate-200 hover:border-slate-300 text-slate-600" onClick={e => handleOnClick(e)}>Staff Members</button>
                   </div>
                 </div>
 
@@ -196,7 +191,7 @@ function JobPost() {
                   <p className="font-medium text-slate-800 italic mb-6">Do you have what it takes?</p>
                   <div className="flex justify-between items-center">
                     {/* Apply button */}
-                    <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white whitespace-nowrap">Join Club -&gt;</button>
+                    <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white whitespace-nowrap">Becoming a staff   -&gt;</button>
                     {/* Share */}
                     <div className="flex items-center">
                       <div className="text-sm text-slate-500 italic mr-4">Share:</div>
@@ -262,8 +257,34 @@ function JobPost() {
                     <div className="text-sm text-slate-500 italic">179 Jobs Posted</div>
                   </div>
                   <div className="space-y-2">
-                    <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white">Join Club -&gt;</button>
-                    <button className="btn w-full border-slate-200 hover:border-slate-300 text-slate-600" onClick={e => handleOnClick(e)}>Club Members</button>
+                    <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white" aria-controls="feedback-modal" onClick={(e) => { e.stopPropagation(); setFeedbackModalOpen(true); }}>Becoming a staff -&gt;</button>
+                    {/* Send Feedback */}
+                    <div className="m-1.5">
+                      {/* Start */}
+                      <ModalBasic id="feedback-modal" modalOpen={feedbackModalOpen} setModalOpen={setFeedbackModalOpen} title="Becoming a staff">
+                        {/* Modal content */}
+                        <div className="px-5 py-4">
+                          <div className="text-sm">
+                            <div className="font-medium text-slate-800 mb-3">Let us know why you want to be staff 🙌</div>
+                          </div>
+                          <div className="space-y-3">
+                            <div>
+                              <label className="block text-sm font-medium mb-1" htmlFor="feedback">Message <span className="text-rose-500">*</span></label>
+                              <textarea id="feedback" className="form-textarea w-full px-2 py-1" rows="4" required></textarea>
+                            </div>
+                          </div>
+                        </div>
+                        {/* Modal footer */}
+                        <div className="px-5 py-4 border-t border-slate-200">
+                          <div className="flex flex-wrap justify-end space-x-2">
+                            <button className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600" onClick={(e) => { e.stopPropagation(); setFeedbackModalOpen(false); }}>Cancel</button>
+                            <button className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">Send</button>
+                          </div>
+                        </div>
+                      </ModalBasic>
+                      {/* End */}
+                    </div>
+                    <button className="btn w-full border-slate-200 hover:border-slate-300 text-slate-600" onClick={e => handleOnClick(e)}>Club staffs</button>
                   </div>
                 </div>
 

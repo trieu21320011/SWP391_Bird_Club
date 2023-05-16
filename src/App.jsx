@@ -116,18 +116,18 @@ function App() {
             <Customers />
           </ProtectedRoute>
         } />
-        <Route path="/ecommerce/orders" element={
+        <Route path="/your-event" element={
           <ProtectedRoute
             redirectPath="*"
-            isAllowed={!!authentication.isAuthentication() && role === Role.admin}
+            isAllowed={role === Role.staff || role === Role.admin || role === Role.manager} 
           >
             <Orders />
           </ProtectedRoute>
         } />
-        <Route path="/ecommerce/invoices" element={
+        <Route path="/your-blog" element={
           <ProtectedRoute
             redirectPath="*"
-            isAllowed={!!authentication.isAuthentication() && role === Role.admin}
+            isAllowed={role === Role.staff || role === Role.admin || role === Role.manager}
           >
             <Invoices />
           </ProtectedRoute>

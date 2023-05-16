@@ -20,10 +20,12 @@ import UserImage08 from '../../images/user-32-08.jpg';
 import Avatar02 from '../../images/avatar-02.jpg';
 import Avatar03 from '../../images/avatar-03.jpg';
 import Avatar04 from '../../images/avatar-04.jpg';
+import ModalBlank from '../../components/ModalBlank';
 
 function MeetupsPost() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [infoModalOpen, setInfoModalOpen] = useState(false)
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -42,14 +44,6 @@ function MeetupsPost() {
             <div className="max-w-5xl mx-auto flex flex-col lg:flex-row lg:space-x-8 xl:space-x-16">
               {/* Content */}
               <div>
-                <div className="mb-6">
-                  <Link className="btn-sm px-3 bg-white border-slate-200 hover:border-slate-300 text-slate-600" to="/activity/meetups">
-                    <svg className="fill-current text-slate-400 mr-2" width="7" height="12" viewBox="0 0 7 12">
-                      <path d="M5.4.6 6.8 2l-4 4 4 4-1.4 1.4L0 6z" />
-                    </svg>
-                    <span>Back To Events</span>
-                  </Link>
-                </div>
                 <div className="text-sm font-semibold text-indigo-500 uppercase mb-2">Mon 27 Dec, 2021 - 9:00 PM -&gt; 10:00 PM</div>
                 <header className="mb-4">
                   {/* Title */}
@@ -241,12 +235,42 @@ function MeetupsPost() {
                 {/* 1st block */}
                 <div className="bg-white p-5 shadow-lg rounded-sm border border-slate-200 lg:w-72 xl:w-80">
                   <div className="space-y-2">
-                    <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white">
+                    <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white" aria-controls="info-modal" onClick={(e) => { e.stopPropagation(); setInfoModalOpen(true); }}>
                       <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 16 16">
                         <path d="m2.457 8.516.969-.99 2.516 2.481 5.324-5.304.985.989-6.309 6.284z" />
                       </svg>
                       <span className="ml-1">Attending</span>
                     </button>
+                    {/* Start */}
+                      <ModalBlank id="info-modal" modalOpen={infoModalOpen} setModalOpen={setInfoModalOpen}>
+                        <div className="p-5 flex space-x-4">
+                          {/* Icon */}
+                          <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-indigo-100">
+                            <svg className="w-4 h-4 shrink-0 fill-current text-indigo-500" viewBox="0 0 16 16">
+                              <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm1 12H7V7h2v5zM8 6c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1z" />
+                            </svg>
+                          </div>
+                          {/* Content */}
+                          <div>
+                            {/* Modal header */}
+                            <div className="mb-2">
+                              <div className="text-lg font-semibold text-slate-800">Want to join the event ?</div>
+                            </div>
+                            {/* Modal content */}
+                            <div className="text-sm mb-10">
+                              <div className="space-y-2">
+                                <p>Semper eget duis at tellus at urna condimentum mattis pellentesque lacus suspendisse faucibus interdum.</p>
+                              </div>
+                            </div>
+                            {/* Modal footer */}
+                            <div className="flex flex-wrap justify-end space-x-2">
+                              <button className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600" onClick={(e) => { e.stopPropagation(); setInfoModalOpen(false); }}>Cancel</button>
+                              <button className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">Yes, I will join</button>
+                            </div>
+                          </div>
+                        </div>
+                      </ModalBlank>
+                      {/* End */}
                     <button className="btn w-full border-slate-200 hover:border-slate-300 text-slate-600">
                       <svg className="w-4 h-4 fill-rose-500 shrink-0" viewBox="0 0 16 16">
                         <path d="M14.682 2.318A4.485 4.485 0 0 0 11.5 1 4.377 4.377 0 0 0 8 2.707 4.383 4.383 0 0 0 4.5 1a4.5 4.5 0 0 0-3.182 7.682L8 15l6.682-6.318a4.5 4.5 0 0 0 0-6.364Zm-1.4 4.933L8 12.247l-5.285-5A2.5 2.5 0 0 1 4.5 3c1.437 0 2.312.681 3.5 2.625C9.187 3.681 10.062 3 11.5 3a2.5 2.5 0 0 1 1.785 4.251h-.003Z" />
@@ -349,7 +373,7 @@ function MeetupsPost() {
                 </div>
 
                 {/* 3rd block */}
-                <div className="bg-white p-5 shadow-lg rounded-sm border border-slate-200 lg:w-72 xl:w-80">
+                {/* <div className="bg-white p-5 shadow-lg rounded-sm border border-slate-200 lg:w-72 xl:w-80">
                   <div className="flex justify-between space-x-1 mb-5">
                     <div className="text-sm text-slate-800 font-semibold">Invite Friends</div>
                     <a className="text-sm font-medium text-indigo-500 hover:text-indigo-600" href="#0">
@@ -418,7 +442,7 @@ function MeetupsPost() {
                       </div>
                     </li>
                   </ul>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
