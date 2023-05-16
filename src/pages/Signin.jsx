@@ -125,7 +125,7 @@ function Signin() {
               {/* Footer */}
               <div className="pt-5 mt-6 border-t border-slate-200">
                 <div className="text-sm">
-                  Don’t you have an account? <div className="font-medium text-indigo-500 hover:text-indigo-600" type="submit">Sign Up</div>
+                  Don’t you have an account? <Link className="font-medium text-indigo-500 hover:text-indigo-600" to="/signup">Sign Up</Link>
                 </div>
                 {/* Warning */}
                 <div className="mt-5">
