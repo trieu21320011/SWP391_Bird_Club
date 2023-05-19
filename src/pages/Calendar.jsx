@@ -297,44 +297,6 @@ function Calendar() {
             {/* Filters and view buttons */}
             <div className="sm:flex sm:justify-between sm:items-center mb-4">
 
-              {/* Filters  */}
-              <div className="mb-4 sm:mb-0 mr-2">
-                <ul className="flex flex-wrap items-center -m-1">
-                  <li className="m-1">
-                    <button className="btn-sm bg-white border-slate-200 hover:border-slate-300 text-slate-500">
-                      <div className="w-1 h-3.5 bg-sky-500 shrink-0"></div>
-                      <span className="ml-1.5">Acme Inc.</span>
-                    </button>
-                  </li>
-                  <li className="m-1">
-                    <button className="btn-sm bg-white border-slate-200 hover:border-slate-300 text-slate-500">
-                      <div className="w-1 h-3.5 bg-emerald-500 shrink-0"></div>
-                      <span className="ml-1.5">Life & Family</span>
-                    </button>
-                  </li>
-                  <li className="m-1">
-                    <button className="btn-sm bg-white border-slate-200 hover:border-slate-300 text-slate-500">
-                      <div className="w-1 h-3.5 bg-indigo-500 shrink-0"></div>
-                      <span className="ml-1.5">Reservations</span>
-                    </button>
-                  </li>
-                  <li className="m-1">
-                    <button className="btn-sm bg-white border-slate-200 hover:border-slate-300 text-slate-500">
-                      <div className="w-1 h-3.5 bg-rose-400 shrink-0"></div>
-                      <span className="ml-1.5">Events</span>
-                    </button>
-                  </li>
-                  <li className="m-1">
-                    <button className="btn-sm bg-white border-slate-200 hover:border-slate-300 text-slate-500">
-                      <div className="w-1 h-3.5 bg-amber-500 shrink-0"></div>
-                      <span className="ml-1.5">Misc</span>
-                    </button>
-                  </li>
-                  <li className="m-1">
-                    <button className="btn-sm bg-white border-slate-200 hover:border-slate-300 text-indigo-500">+Add New</button>
-                  </li>
-                </ul>
-              </div>
 
               {/* View buttons (requires custom integration) */}
               <div className="flex flex-nowrap -space-x-px">

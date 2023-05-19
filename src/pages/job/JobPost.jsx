@@ -76,7 +76,7 @@ function JobPost() {
                 <div className="text-sm text-slate-500 italic mb-2">Posted Jan 6, 2022</div>
                 <header className="mb-4">
                   {/* Title */}
-                  <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">Senior Client Engineer (React &amp; React Native)</h1>
+                  <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">Your bird club online</h1>
                 </header>
 
                 {/* Company information (mobile) */}
@@ -89,31 +89,11 @@ function JobPost() {
                     <div className="text-sm text-slate-500 italic">179 Jobs Posted</div>
                   </div>
                   <div className="space-y-2 sm:flex sm:space-y-0 sm:space-x-2">
-                    <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white">Becoming a staff  -&gt;</button>
+                    <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white">Become one of us  -&gt;</button>
                     <button className="btn w-full border-slate-200 hover:border-slate-300 text-slate-600" onClick={e => handleOnClick(e)}>Staff Members</button>
                   </div>
                 </div>
 
-                {/* Tags */}
-                <div className="mb-6">
-                  <div className="flex flex-wrap items-center -m-1">
-                    <div className="m-1">
-                      <a className="text-xs inline-flex font-medium bg-indigo-100 text-indigo-600 rounded-full text-center px-2.5 py-1" href="#0">
-                        Full-time
-                      </a>
-                    </div>
-                    <div className="m-1">
-                      <a className="text-xs inline-flex font-medium bg-indigo-100 text-indigo-600 rounded-full text-center px-2.5 py-1" href="#0">
-                        Senior Engineer
-                      </a>
-                    </div>
-                    <div className="m-1">
-                      <a className="text-xs inline-flex font-medium bg-indigo-100 text-indigo-600 rounded-full text-center px-2.5 py-1" href="#0">
-                        Remote
-                      </a>
-                    </div>
-                  </div>
-                </div>
 
                 <hr className="my-6 border-t border-slate-200" />
 
@@ -121,55 +101,25 @@ function JobPost() {
                 <div>
                   <h2 className="text-xl leading-snug text-slate-800 font-bold mb-2">The Role</h2>
                   <div className="space-y-6">
-                    <p>In the world of AI, behavioural predictions are leading the charge to better machine learning.</p>
+                    <p>Whether it’s for a large club or just you and your friends, BirdClub provides you with a space to connect, share records and publish photos - all for free..</p>
                     <p>
-                      There is so much happening in the AI space. Advances in the economic sectors have seen automated business practices rapidly
-                      increasing economic value. While the realm of the human sciences has used the power afforded by computational capabilities to
-                      solve many human based dilemmas. Even the art scene has adopted carefully selected ML applications to usher in the technological
-                      movement.
+                      At the Bird Club, we are passionate about birds and all things avian. We are a community of bird enthusiasts, from beginners to experienced birders, united by our love for these magnificent creatures. Whether you're an avid birder or simply have a curiosity about the fascinating world of birds, you've come to the right place.
                     </p>
                     <p>
-                      Join us every second Wednesday as we host an open discussion about the amazing things happening in the world of AI and machine
-                      learning. Feel free to share your experiences, ask questions, ponder the possibilities, or just listen as we explore new topics
-                      and revisit old ones.
+                    At the Bird Club, we are passionate about birds and all things avian. We are a community of bird enthusiasts, from beginners to experienced birders, united by our love for these magnificent creatures. Whether you're an avid birder or simply have a curiosity about the fascinating world of birds, you've come to the right place.
                     </p>
                   </div>
                 </div>
 
-                <hr className="my-6 border-t border-slate-200" />
-
-                {/* About You */}
-                <div>
-                  <h2 className="text-xl leading-snug text-slate-800 font-bold mb-2">About You</h2>
-                  <div className="space-y-6">
-                    <p>
-                      You love building great software. Your work could be supporting new feature development, migrating existing features, and
-                      creating other mobile and web solutions for customers. You'll have a primary focus on frontend development using Javascript. Our
-                      client's tech stack is JavaScript, primarily using React. A strong understanding of JS core (ES2019+) is required, with some
-                      exposure in Java as back-end technology. We use modern tools, which means you'll have the opportunity to work with Webpack,
-                      Redux, Apollo, Styled Components, and much more.
-                    </p>
-                    <p>
-                      You love learning. Engineering is an ever-evolving world. You enjoy playing with new tech and exploring areas that you might not
-                      have experience with yet. You are self-driven, self-learner willing to share knowledge and participate actively in your
-                      community.
-                    </p>
-                    <p>
-                      Having overlap with your team is critical when working in a global remote team. Modus requires all team members to overlap with
-                      EST morning hours daily. In addition, reliable high speed internet is a must.
-                    </p>
-                  </div>
-                </div>
 
                 <hr className="my-6 border-t border-slate-200" />
 
                 {/* Things You Might Do */}
                 <div>
-                  <h2 className="text-xl leading-snug text-slate-800 font-bold mb-2">Things You Might Do</h2>
+                  <h2 className="text-xl leading-snug text-slate-800 font-bold mb-2">Bird clubs made simple.</h2>
                   <div className="space-y-6">
                     <p>
-                      We are a fast-growing, and remote-first company, so you'll likely get experience on many different projects across the
-                      organization. That said, here are some things you'll probably do:
+                    Everything you need is in one place: members, records, photos, and more.
                     </p>
                     <ul className="list-disc list-inside space-y-1">
                       <li>Give back to the community via open source and blog posts</li>
@@ -191,7 +141,7 @@ function JobPost() {
                   <p className="font-medium text-slate-800 italic mb-6">Do you have what it takes?</p>
                   <div className="flex justify-between items-center">
                     {/* Apply button */}
-                    <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white whitespace-nowrap">Becoming a staff   -&gt;</button>
+                    <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white whitespace-nowrap">Become one of us   -&gt;</button>
                     {/* Share */}
                     <div className="flex items-center">
                       <div className="text-sm text-slate-500 italic mr-4">Share:</div>
@@ -251,17 +201,17 @@ function JobPost() {
                 <div className="bg-white p-5 shadow-lg rounded-sm border border-slate-200 lg:w-72 xl:w-80">
                   <div className="text-center mb-6">
                     <div className="inline-flex mb-3">
-                      <img className="w-16 h-16 rounded-full" src={Image06} width="64" height="64" alt="Company 01" />
+                      <img className="w-16 h-16 rounded-full" src="https://www.bird.club/assets/avatars/thrush-0c3b012d5b61ac56781c674e26281202be20fb57ebe4ca0e8fb06f82214c6064.png" width="64" height="64" alt="Company 01" />
                     </div>
-                    <div className="text-lg font-bold text-slate-800 mb-1">Revolut Ltd</div>
-                    <div className="text-sm text-slate-500 italic">179 Jobs Posted</div>
+                    <div className="text-lg font-bold text-slate-800 mb-1">Bird club</div>
+                    <div className="text-sm text-slate-500 italic">430 Members</div>
                   </div>
                   <div className="space-y-2">
-                    <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white" aria-controls="feedback-modal" onClick={(e) => { e.stopPropagation(); setFeedbackModalOpen(true); }}>Becoming a staff -&gt;</button>
+                    <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white" aria-controls="feedback-modal" onClick={(e) => { e.stopPropagation(); setFeedbackModalOpen(true); }}>Become one of us -&gt;</button>
                     {/* Send Feedback */}
                     <div className="m-1.5">
                       {/* Start */}
-                      <ModalBasic id="feedback-modal" modalOpen={feedbackModalOpen} setModalOpen={setFeedbackModalOpen} title="Becoming a staff">
+                      <ModalBasic id="feedback-modal" modalOpen={feedbackModalOpen} setModalOpen={setFeedbackModalOpen} title="Become one of us">
                         {/* Modal content */}
                         <div className="px-5 py-4">
                           <div className="text-sm">
@@ -284,7 +234,7 @@ function JobPost() {
                       </ModalBasic>
                       {/* End */}
                     </div>
-                    <button className="btn w-full border-slate-200 hover:border-slate-300 text-slate-600" onClick={e => handleOnClick(e)}>Club staffs</button>
+                    <button className="btn w-full border-slate-200 hover:border-slate-300 text-slate-600" onClick={e => handleOnClick(e)}>Our staffs</button>
                   </div>
                 </div>
 
