@@ -20,33 +20,33 @@ function JobListing() {
   const items = [
     {
       id: 0,
-      image: Image01,
+      image: 'https://th.bing.com/th/id/OIP.rcfDm6OymEC4mbGB_05zagHaEK?w=313&h=180&c=7&r=0&o=5&pid=1.7',
       company: 'Company 01',
-      role: 'Senior Web App Designer',
+      role: 'Vo Khắc Triệu',
       link: '/job/job-post',
-      details: 'Contract / Remote / New York, NYC',
+      details: 'Em muốn join sự kiện này',
       date: 'Jan 4',
       type: 'Featured',
       fav: false,
     },
     {
       id: 1,
-      image: Image01,
+      image: "https://th.bing.com/th?id=OIP.gvJOXgwfUeS-TfUtPxal2AHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2",
       company: 'Company 02',
-      role: 'Senior Full Stack Engineer',
+      role: 'Hoàng Thông',
       link: '/job/job-post',
-      details: 'Contract / Remote / New York, NYC',
+      details: 'Sự kiện này rất là thú vị',
       date: 'Jan 7',
       type: 'New',
       fav: true,
     },
     {
       id: 2,
-      image: Image02,
+      image: 'https://th.bing.com/th/id/OIP.EAzMf4436BdR-LVn7u_TOAHaJ4?w=136&h=181&c=7&r=0&o=5&pid=1.7',
       company: 'Company 03',
-      role: 'Ruby on Rails Engineer',
+      role: 'Lê Hồng Anh',
       link: '/job/job-post',
-      details: 'Contract / Remote / New York, NYC',
+      details: 'Sự kiện này rất là thú vị',
       date: 'Jan 7',
       type: 'New',
       fav: false,
@@ -57,7 +57,7 @@ function JobListing() {
       company: 'Company 04',
       role: 'Senior Software Engineer Backend',
       link: '/job/job-post',
-      details: 'Full-time / Remote / Anywhere',
+      details: 'Sự kiện này rất là thú vị',
       date: 'Jan 7',
       type: 'New',
       fav: false,
@@ -68,7 +68,7 @@ function JobListing() {
       company: 'Company 05',
       role: 'React.js Software Developer',
       link: '/job/job-post',
-      details: 'Full-time / Remote / London, UK',
+      details: 'Tôi yêu chim',
       date: 'Jan 6',
       type: 'New',
       fav: true,
@@ -79,7 +79,7 @@ function JobListing() {
       company: 'Company 06',
       role: 'Senior Full Stack Rails Developer',
       link: '/job/job-post',
-      details: 'Part-time / Remote / Milan, IT',
+      details: '',
       date: 'Jan 6',
       type: 'New',
       fav: false,
@@ -171,7 +171,7 @@ function JobListing() {
                 <div className="mb-5">
                   <form className="relative">
                     <label htmlFor="job-search" className="sr-only">Search</label>
-                    <input id="job-search" className="form-input w-full pl-9 focus:border-slate-300" type="search" placeholder="Search job title or keyword…" />
+                    <input id="job-search" className="form-input w-full pl-9 focus:border-slate-300" type="search" placeholder="Search request..." />
                     <button className="absolute inset-0 right-auto group" type="submit" aria-label="Search">
                       <svg className="w-4 h-4 shrink-0 fill-current text-slate-400 group-hover:text-slate-500 ml-3 mr-2" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                         <path d="M7 14c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zM7 2C4.243 2 2 4.243 2 7s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5z" />
@@ -213,6 +213,7 @@ function JobListing() {
                 {/* Pagination */}
                 <div className="mt-6">
                   <PaginationNumeric />
+                  
                 </div>
 
               </div>

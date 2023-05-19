@@ -40,6 +40,9 @@ function FeedRightContent() {
             
             
             {/* Block 2 */}
+            <div className="mb-6">
+            <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white">Add Record</button>
+          </div>
             <div className="bg-slate-50 p-4 rounded border border-slate-200">
               <div className="text-xs font-semibold text-slate-400 uppercase mb-4">Who to follow</div>
               <ul className="space-y-3">
