@@ -293,10 +293,10 @@ function MeetupsPost() {
                       <div className="flex justify-between">
                         <div className="grow flex items-center">
                           <div className="relative mr-3">
-                            <img className="w-8 h-8 rounded-full" src={UserImage08} width="32" height="32" alt="User 08" />
+                            <img className="w-8 h-8 rounded-full" src="https://scontent.fsgn2-9.fna.fbcdn.net/v/t39.30808-6/341868164_781913886496459_5820586788419205532_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=btdKADEdzg0AX_iO3E8&_nc_ht=scontent.fsgn2-9.fna&oh=00_AfCVwrnzrAXM8eH9dCGqyIJJepRshEf_TRwbQ2GhBRqHyw&oe=646C7D59" width="32" height="32" alt="User 08" />
                           </div>
                           <div className="truncate">
-                            <span className="text-sm font-medium text-slate-800">Carolyn McNeail</span>
+                            <span className="text-sm font-medium text-slate-800">Hoàng Trung Thông ( Thông Soái Ca)</span>
                           </div>
                         </div>
                         <button className="text-slate-400 hover:text-slate-500 rounded-full">
@@ -373,7 +373,7 @@ function MeetupsPost() {
                 </div>
 
                 {/* 3rd block */}
-                {/* <div className="bg-white p-5 shadow-lg rounded-sm border border-slate-200 lg:w-72 xl:w-80">
+                <div className="bg-white p-5 shadow-lg rounded-sm border border-slate-200 lg:w-72 xl:w-80">
                   <div className="flex justify-between space-x-1 mb-5">
                     <div className="text-sm text-slate-800 font-semibold">Invite Friends</div>
                     <a className="text-sm font-medium text-indigo-500 hover:text-indigo-600" href="#0">
@@ -415,10 +415,10 @@ function MeetupsPost() {
                       <div className="flex items-center justify-between">
                         <div className="grow flex items-center">
                           <div className="relative mr-3">
-                            <img className="w-8 h-8 rounded-full" src={UserImage06} width="32" height="32" alt="User 06" />
+                            <img className="w-8 h-8 rounded-full" src="https://scontent.fsgn2-9.fna.fbcdn.net/v/t39.30808-6/341868164_781913886496459_5820586788419205532_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=btdKADEdzg0AX_iO3E8&_nc_ht=scontent.fsgn2-9.fna&oh=00_AfCVwrnzrAXM8eH9dCGqyIJJepRshEf_TRwbQ2GhBRqHyw&oe=646C7D59" width="32" height="32" alt="User 06" />
                           </div>
                           <div className="truncate">
-                            <span className="text-sm font-medium text-slate-800">Carolyn McNeail</span>
+                            <span className="text-sm font-medium text-slate-800">Hoàng Trung Thông ( Thông Soái Ca)</span>
                           </div>
                         </div>
                         <button className="text-xs inline-flex font-medium bg-indigo-100 text-indigo-600 rounded-full text-center px-2.5 py-1">
@@ -442,7 +442,7 @@ function MeetupsPost() {
                       </div>
                     </li>
                   </ul>
-                </div> */}
+                </div>
               </div>
             </div>
           </div>

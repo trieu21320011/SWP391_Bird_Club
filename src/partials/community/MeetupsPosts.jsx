@@ -327,7 +327,7 @@ function MeetupsPosts() {
           <div className="grow">
             <div className="text-sm font-semibold text-indigo-500 uppercase mb-2">Mon 3 Jan, 2022</div>
             <Link className="inline-flex mb-2" to="/activity/meetups-post">
-              <h3 className="text-lg font-bold text-slate-800">Acme Inc. London Meetup: Women in Tech Night</h3>
+              <h3 className="text-lg font-bold text-slate-800">BirdClub London Meetup: Women in Tech Night</h3>
             </Link>
             <div className="text-sm">
               Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts.

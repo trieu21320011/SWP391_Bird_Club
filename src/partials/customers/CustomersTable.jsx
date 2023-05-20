@@ -128,7 +128,7 @@ function CustomersTable({
     {
       id: '9',
       image: Image10,
-      name: 'Carolyn McNeail',
+      name: 'Hoàng Trung Thông ( Thông Soái Ca)',
       email: 'carolynlove@gmail.com',
       location: '🇮🇹 Milan, IT',
       orders: '19',

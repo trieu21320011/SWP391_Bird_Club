@@ -132,7 +132,7 @@ function OrdersTable({
       image: Image01,
       order: '#908764',
       date: '21/01/2021',
-      customer: 'Carolyn McNeail',
+      customer: 'Hoàng Trung Thông ( Thông Soái Ca)',
       total: '$59.00',
       status: 'Đã hủy',
       items: '1',

@@ -30,9 +30,9 @@ function ProfileSidebar({
                 {/* Profile image */}
                 <div className="relative">
                   <div className="grow flex items-center truncate">
-                    <img className="w-8 h-8 rounded-full mr-2" src={ProfileImage} width="32" height="32" alt="Group 01" />
+                    <img className="w-8 h-8 rounded-full mr-2" src="https://se-images.campuslabs.com/clink/images/a2978c4f-0bc9-40dc-8e30-b94638286e64271d694f-4b40-4a33-bb1b-7c09611fb10c.png?preset=med-sq" width="32" height="32" alt="Group 01" />
                     <div className="truncate">
-                      <span className="font-semibold text-slate-800">Acme Inc.</span>
+                      <span className="font-semibold text-slate-800">BirdClub</span>
                     </div>
                   </div>
                 </div>
@@ -72,10 +72,10 @@ function ProfileSidebar({
                   <button className="w-full p-2 rounded bg-indigo-100" onClick={() => setProfileSidebarOpen(false)}>
                     <div className="flex items-center">
                       <div className="relative mr-2">
-                        <img className="w-8 h-8 rounded-full" src={UserImage08} width="32" height="32" alt="User 08" />
+                        <img className="w-8 h-8 rounded-full" src="https://scontent.fsgn2-9.fna.fbcdn.net/v/t39.30808-6/341868164_781913886496459_5820586788419205532_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=btdKADEdzg0AX_iO3E8&_nc_ht=scontent.fsgn2-9.fna&oh=00_AfCVwrnzrAXM8eH9dCGqyIJJepRshEf_TRwbQ2GhBRqHyw&oe=646C7D59" width="32" height="32" alt="User 08" />
                       </div>
                       <div className="truncate">
-                        <span className="text-sm font-medium text-slate-800">Carolyn McNeail</span>
+                        <span className="text-sm font-medium text-slate-800">Hoàng Trung Thông ( Thông Soái Ca)</span>
                       </div>
                     </div>
                   </button>

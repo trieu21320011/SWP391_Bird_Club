@@ -38,7 +38,7 @@ function TasksKanban() {
 
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0">
-                <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">Acme Inc. Kanban ✨</h1>
+                <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">BirdClub Kanban ✨</h1>
               </div>
 
               {/* Right: Actions */}

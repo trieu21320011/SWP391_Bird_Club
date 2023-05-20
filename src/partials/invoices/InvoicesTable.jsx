@@ -101,7 +101,7 @@ function InvoicesTable({
       invoice: '#908764',
       total: '$129.00',
       status: 'Due',
-      customer: 'Carolyn McNeail',
+      customer: 'Hoàng Trung Thông ( Thông Soái Ca)',
       issueddate: '17/06/2021',
       paiddate: '-',
       type: 'Subscription',
