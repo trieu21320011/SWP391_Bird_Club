@@ -1,16 +1,109 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { convertToRaw, EditorState } from "draft-js";
 
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import FeedLeftContent from '../../partials/community/FeedLeftContent';
 import FeedPosts from '../../partials/community/FeedPosts';
 import FeedRightContent from '../../partials/community/FeedRightContent';
+import ModalBasic from '../../components/ModalBasic';
+import Swal from 'sweetalert2';
+import { baseURL } from '../baseUrl';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 import Avatar from '../../images/user-40-02.jpg';
+import axios from 'axios';
 
 function Feed() {
-
+  const childRef = useRef()
+  const id = localStorage.getItem('uid')
+  const [value, setValue] = useState();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const name = localStorage.getItem('name')
+  const [title, setTitle] = useState();
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false)
+  const date = new Date(2023, 11, 13).toDateString()
+  const check = new Date("2023-05-20T07:54:08.797").toDateString() === new Date(2023, 4, 20).toDateString()
+  console.log(check);
+  console.log(new Date("2023-05-20T07:54:08.797").toDateString());
+  console.log(new Date(2023, 4, 20).toDateString());
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "link",
+    "color",
+    "image",
+    "background",
+    "align",
+    "size",
+    "font"
+  ];
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [{ size: [] }],
+      [{ font: [] }],
+      [{ align: ["right", "center", "justify"] }],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "image"],
+      [{ color: ["red", "#785412"] }],
+      [{ background: ["red", "#785412"] }]
+    ]
+  };
+  const handleCreate = (e) => {
+    e.preventDefault()
+    Swal.fire({
+      title: 'Xác nhận thông tin',
+      html: 'This will close in a minutes',
+
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading()
+        const b = Swal.getHtmlContainer().querySelector('b')
+      },
+    })
+    var data = JSON.stringify({
+      "ownerId": id,
+      "title": title,
+      "content": value
+    });
+
+    var config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseURL + '/newsfeeds/blogs',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(response);
+        Swal.close()
+        Swal.fire(
+          "Good job!",
+          "You success create a blog!",
+          "success",
+        );
+        childRef.current.getDat()
+      })
+      .catch(function (error) {
+        console.log();
+        Swal.close()
+        Swal.fire("Oops", "Wrong id or password!", "error");
+      });
+
+  }
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -46,7 +139,7 @@ function Feed() {
                           <img className="rounded-full shrink-0" src={Avatar} width="40" height="40" alt="User 02" />
                           <div className="grow">
                             <label htmlFor="status-input" className="sr-only">
-                              What's happening, Mark?
+                              Let write a blog, {name}?
                             </label>
                             <input
                               id="status-input"
@@ -57,46 +150,55 @@ function Feed() {
                           </div>
                         </div>
                         <div className="flex justify-between items-center">
-                          <div className="grow flex space-x-5">
-                            <button className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-700">
-                              <svg className="w-4 h-4 fill-indigo-400 mr-2" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M0 0h2v16H0V0Zm14 0h2v16h-2V0Zm-3 7H5c-.6 0-1-.4-1-1V1c0-.6.4-1 1-1h6c.6 0 1 .4 1 1v5c0 .6-.4 1-1 1ZM6 5h4V2H6v3Zm5 11H5c-.6 0-1-.4-1-1v-5c0-.6.4-1 1-1h6c.6 0 1 .4 1 1v5c0 .6-.4 1-1 1Zm-5-2h4v-3H6v3Z" />
-                              </svg>
-                              <span>Media</span>
-                            </button>
-                            <button className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-700">
-                              <svg className="w-4 h-4 fill-indigo-400 mr-2" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6.974 14c-.3 0-.7-.2-.9-.5l-2.2-3.7-2.1 2.8c-.3.4-1 .5-1.4.2-.4-.3-.5-1-.2-1.4l3-4c.2-.3.5-.4.9-.4.3 0 .6.2.8.5l2 3.3 3.3-8.1c0-.4.4-.7.8-.7s.8.2.9.6l4 8c.2.5 0 1.1-.4 1.3-.5.2-1.1 0-1.3-.4l-3-6-3.2 7.9c-.2.4-.6.6-1 .6Z" />
-                              </svg>
-                              <span>GIF</span>
-                            </button>
-                            <button className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-700">
-                              <svg className="w-4 h-4 fill-indigo-400 mr-2" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9.793 10.002a.5.5 0 0 1 .353.853l-1.792 1.793a.5.5 0 0 1-.708 0l-1.792-1.793a.5.5 0 0 1 .353-.853h3.586Zm5.014-4.63c1.178 2.497 1.833 5.647.258 7.928-1.238 1.793-3.615 2.702-7.065 2.702S2.173 15.092.935 13.3c-1.575-2.28-.92-5.431.258-7.927A2.962 2.962 0 0 1 0 3.002a3 3 0 0 1 3-3c.787 0 1.496.309 2.029.806a5.866 5.866 0 0 1 5.942 0A2.96 2.96 0 0 1 13 .002a3 3 0 0 1 3 3c0 .974-.472 1.827-1.193 2.37Zm-1.387 6.79c1.05-1.522.417-3.835-.055-5.078C12.915 5.89 11.192 2.002 8 2.002s-4.914 3.89-5.365 5.082c-.472 1.243-1.106 3.556-.055 5.079.843 1.22 2.666 1.839 5.42 1.839s4.577-.62 5.42-1.84ZM6.67 6.62c.113.443.102.68-.433 1.442-.535.761-1.06 1.297-1.658 1.297-.597 0-1.08-.772-1.07-1.483.01-.71.916-2.306 1.997-2.306.784 0 1.05.607 1.163 1.05Zm3.824-1.05c1.08 0 1.987 1.596 1.997 2.306.01.71-.473 1.483-1.07 1.483-.598 0-1.123-.536-1.658-1.297-.535-.762-.546-1-.432-1.442.113-.443.38-1.05 1.163-1.05Z" />
-                              </svg>
-                              <span>Emoji</span>
-                            </button>
-                          </div>
                           <div>
-                            <button type="submit" className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white whitespace-nowrap">
-                              Send -&gt;
+                            <button aria-controls="feedback-modal" className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white whitespace-nowrap" onClick={(e) => { e.stopPropagation(); setFeedbackModalOpen(true); }}>
+                              Create blog -&gt;
                             </button>
+                            <ModalBasic id="feedback-modal" modalOpen={feedbackModalOpen} setModalOpen={setFeedbackModalOpen} title="Let's write a blog">
+                              {/* Modal content */}
+                              <div className="px-5 py-4">
+                                <div className="text-sm">
+                                  <div className="font-medium text-slate-800 mb-3">Let us know what you think 🙌</div>
+                                </div>
+                                <div className="space-y-3">
+                                  <div>
+                                    <label className="block text-sm font-medium mb-1" htmlFor="name">Title <span className="text-rose-500">*</span></label>
+                                    <input id="name" className="form-input w-full px-2 py-1" type="text" required onChange={e => setTitle(e.target.value)} />
+                                  </div>
+                                  <div>
+                                    <label className="block text-sm font-medium mb-1" htmlFor="feedback">Message <span className="text-rose-500">*</span></label>
+                                    <ReactQuill theme="snow"
+                                      modules={modules}
+                                      formats={formats}
+                                      value={value} onChange={setValue} />
+                                  </div>
+                                </div>
+                              </div>
+                              {/* Modal footer */}
+                              <div className="px-5 py-4 border-t border-slate-200">
+                                <div className="flex flex-wrap justify-end space-x-2">
+                                  <button className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600" onClick={(e) => { e.stopPropagation(); setFeedbackModalOpen(false); }}>Cancel</button>
+                                  <button onClick={e => handleCreate(e)} className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">Create</button>
+                                </div>
+                              </div>
+                            </ModalBasic>
                           </div>
                         </div>
                       </div>
 
                       {/* Posts */}
-                      <FeedPosts />
+                      <FeedPosts ref={childRef} />
 
                     </div>
 
+
                   </div>
-                </div>                
+                </div>
 
               </div>
 
               {/* Right content */}
-              <FeedRightContent />              
+              <FeedRightContent />
 
             </div>
 

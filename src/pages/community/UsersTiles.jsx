@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import SearchForm from '../../partials/actions/SearchForm';
 import UsersTilesCard from '../../partials/community/UsersTilesCard';
 import PaginationNumeric from '../../components/PaginationNumeric';
+import { baseURL } from '../baseUrl';
 
 import Image01 from '../../images/user-64-01.jpg';
 import Image02 from '../../images/user-64-02.jpg';
@@ -18,107 +19,26 @@ import Image09 from '../../images/user-64-09.jpg';
 import Image10 from '../../images/user-64-10.jpg';
 import Image11 from '../../images/user-64-11.jpg';
 import Image12 from '../../images/user-64-12.jpg';
-
+import axios from 'axios';
 function UsersTiles() {
+  const [members,setMembers] = useState([])
 
-  const items = [
-    {
-      id: 0,
-      name: 'Dominik McNeail',
-      image: Image01,
-      link: '#0',
-      location: '🇮🇹',
-      content: 'Fitness Fanatic, Design Enthusiast, Mentor, Meetup Organizer & PHP Lover.',
-    },
-    {
-      id: 1,
-      name: 'Ivan Mesaros',
-      image: Image02,
-      link: '#0',
-      location: '🇫🇷',
-      content: 'Fitness Fanatic, Design Enthusiast, Mentor, Meetup Organizer & PHP Lover.',
-    },
-    {
-      id: 2,
-      name: 'Tisha Yanchev',
-      image: Image03,
-      link: '#0',
-      location: '🇩🇪',
-      content: 'Fitness Fanatic, Design Enthusiast, Mentor, Meetup Organizer & PHP Lover.',
-    },
-    {
-      id: 3,
-      name: 'Sergio Gonnelli',
-      image: Image04,
-      link: '#0',
-      location: '🇮🇹',
-      content: 'Fitness Fanatic, Design Enthusiast, Mentor, Meetup Organizer & PHP Lover.',
-    },
-    {
-      id: 4,
-      name: 'Jerzy Wierzy',
-      image: Image05,
-      link: '#0',
-      location: '🇪🇸',
-      content: 'Fitness Fanatic, Design Enthusiast, Mentor, Meetup Organizer & PHP Lover.',
-    },
-    {
-      id: 5,
-      name: 'Mirko Grubisic',
-      image: Image06,
-      link: '#0',
-      location: '🇩🇪',
-      content: 'Fitness Fanatic, Design Enthusiast, Mentor, Meetup Organizer & PHP Lover.',
-    },
-    {
-      id: 6,
-      name: 'Alisha Acharya',
-      image: Image07,
-      link: '#0',
-      location: '🇬🇧',
-      content: 'Fitness Fanatic, Design Enthusiast, Mentor, Meetup Organizer & PHP Lover.',
-    },
-    {
-      id: 7,
-      name: 'Brian Halligan',
-      image: Image08,
-      link: '#0',
-      location: '🇺🇸',
-      content: 'Fitness Fanatic, Design Enthusiast, Mentor, Meetup Organizer & PHP Lover.',
-    },
-    {
-      id: 8,
-      name: 'Patricia Semklo',
-      image: Image09,
-      link: '#0',
-      location: '🇮🇳',
-      content: 'Fitness Fanatic, Design Enthusiast, Mentor, Meetup Organizer & PHP Lover.',
-    },
-    {
-      id: 9,
-      name: 'Maria Martinez',
-      image: Image10,
-      link: '#0',
-      location: '🇮🇹',
-      content: 'Fitness Fanatic, Design Enthusiast, Mentor, Meetup Organizer & PHP Lover.',
-    },
-    {
-      id: 10,
-      name: 'Vedad Siljak',
-      image: Image11,
-      link: '#0',
-      location: '🇨🇦',
-      content: 'Fitness Fanatic, Design Enthusiast, Mentor, Meetup Organizer & PHP Lover.',
-    },
-    {
-      id: 11,
-      name: 'Dominik Lamakani',
-      image: Image12,
-      link: '#0',
-      location: '🇧🇪',
-      content: 'Fitness Fanatic, Design Enthusiast, Mentor, Meetup Organizer & PHP Lover.',
-    },
-  ];
+  useEffect (()=> {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL+'/members',
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      setMembers(response.data)
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+    
+  }, [])
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -142,7 +62,7 @@ function UsersTiles() {
 
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0">
-                <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">Club Staffs. ✨</h1>
+                <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">Club Member. ✨</h1>
               </div>
 
               {/* Right: Actions */}
@@ -163,16 +83,16 @@ function UsersTiles() {
             {/* Cards */}
             <div className="grid grid-cols-12 gap-6">
               {
-                items.map(item => {
+                members.map(m => {
                   return (
                     <UsersTilesCard
-                      key={item.id}
-                      id={item.id}
-                      name={item.name}
-                      image={item.image}
-                      link={item.link}
-                      location={item.location}
-                      content={item.content}
+                      key={m.id}
+                      id={m.id}
+                      name={m.displayName}
+                      image={m.avatar}
+                      link={'?id='+m.id}
+                      location={m.userType}
+                      content=""
                     />
                   )
                 })
