@@ -8,8 +8,13 @@ import UserImage01 from '../../images/user-32-01.jpg';
 import UserImage02 from '../../images/user-32-02.jpg';
 import UserImage04 from '../../images/user-32-04.jpg';
 import UserImage05 from '../../images/user-32-05.jpg';
+import { useNavigate } from 'react-router-dom';
 
 function FeedRightContent() {
+  const navigate = useNavigate();
+  const handleNavigate = () => {
+    navigate('/activity/create-blog')
+  }
   return (
     <div className="w-full hidden xl:block xl:w-72">
       <div className="lg:sticky lg:top-16 lg:h-[calc(100vh-64px)] lg:overflow-x-hidden lg:overflow-y-auto no-scrollbar">
