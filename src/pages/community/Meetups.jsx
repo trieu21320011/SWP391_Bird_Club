@@ -1,12 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import SearchForm from '../../partials/actions/SearchForm';
 import MeetupsPosts from '../../partials/community/MeetupsPosts';
 import PaginationNumeric from '../../components/PaginationNumeric';
+import axios from 'axios';
+
+import { baseURL } from '../baseUrl';
 
 function Meetups() {
+    const [event, setEvents] = useState([])
+  const getData = () => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/activities',
+    };
+
+    axios.request(config)
+      .then((response) => {
+        console.log(response.data);
+        setEvents(response.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  useEffect(() => {
+    getData();
+  }, []);
   
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -88,7 +111,9 @@ function Meetups() {
             <div className="text-sm text-slate-500 italic mb-4">289 Meetups</div>
 
             {/* Content */}
-            <MeetupsPosts />
+            <MeetupsPosts 
+              data={event}
+            />
 
             {/* Pagination */}
             <div className="mt-8">

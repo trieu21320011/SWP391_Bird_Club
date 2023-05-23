@@ -31,7 +31,6 @@ const FeedPosts = forwardRef((props, ref) => {
     getData(page);
  }
   const getData = (page) => {
-    debugger
     let config = {
       method: 'get',
       maxBodyLength: Infinity,

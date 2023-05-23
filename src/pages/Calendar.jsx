@@ -23,7 +23,7 @@ function Calendar() {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: baseURL + '/activities',
+      url: baseURL + '/activities/calender',
     };
 
     axios.request(config)
@@ -200,13 +200,12 @@ function Calendar() {
   }
 
   const getEvents = (date) => {
-    debugger
-    return event.filter(e => new Date(e.startTime).toDateString() === new Date(year, month, date).toDateString());
+    return event.filter(e => new Date(e.date).toDateString() === new Date(year, month, date).toDateString());
   }
 
   const eventColor = (color) => {
     switch (color) {
-      case 'sky':
+      case 'EVENT':
         return 'text-white bg-sky-500';
       case 'indigo':
         return 'text-white bg-indigo-500';
@@ -381,19 +380,19 @@ function Calendar() {
                               getEvents(day).map(event => {
                                 return (
                                   <button className="relative w-full text-left mb-1" key={event.name}>
-                                    <div className={`px-2 py-0.5 rounded overflow-hidden text-white bg-indigo-500`}>
+                                     <div className={`px-2 py-0.5 rounded overflow-hidden ${eventColor(event.activityType)}`}>
                                       {/* Event name */}
                                       <div className="text-xs font-semibold truncate">{event.name}</div>
                                       {/* Event time */}
                                       <div className="text-xs uppercase truncate hidden sm:block">
                                         {/* Start date */}
                                         {event.startTime &&        
-                                          <span>{ new Date(event.startTime).toLocaleTimeString([], {hour12: true, hour: 'numeric', minute:'numeric'})}</span>
+                                          <span>{event.startTime}</span>
                                         }
                                         {/* End date */}
                                         {event.endTime &&  
                                           <span>
-                                            - <span>{new Date(event.endTime).toLocaleTimeString([], {hour12: true, hour: 'numeric', minute:'numeric'})}</span>
+                                            - <span>{event.endTime}</span>
                                           </span>
                                         }
                                       </div>
