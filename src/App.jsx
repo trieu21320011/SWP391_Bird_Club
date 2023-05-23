@@ -80,6 +80,7 @@ import AvatarPage from './pages/component/AvatarPage';
 import TooltipPage from './pages/component/TooltipPage';
 import AccordionPage from './pages/component/AccordionPage';
 import IconsPage from './pages/component/IconsPage';
+import CreateBlog from './partials/community/CreateBlog';
 import { authentication } from './pages/hooks/authentication';
 import { Role } from './pages/enum/roleEnum';
 
@@ -134,6 +135,14 @@ function App() {
 
         } />
 
+        <Route path="/activity/create-blog" element={
+          <ProtectedRoute
+            redirectPath="*"
+            isAllowed={!!authentication.isAuthentication() }
+          >
+            <CreateBlog />
+          </ProtectedRoute>
+        } />
         <Route path="/ecommerce/shop-2" element={
           <ProtectedRoute
             redirectPath="*"

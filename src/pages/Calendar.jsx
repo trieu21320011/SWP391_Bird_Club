@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
+import axios from 'axios';
+import { baseURL } from './baseUrl';
 
 function Calendar() {
+
 
   const today = new Date();
   const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -15,6 +18,26 @@ function Calendar() {
   const [daysInMonth, setDaysInMonth] = useState([])
   const [startingBlankDays, setStartingBlankDays] = useState([])
   const [endingBlankDays, setEndingBlankDays] = useState([])
+  const [event, setEvents] = useState([])
+  const getData = () => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/activities/calender',
+    };
+
+    axios.request(config)
+      .then((response) => {
+        console.log(response.data);
+        setEvents(response.data)
+        
+      }).then(() =>{
+        getDays();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   const events = [
     // Previous month
     {
@@ -177,12 +200,12 @@ function Calendar() {
   }
 
   const getEvents = (date) => {
-    return events.filter(e => new Date(e.eventStart).toDateString() === new Date(year, month, date).toDateString());
+    return event.filter(e => new Date(e.date).toDateString() === new Date(year, month, date).toDateString());
   }
 
   const eventColor = (color) => {
     switch (color) {
-      case 'sky':
+      case 'EVENT':
         return 'text-white bg-sky-500';
       case 'indigo':
         return 'text-white bg-indigo-500';
@@ -226,7 +249,7 @@ function Calendar() {
   }
 
   useEffect(() => {
-    getDays();
+    getData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -356,20 +379,20 @@ function Calendar() {
                             {
                               getEvents(day).map(event => {
                                 return (
-                                  <button className="relative w-full text-left mb-1" key={event.eventName}>
-                                    <div className={`px-2 py-0.5 rounded overflow-hidden ${eventColor(event.eventColor)}`}>
+                                  <button className="relative w-full text-left mb-1" key={event.name}>
+                                     <div className={`px-2 py-0.5 rounded overflow-hidden ${eventColor(event.activityType)}`}>
                                       {/* Event name */}
-                                      <div className="text-xs font-semibold truncate">{event.eventName}</div>
+                                      <div className="text-xs font-semibold truncate">{event.name}</div>
                                       {/* Event time */}
                                       <div className="text-xs uppercase truncate hidden sm:block">
                                         {/* Start date */}
-                                        {event.eventStart &&        
-                                          <span>{event.eventStart.toLocaleTimeString([], {hour12: true, hour: 'numeric', minute:'numeric'})}</span>
+                                        {event.startTime &&        
+                                          <span>{event.startTime}</span>
                                         }
                                         {/* End date */}
-                                        {event.eventEnd &&  
+                                        {event.endTime &&  
                                           <span>
-                                            - <span>{event.eventEnd.toLocaleTimeString([], {hour12: true, hour: 'numeric', minute:'numeric'})}</span>
+                                            - <span>{event.endTime}</span>
                                           </span>
                                         }
                                       </div>

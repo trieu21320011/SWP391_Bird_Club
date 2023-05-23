@@ -26,6 +26,9 @@ input[type=range]::-webkit-slider-thumb {
     height: --range-thumb-size;
     width: --range-thumb-size;        
 }
+.avatar {
+    height: 40px !important; 
+}
 
 input[type=range]::-moz-range-thumb {
     background-color: #000;
