@@ -32,7 +32,6 @@ function PageNotFound() {
                   <img src={NotFoundImage} width="176" height="176" alt="404 illustration" />
                 </div>
                 <div className="mb-6">Hmm...this page doesn’t exist. Try searching for something else!</div>
-                <Link to="/" className="btn bg-indigo-500 hover:bg-indigo-600 text-white">Back To Dashboard</Link>
               </div>
 
             </div>

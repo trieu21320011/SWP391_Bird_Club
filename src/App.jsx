@@ -81,6 +81,7 @@ import TooltipPage from './pages/component/TooltipPage';
 import AccordionPage from './pages/component/AccordionPage';
 import IconsPage from './pages/component/IconsPage';
 import CreateBlog from './partials/community/CreateBlog';
+import MeetupCreate from './pages/community/MeetupCreate';
 import { authentication } from './pages/hooks/authentication';
 import { Role } from './pages/enum/roleEnum';
 
@@ -131,6 +132,15 @@ function App() {
             isAllowed={role === Role.staff || role === Role.admin || role === Role.manager}
           >
             <Invoices />
+          </ProtectedRoute>
+
+        } />
+        <Route path="/activity/meetups-create" element={
+          <ProtectedRoute
+            redirectPath="*"
+            isAllowed={role === Role.staff || role === Role.admin || role === Role.manager}
+          >
+            <MeetupCreate />
           </ProtectedRoute>
 
         } />
