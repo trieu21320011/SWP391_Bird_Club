@@ -33,7 +33,7 @@ function MeetupsPosts(props) {
           return (
           <article className="flex bg-white shadow-lg rounded-sm border border-slate-200 overflow-hidden">
             {/* Image */}
-            <Link className="relative block w-24 sm:w-56 xl:sidebar-expanded:w-40 2xl:sidebar-expanded:w-56 shrink-0" to="/activity/meetups-post">
+            <Link className="relative block w-24 sm:w-56 xl:sidebar-expanded:w-40 2xl:sidebar-expanded:w-56 shrink-0" to={"/activity/meetups-post?id="+e.id}>
               <img
                 className="absolute object-cover object-center w-full h-full"
                 src={MeetupsThumb01}
@@ -55,7 +55,7 @@ function MeetupsPosts(props) {
             <div className="grow p-5 flex flex-col">
               <div className="grow">
                 <div className="text-sm font-semibold text-indigo-500 uppercase mb-2">{e.startTime}</div>
-                <Link className="inline-flex mb-2" to="/activity/meetups-post">
+                <Link className="inline-flex mb-2" to={"/activity/meetups-post?id="+e.id}>
                   <h3 className="text-lg font-bold text-slate-800">{e.name}</h3>
                 </Link>
                 <div className="text-sm">

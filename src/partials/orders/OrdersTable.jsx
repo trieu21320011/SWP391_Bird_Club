@@ -4,11 +4,15 @@ import Orders from './OrdersTableItem';
 import Image01 from '../../images/icon-01.svg';
 import Image02 from '../../images/icon-02.svg';
 import Image03 from '../../images/icon-03.svg';
+import axios from 'axios';
+import { baseURL } from '../../pages/baseUrl';
+import NotFoundImage from '../../images/404-illustration.svg';
 
 function OrdersTable({
   selectedItems
 }) {
 
+  const uid = localStorage.getItem("uid")
   const orders = [
     {
       id: '0',
@@ -141,13 +145,29 @@ function OrdersTable({
       description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
     }
   ];
-
+  const [event, setEvents] = useState([])
   const [selectAll, setSelectAll] = useState(false);
   const [isCheck, setIsCheck] = useState([]);
   const [list, setList] = useState([]);
+  const getData = () => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/activities/by-owner?ownerId=' + uid,
+    };
 
+    axios.request(config)
+      .then((response) => {
+        console.log(response.data);
+        setEvents(response.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   useEffect(() => {
     setList(orders);
+    getData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -173,77 +193,87 @@ function OrdersTable({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCheck]);
 
+  if (event === null) return null;
   return (
     <div className="bg-white shadow-lg rounded-sm border border-slate-200 relative">
       <header className="px-5 py-4">
-        <h2 className="font-semibold text-slate-800">All Orders <span className="text-slate-400 font-medium">442</span></h2>
+        <h2 className="font-semibold text-slate-800">All Event <span className="text-slate-400 font-medium">{event.length}</span></h2>
       </header>
       <div>
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <table className="table-auto w-full divide-y divide-slate-200">
-            {/* Table header */}
-            <thead className="text-xs uppercase text-slate-500 bg-slate-50 border-t border-slate-200">
-              <tr>
-                <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
-                  <div className="flex items-center">
-                    <label className="inline-flex">
-                      <span className="sr-only">Select all</span>
-                      <input className="form-checkbox" type="checkbox" checked={selectAll} onChange={handleSelectAll} />
-                    </label>
-                  </div>
-                </th>
-                <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                  <div className="font-semibold text-left">Tên</div>
-                </th>
-                <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                  <div className="font-semibold text-left">Date</div>
-                </th>
-                <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                  <div className="font-semibold text-left">Tổng tham dự</div>
-                </th>
-                <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                  <div className="font-semibold text-left">Status</div>
-                </th>
-                <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                  <div className="font-semibold">Đơn chưa duyệt</div>
-                </th>
-                <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                  <div className="font-semibold text-left">Location</div>
-                </th>
-                <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                  <div className="font-semibold text-left">Duyệt danh sách tham dự</div>
-                </th>
-                <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                  <span className="sr-only">Menu</span>
-                </th>
-              </tr>
-            </thead>
-            {/* Table body */}
-            {
-              list.map(order => {
-                return (
-                  <Orders
-                    key={order.id}
-                    id={order.id}
-                    image={order.image}
-                    order={order.order}
-                    date={order.date}
-                    customer={order.customer}
-                    total={order.total}
-                    status={order.status}
-                    items={order.items}
-                    location={order.location}
-                    type={order.type}
-                    description={order.description}
-                    handleClick={handleClick}
-                    isChecked={isCheck.includes(order.id)}
-                  />
+          {
+            event.length > 0 ? (
+              <table className="table-auto w-full divide-y divide-slate-200">
+                {/* Table header */}
+                <thead className="text-xs uppercase text-slate-500 bg-slate-50 border-t border-slate-200">
+                  <tr>
+                    <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                      <div className="font-semibold text-left">Tên</div>
+                    </th>
+                    <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                      <div className="font-semibold text-left">Date</div>
+                    </th>
+                    <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                      <div className="font-semibold text-left">Tổng tham dự</div>
+                    </th>
+                    <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                      <div className="font-semibold text-left">Status</div>
+                    </th>
+                    <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                      <div className="font-semibold">Đơn chưa duyệt</div>
+                    </th>
+                    <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                      <div className="font-semibold text-left">Location</div>
+                    </th>
+                    <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                      <div className="font-semibold text-left">Duyệt danh sách tham dự</div>
+                    </th>
+                    <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                      <span className="sr-only">Menu</span>
+                    </th>
+                  </tr>
+                </thead>
+                {/* Table body */}
+            
+                {event.map(e => {
+                  return (
+                <Orders
+                  id={e.id}
+                  image={e.background}
+                  order={e.name}
+                  date={e.startTime}
+                  status={e.status}
+                  location={e.location}
+                  type={e.activityType}
+                  description={e.description}
+                  handleClick={handleClick}
+                />
                 )
-              })
-            }
-          </table>
+                })
+              }
+              </table>
+            ) : (
+
+              <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+
+                <div className="max-w-2xl m-auto mt-16">
+
+                  <div className="text-center px-4">
+                    <div className="inline-flex mb-8">
+                      <img src={NotFoundImage} width="176" height="176" alt="404 illustration" />
+                    </div>
+                    <div className="mb-6">Hiện chưa có event nào. Hãy tạo một event đi</div>
+                  </div>
+
+                </div>
+
+              </div>
+
+            )
+
+          }
 
         </div>
       </div>

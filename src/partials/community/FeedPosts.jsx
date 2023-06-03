@@ -14,14 +14,16 @@ import { useState } from 'react';
 import axios from 'axios';
 import { baseURL } from '../../pages/baseUrl';
 import moment from 'moment/moment';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 const FeedPosts = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => {
     return {
-      getDat: getData,
+      getDat: getDataDefault,
     };
   })
-  const [newFeeds, setNewFeeds] = useState([]);
+  const [newFeeds, setNewFeeds] = useState(null);
   const [totalPage, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
@@ -47,10 +49,29 @@ const FeedPosts = forwardRef((props, ref) => {
         console.log(error);
       });
   }
+  const getDataDefault = (page) => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/newsfeeds?limit=50&page=1&size=10',
+    };
+
+    axios.request(config)
+      .then((response) => {
+        setNewFeeds(response.data.newsfeeds)
+        setTotalCount(response.data.total)
+        setTotalPages(Math.ceil(response.data.total / 10))
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   useEffect(() => {
     getData(page)
   }, [])
-
+  if (newFeeds === null) return (<Box sx={{ display: 'flex' }}>
+  <CircularProgress />
+</Box>);
   return (
     <>
       {/* Post 1 */}
