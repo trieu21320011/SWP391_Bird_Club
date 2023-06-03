@@ -75,7 +75,8 @@ function MeetupCreate() {
             "location": location,
             "description": description,
             "activityType": type,
-            "ownerId": uid
+            "ownerId": parseInt(uid, 10),
+            "background": "",
         });
     console.log(data);
         var config = {
@@ -226,7 +227,7 @@ function MeetupCreate() {
                                     <select value={type} onChange={(e) => setType(e.target.value)} id="country" className="form-select">
                                         <option value={"ONLINE"}>Online Event</option>
                                         <option value={"OFFLINE"}>Offline Event</option>
-                                        <option>Tourament</option>
+                                        <option value={"TOURAMENT"}>Tourament</option>
                                     </select>
                                 </div>
                             </div>

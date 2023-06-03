@@ -3,7 +3,6 @@ import { NavLink, useLocation } from 'react-router-dom';
 
 import SidebarLinkGroup from './SidebarLinkGroup';
 import { Role } from '../pages/enum/roleEnum';
-
 function Sidebar({
   sidebarOpen,
   setSidebarOpen
