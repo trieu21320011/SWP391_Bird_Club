@@ -24,10 +24,7 @@ function Feed() {
   const [title, setTitle] = useState();
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false)
   const date = new Date(2023, 11, 13).toDateString()
-  const check = new Date("2023-05-20T07:54:08.797").toDateString() === new Date(2023, 4, 20).toDateString()
-  console.log(check);
-  console.log(new Date("2023-05-20T07:54:08.797").toDateString());
-  console.log(new Date(2023, 4, 20).toDateString());
+  const check = new Date("2023-05-20T07:54:08.797").toDateString() === new Date(2023, 4, 20).toDateString();
   const formats = [
     "header",
     "bold",

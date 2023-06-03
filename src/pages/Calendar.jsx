@@ -207,16 +207,16 @@ function Calendar() {
     switch (color) {
       case 'EVENT':
         return 'text-white bg-sky-500';
-      case 'indigo':
+      case 'OFFLINE':
         return 'text-white bg-indigo-500';
-      case 'yellow':
+      case 'TOURNAMENT':
         return 'text-white bg-amber-500';
       case 'emerald':
         return 'text-white bg-emerald-500';
       case 'red':
         return 'text-white bg-rose-400';
       default:
-        return '';
+        return 'text-white bg-rose-400';
     }
   };
 

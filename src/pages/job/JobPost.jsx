@@ -15,41 +15,6 @@ import ModalBasic from '../../components/ModalBasic';
 function JobPost() {
 
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false)
-    const items = [
-      {
-        id: 3,
-        image: Image03,
-        company: 'Company 04',
-        role: 'Senior Software Engineer Backend',
-        link: '/job/job-post',
-        details: 'Full-time / Remote / Anywhere',
-        date: 'Jan 7',
-        type: 'New',
-        fav: false,
-      },
-      {
-        id: 4,
-        image: Image04,
-        company: 'Company 05',
-        role: 'React.js Software Developer',
-        link: '/job/job-post',
-        details: 'Full-time / Remote / London, UK',
-        date: 'Jan 6',
-        type: 'New',
-        fav: true,
-      },
-      {
-        id: 5,
-        image: Image05,
-        company: 'Company 06',
-        role: 'Senior Full Stack Rails Developer',
-        link: '/job/job-post',
-        details: 'Part-time / Remote / Milan, IT',
-        date: 'Jan 6',
-        type: 'New',
-        fav: false,
-      },
-    ];
     let navigate = useNavigate();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -170,28 +135,6 @@ function JobPost() {
                 </div>
 
                 <hr className="my-6 border-t border-slate-200" />
-
-                {/* Related Jobs */}
-                <div>
-                  <h2 className="text-xl leading-snug text-slate-800 font-bold mb-6">Related Jobs</h2>
-                  <div className="space-y-2 mt-6">
-                    {items.map((item) => {
-                      return (
-                        <JobListItem
-                          key={item.id}
-                          id={item.id}
-                          image={item.image}
-                          role={item.role}
-                          link={item.link}
-                          details={item.details}
-                          date={item.date}
-                          type={item.type}
-                          fav={item.fav}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
               </div>
 
               {/* Sidebar */}
