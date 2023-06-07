@@ -26,6 +26,7 @@ import ModalBlank from '../../components/ModalBlank';
 import moment from 'moment';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import Swal from 'sweetalert2';
 
 
 
@@ -34,19 +35,21 @@ function MeetupsPost(props) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [infoModalOpen, setInfoModalOpen] = useState(false)
   const [eventDetail, setEventsDetail] = useState(null)
+  const [eventDetailAttend, setEventsDetailAttend] = useState([])
+  const [status, setStatus] = useState({})
   const uid = localStorage.getItem("uid")
   // const eventId = props.location.search.split("=")[1];
   const handleJoin = (e) => {
     e.preventDefault()
     var data = JSON.stringify({
-      "memberId": parseInt(uid, 10) ,
-      "activityId": parseInt(eventId, 10) 
+      "memberId": parseInt(uid, 10),
+      "activityId": parseInt(eventId, 10)
     });
     console.log(data);
     var config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseURL + '/activities',
+      url: baseURL + '/activities/attendance-requests',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -56,25 +59,46 @@ function MeetupsPost(props) {
     axios(config)
       .then(function (response) {
         console.log(response);
-        Swal.close()
+        setInfoModalOpen(false)
         Swal.fire(
           "Good job!",
           "Sending a request!",
           "success",
         );
+        getStatusMember()
+
       })
       .catch(function (error) {
         console.log();
-
+        setInfoModalOpen(false)
       });
 
   }
+  const getAttendantList = () => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/activities/' + eventId + '/listattendance',
+    };
+
+    axios.request(config)
+      .then((response) => {
+        setEventsDetailAttend(response.data)
+        console.log(response.data.length);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   useEffect(() => {
+    getStatusMember()
+    getAttendantList()
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
       url: baseURL + '/activities/' + eventId,
     };
+
 
     axios.request(config)
       .then((response) => {
@@ -84,7 +108,24 @@ function MeetupsPost(props) {
         console.log(error);
       });
   }, [])
-  if (eventDetail === null) return;
+  const getStatusMember = () => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/activities/' + eventId + '/user-attendance-status?memberId=' + uid,
+    };
+
+
+    axios.request(config)
+      .then((response) => {
+        setStatus(response.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+  }
+  if (eventDetail === null || eventDetailAttend.length === 0) return;
   return (
     <div className="flex h-screen overflow-hidden">
 
@@ -291,12 +332,47 @@ function MeetupsPost(props) {
                 {/* 1st block */}
                 <div className="bg-white p-5 shadow-lg rounded-sm border border-slate-200 lg:w-72 xl:w-80">
                   <div className="space-y-2">
-                    <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white" aria-controls="info-modal" onClick={(e) => { e.stopPropagation(); setInfoModalOpen(true); }}>
-                      <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 16 16">
-                        <path d="m2.457 8.516.969-.99 2.516 2.481 5.324-5.304.985.989-6.309 6.284z" />
-                      </svg>
-                      <span className="ml-1">Attending</span>
-                    </button>
+                    {status.message === 'NOT_ATTEND' && (
+                      <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white" aria-controls="info-modal" onClick={(e) => { e.stopPropagation(); setInfoModalOpen(true); }}>
+                        <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 16 16">
+                          <path d="m2.457 8.516.969-.99 2.516 2.481 5.324-5.304.985.989-6.309 6.284z" />
+                        </svg>
+                        <span className="ml-1">Attending</span>
+                      </button>
+                    )}
+                    {status.message === 'PENDING' && (
+                      <button disabled={true} className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white" aria-controls="info-modal" onClick={(e) => { e.stopPropagation(); setInfoModalOpen(true); }}>
+                        <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 16 16">
+                          <path d="m2.457 8.516.969-.99 2.516 2.481 5.324-5.304.985.989-6.309 6.284z" />
+                        </svg>
+                        <span className="ml-1">Đợi được xác nhận</span>
+                      </button>
+                    )}
+                    {status.message === 'ACCEPTED' && (
+                      <button disabled className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white" aria-controls="info-modal" onClick={(e) => { e.stopPropagation(); setInfoModalOpen(true); }}>
+                        <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 16 16">
+                          <path d="m2.457 8.516.969-.99 2.516 2.481 5.324-5.304.985.989-6.309 6.284z" />
+                        </svg>
+                        <span className="ml-1">Accepted</span>
+                      </button>
+                    )}
+                    {status.message === 'CLOSED' && (
+                      <button disabled className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white" aria-controls="info-modal" onClick={(e) => { e.stopPropagation(); setInfoModalOpen(true); }}>
+                        <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 16 16">
+                          <path d="m2.457 8.516.969-.99 2.516 2.481 5.324-5.304.985.989-6.309 6.284z" />
+                        </svg>
+                        <span className="ml-1">Close for attending</span>
+                      </button>
+                    )}
+                    {status.message === 'NOT_FOUND' && (
+                      <button disabled className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white" aria-controls="info-modal" onClick={(e) => { e.stopPropagation(); setInfoModalOpen(true); }}>
+                        <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 16 16">
+                          <path d="m2.457 8.516.969-.99 2.516 2.481 5.324-5.304.985.989-6.309 6.284z" />
+                        </svg>
+                        <span className="ml-1">Attending</span>
+                      </button>
+                    )}
+
                     {/* Start */}
                     <ModalBlank id="info-modal" modalOpen={infoModalOpen} setModalOpen={setInfoModalOpen}>
                       <div className="p-5 flex space-x-4">
@@ -321,7 +397,7 @@ function MeetupsPost(props) {
                           {/* Modal footer */}
                           <div className="flex flex-wrap justify-end space-x-2">
                             <button className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600" onClick={(e) => { e.stopPropagation(); setInfoModalOpen(false); }}>Cancel</button>
-                            <button onClick={(e)=> handleJoin(e)} className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">Yes, I will join</button>
+                            <button onClick={(e) => handleJoin(e)} className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">Yes, I will join</button>
                           </div>
                         </div>
                       </div>
@@ -339,92 +415,36 @@ function MeetupsPost(props) {
                 {/* 2nd block */}
                 <div className="bg-white p-5 shadow-lg rounded-sm border border-slate-200 lg:w-72 xl:w-80">
                   <div className="flex justify-between space-x-1 mb-5">
-                    <div className="text-sm text-slate-800 font-semibold">Attendees (127)</div>
+                    <div className="text-sm text-slate-800 font-semibold">Attendees ({eventDetailAttend.length})</div>
                     <a className="text-sm font-medium text-indigo-500 hover:text-indigo-600" href="#0">
                       View All
                     </a>
                   </div>
                   <ul className="space-y-3">
-                    <li>
-                      <div className="flex justify-between">
-                        <div className="grow flex items-center">
-                          <div className="relative mr-3">
-                            <img className="w-8 h-8 rounded-full" src={UserImage08} width="32" height="32" alt="User 08" />
+                    {eventDetailAttend.map(a => {
+                      return (
+                        <li>
+                          <div className="flex justify-between">
+                            <div className="grow flex items-center">
+                              <div className="relative mr-3">
+                                <img className="w-8 h-8 rounded-full" src={a.avatar} width="32" height="32" alt="User 08" />
+                              </div>
+                              <div className="truncate">
+                                <span className="text-sm font-medium text-slate-800">{a.displayName}</span>
+                              </div>
+                            </div>
+                            <button className="text-slate-400 hover:text-slate-500 rounded-full">
+                              <span className="sr-only">Menu</span>
+                              <svg className="w-8 h-8 fill-current" viewBox="0 0 32 32">
+                                <circle cx="16" cy="16" r="2" />
+                                <circle cx="10" cy="16" r="2" />
+                                <circle cx="22" cy="16" r="2" />
+                              </svg>
+                            </button>
                           </div>
-                          <div className="truncate">
-                            <span className="text-sm font-medium text-slate-800">Carolyn McNeail</span>
-                          </div>
-                        </div>
-                        <button className="text-slate-400 hover:text-slate-500 rounded-full">
-                          <span className="sr-only">Menu</span>
-                          <svg className="w-8 h-8 fill-current" viewBox="0 0 32 32">
-                            <circle cx="16" cy="16" r="2" />
-                            <circle cx="10" cy="16" r="2" />
-                            <circle cx="22" cy="16" r="2" />
-                          </svg>
-                        </button>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="flex justify-between">
-                        <div className="grow flex items-center">
-                          <div className="relative mr-3">
-                            <img className="w-8 h-8 rounded-full" src={UserImage01} width="32" height="32" alt="User 01" />
-                          </div>
-                          <div className="truncate">
-                            <span className="text-sm font-medium text-slate-800">Dominik Lamakani</span>
-                          </div>
-                        </div>
-                        <button className="text-slate-400 hover:text-slate-500 rounded-full">
-                          <span className="sr-only">Menu</span>
-                          <svg className="w-8 h-8 fill-current" viewBox="0 0 32 32">
-                            <circle cx="16" cy="16" r="2" />
-                            <circle cx="10" cy="16" r="2" />
-                            <circle cx="22" cy="16" r="2" />
-                          </svg>
-                        </button>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="flex justify-between">
-                        <div className="grow flex items-center">
-                          <div className="relative mr-3">
-                            <img className="w-8 h-8 rounded-full" src={UserImage03} width="32" height="32" alt="User 03" />
-                          </div>
-                          <div className="truncate">
-                            <span className="text-sm font-medium text-slate-800">Ivan Mesaros</span>
-                          </div>
-                        </div>
-                        <button className="text-slate-400 hover:text-slate-500 rounded-full">
-                          <span className="sr-only">Menu</span>
-                          <svg className="w-8 h-8 fill-current" viewBox="0 0 32 32">
-                            <circle cx="16" cy="16" r="2" />
-                            <circle cx="10" cy="16" r="2" />
-                            <circle cx="22" cy="16" r="2" />
-                          </svg>
-                        </button>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="flex justify-between">
-                        <div className="grow flex items-center">
-                          <div className="relative mr-3">
-                            <img className="w-8 h-8 rounded-full" src={UserImage05} width="32" height="32" alt="User 05" />
-                          </div>
-                          <div className="truncate">
-                            <span className="text-sm font-medium text-slate-800">Maria Martinez</span>
-                          </div>
-                        </div>
-                        <button className="text-slate-400 hover:text-slate-500 rounded-full">
-                          <span className="sr-only">Menu</span>
-                          <svg className="w-8 h-8 fill-current" viewBox="0 0 32 32">
-                            <circle cx="16" cy="16" r="2" />
-                            <circle cx="10" cy="16" r="2" />
-                            <circle cx="22" cy="16" r="2" />
-                          </svg>
-                        </button>
-                      </div>
-                    </li>
+                        </li>
+                      )
+                    })}
                   </ul>
                 </div>
 
