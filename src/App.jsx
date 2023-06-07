@@ -78,6 +78,7 @@ import BreadcrumbPage from './pages/component/BreadcrumbPage';
 import BadgePage from './pages/component/BadgePage';
 import AvatarPage from './pages/component/AvatarPage';
 import TooltipPage from './pages/component/TooltipPage';
+import MeetupEdit from './pages/community/MeetupEdit';
 import AccordionPage from './pages/component/AccordionPage';
 import IconsPage from './pages/component/IconsPage';
 import CreateBlog from './partials/community/CreateBlog';
@@ -141,6 +142,15 @@ function App() {
             isAllowed={role === Role.staff || role === Role.admin || role === Role.manager}
           >
             <MeetupCreate />
+          </ProtectedRoute>
+
+        } />
+        <Route path="/activity/meetups-edit" element={
+          <ProtectedRoute
+            redirectPath="*"
+            isAllowed={role === Role.staff || role === Role.admin || role === Role.manager}
+          >
+            <MeetupEdit />
           </ProtectedRoute>
 
         } />

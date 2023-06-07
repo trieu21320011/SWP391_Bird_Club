@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
+import axios from 'axios';
 
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
@@ -6,6 +7,7 @@ import JobSidebar from '../../partials/job/JobSidebar';
 import DropdownSort from '../../components/DropdownSort';
 import JobListItem from '../../partials/job/JobListItem';
 import PaginationNumeric from '../../components/PaginationNumeric';
+import NotFoundImage from '../../images/404-illustration.svg';
 
 import Image01 from '../../images/company-icon-05.svg';
 import Image02 from '../../images/company-icon-06.svg';
@@ -14,124 +16,34 @@ import Image04 from '../../images/company-icon-07.svg';
 import Image05 from '../../images/company-icon-08.svg';
 import Image06 from '../../images/company-icon-01.svg';
 import Image07 from '../../images/company-icon-02.svg';
+import { baseURL } from '../baseUrl';
 
 function JobListing() {
+  var eventId = window.location.search.split("=")[1];
+  const [attendRequest, setAttendRequest] = useState([])
 
-  const items = [
-    {
-      id: 0,
-      image: 'https://th.bing.com/th/id/OIP.rcfDm6OymEC4mbGB_05zagHaEK?w=313&h=180&c=7&r=0&o=5&pid=1.7',
-      company: 'Company 01',
-      role: 'Vo Khắc Triệu',
-      link: '/job/job-post',
-      details: 'Em muốn join sự kiện này',
-      date: 'Jan 4',
-      type: 'Featured',
-      fav: false,
-    },
-    {
-      id: 1,
-      image: "https://th.bing.com/th?id=OIP.gvJOXgwfUeS-TfUtPxal2AHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2",
-      company: 'Company 02',
-      role: 'Hoàng Thông',
-      link: '/job/job-post',
-      details: 'Sự kiện này rất là thú vị',
-      date: 'Jan 7',
-      type: 'New',
-      fav: true,
-    },
-    {
-      id: 2,
-      image: 'https://th.bing.com/th/id/OIP.EAzMf4436BdR-LVn7u_TOAHaJ4?w=136&h=181&c=7&r=0&o=5&pid=1.7',
-      company: 'Company 03',
-      role: 'Lê Hồng Anh',
-      link: '/job/job-post',
-      details: 'Sự kiện này rất là thú vị',
-      date: 'Jan 7',
-      type: 'New',
-      fav: false,
-    },
-    {
-      id: 3,
-      image: Image03,
-      company: 'Company 04',
-      role: 'Senior Software Engineer Backend',
-      link: '/job/job-post',
-      details: 'Sự kiện này rất là thú vị',
-      date: 'Jan 7',
-      type: 'New',
-      fav: false,
-    },
-    {
-      id: 4,
-      image: Image04,
-      company: 'Company 05',
-      role: 'React.js Software Developer',
-      link: '/job/job-post',
-      details: 'Tôi yêu chim',
-      date: 'Jan 6',
-      type: 'New',
-      fav: true,
-    },
-    {
-      id: 5,
-      image: Image05,
-      company: 'Company 06',
-      role: 'Senior Full Stack Rails Developer',
-      link: '/job/job-post',
-      details: '',
-      date: 'Jan 6',
-      type: 'New',
-      fav: false,
-    },
-    {
-      id: 6,
-      image: Image06,
-      company: 'Company 07',
-      role: 'Principal Software Engineer',
-      link: '/job/job-post',
-      details: 'Freelance / Remote / London, UK',
-      date: 'Jan 6',
-      type: 'New',
-      fav: false,
-    },
-    {
-      id: 7,
-      image: Image04,
-      company: 'Company 08',
-      role: 'Contract React Native Engineer',
-      link: '/job/job-post',
-      details: 'Contract / Remote / Miami, FL',
-      date: 'Jan 6',
-      type: 'New',
-      fav: false,
-    },
-    {
-      id: 8,
-      image: Image05,
-      company: 'Company 09',
-      role: 'Senior Client Engineer (React & React Native)',
-      link: '/job/job-post',
-      details: 'Full-time / Remote / Lincoln, NE',
-      date: 'Jan 5',
-      type: 'New',
-      fav: false,
-    },
-    {
-      id: 9,
-      image: Image07,
-      company: 'Company 10',
-      role: 'QA Automation Engineer',
-      link: '/job/job-post',
-      details: 'Contract / Remote / Anywhere',
-      date: 'Jan 5',
-      type: 'New',
-      fav: false,
-    },
-  ];
+  const getAttendantList = () => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/activities/'+ eventId +'/attendance-requests' ,
+    };
+
+    axios.request(config)
+      .then((response) => {
+        setAttendRequest(response.data)
+        console.log(response.data.length);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  useEffect(() => {
+    getAttendantList()
+  }, [])
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
   return (
     <div className="flex h-screen overflow-hidden">
 
@@ -192,23 +104,40 @@ function JobListing() {
                 </div>
 
                 {/* Jobs list */}
-                <div className='space-y-2'>
-                  {items.map((item) => {
+                {attendRequest.length > 0 ? (
+                  <div className='space-y-2'>
+                  {attendRequest.map((item) => {
                     return (
                       <JobListItem
-                        key={item.id}
-                        id={item.id}
-                        image={item.image}
-                        role={item.role}
-                        link={item.link}
-                        details={item.details}
-                        date={item.date}
-                        type={item.type}
-                        fav={item.fav}
+                        key={item.memberId}
+                        id={item.memberId}
+                        image={item.avatar}
+                        role={item.displayName}
+                        details={item.userType}
+                        date={item.requestTime}
+                        event={eventId}
+                        callParentFunction={getAttendantList}
                       />
                     );
                   })}
                 </div>
+                ) : (
+                  <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+
+                <div className="max-w-2xl m-auto mt-16">
+
+                  <div className="text-center px-4">
+                    <div className="inline-flex mb-8">
+                      <img src={NotFoundImage} width="176" height="176" alt="404 illustration" />
+                    </div>
+                    <div className="mb-6">Hiện chưa có request nào. Hãy kêu gọi thêm người nhé</div>
+                  </div>
+
+                </div>
+
+              </div>
+                )}
+                
 
                 {/* Pagination */}
                 <div className="mt-6">
