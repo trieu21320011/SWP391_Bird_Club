@@ -31,6 +31,7 @@ input[type=range]::-webkit-slider-thumb {
 }
 .backgroundcolor1{
     background-color: rgb(50, 183, 138);
+    
 }
 .backgroundcolor2{
     background-color: white;
@@ -41,6 +42,9 @@ input[type=range]::-webkit-slider-thumb {
     margin-right: 3cm;
     margin-bottom: 5cm;
     margin-left: 3cm;
+}
+.margin-top-5{
+    margin-top: 5%;
 }
 input[type=range]::-moz-range-thumb {
     background-color: #000;
@@ -78,8 +82,19 @@ input[type=range]::-moz-focus-outer {
 }
 .backgroundcolor3{
     background-color: white;
+    margin-top: 3cm;
+    margin-right: 3cm;
+    margin-bottom: 3cm;
+    margin-left: 3cm;
+}
+.image{
     margin-top: 5cm;
     margin-right: 3cm;
     margin-bottom: 5cm;
     margin-left: 3cm;
+}
+.imagesize{
+    margin-left: 2.5cm;
+    margin-bottom: 2.5cm;
+    margin-top: 0.5cm;
 }
