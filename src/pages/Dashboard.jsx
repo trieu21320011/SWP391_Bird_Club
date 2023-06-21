@@ -1,26 +1,47 @@
 import React, { useState } from 'react';
 import TabPanel from './TabPanel';
+
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
-import WelcomeBanner from '../partials/dashboard/WelcomeBanner';
-import DashboardAvatars from '../partials/dashboard/DashboardAvatars';
-import FilterButton from '../components/DropdownFilter';
-import Datepicker from '../components/Datepicker';
-
-import { color } from '@mui/system';
 
 function Dashboard() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const tabs = [
-    { title: 'Members', content: <img srcset="https://www.bird.club/assets/backgrounds/members@2x-c6df03f3dc11e655adede8d313b224034491d1b005d3a681d072f7b13ce3fae8.png 2x, https://www.bird.club/assets/backgrounds/members@4x-446ecc01c8dbc51f62034ad1c56013aee65d7ff18e510a8c816cfd7d1717d164.png 4x" src="https://www.bird.club/assets/backgrounds/members-9a5cc7db9e3ef95139d59b5a49eda7aeeb2e6891a221cef79b611e0f765c1506.png" /> },
-    { title: 'Record and Photos', content: <img srcset="https://www.bird.club/assets/backgrounds/records@2x-d0a94643fa9429602430ee7e53f44bb8b04763de8d772f4be859e434dc445787.png 2x, https://www.bird.club/assets/backgrounds/records@4x-5941424ce7741d46c7fbe237a39576938286459432d4b7717d702a76e83ed17b.png 4x" src="https://www.bird.club/assets/backgrounds/records-f07111142a5005914e16151bc879ba47eb8d3840f19e795a0b99ed420e21c5bc.png" /> },
-    { title: 'Site Guide', content: <img srcset="https://www.bird.club/assets/backgrounds/site-guide@2x-d666721af091e3a9915ff57f659ebd6e033c91792ead2a5676590cd04f597aa7.png 2x, https://www.bird.club/assets/backgrounds/site-guide@4x-152c4b03017fb246d2b43475c18e870942ce5258bcbf8b363e00a24b29f07a6e.png 4x" src="https://www.bird.club/assets/backgrounds/site-guide-ba982cc2742ebc0b669d0fc615bc61b5364ec8cf67fff927e2d9a0c5d810a83a.png" /> },
-    { title: 'Communication', content: <img srcset="https://www.bird.club/assets/backgrounds/conversation@2x-273410a47c7e65828764d0a396e0fd6b259cd520568156b2f2416dddef0ae471.png 2x, https://www.bird.club/assets/backgrounds/conversation@4x-bbd490a157c1afc1306de63fd93470b613f9d02077ea55be51c8a27b201d4a89.png 4x" src="https://www.bird.club/assets/backgrounds/conversation-9ad65d8aa216203b450d432a1cdc9452fa9522f70ea99b6dfbddb507b953fa1d.png" /> },
+    {
+      title:
+        <a class="px-4 py-2 text-sm text-white shadow-sm border-transparent bg-teal-600 hover:bg-teal-700 focus:ring-teal-500 inline-flex items-center border font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2">
+          Members
+        </a>,
+      content: <img class="imagesize" srcset="https://www.bird.club/assets/backgrounds/members@2x-c6df03f3dc11e655adede8d313b224034491d1b005d3a681d072f7b13ce3fae8.png 2x, https://www.bird.club/assets/backgrounds/members@4x-446ecc01c8dbc51f62034ad1c56013aee65d7ff18e510a8c816cfd7d1717d164.png 4x" src="https://www.bird.club/assets/backgrounds/members-9a5cc7db9e3ef95139d59b5a49eda7aeeb2e6891a221cef79b611e0f765c1506.png" />
+    },
+    {
+      title: <a class="px-4 py-2 text-sm text-white shadow-sm border-transparent bg-teal-600 hover:bg-teal-700 focus:ring-teal-500 inline-flex items-center border font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2" >
+        Records and Photos
+      </a>,
+      content: <img class="imagesize" srcset="https://www.bird.club/assets/backgrounds/records@2x-d0a94643fa9429602430ee7e53f44bb8b04763de8d772f4be859e434dc445787.png 2x, https://www.bird.club/assets/backgrounds/records@4x-5941424ce7741d46c7fbe237a39576938286459432d4b7717d702a76e83ed17b.png 4x" src="https://www.bird.club/assets/backgrounds/records-f07111142a5005914e16151bc879ba47eb8d3840f19e795a0b99ed420e21c5bc.png" />
+    },
+    {
+      title: <a class="px-4 py-2 text-sm text-white shadow-sm border-transparent bg-teal-600 hover:bg-teal-700 focus:ring-teal-500 inline-flex items-center border font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2" >
+        Site Guide
+      </a>,
+      content: <img class="imagesize" srcset="https://www.bird.club/assets/backgrounds/site-guide@2x-d666721af091e3a9915ff57f659ebd6e033c91792ead2a5676590cd04f597aa7.png 2x, https://www.bird.club/assets/backgrounds/site-guide@4x-152c4b03017fb246d2b43475c18e870942ce5258bcbf8b363e00a24b29f07a6e.png 4x" src="https://www.bird.club/assets/backgrounds/site-guide-ba982cc2742ebc0b669d0fc615bc61b5364ec8cf67fff927e2d9a0c5d810a83a.png" />
+    },
+    {
+      title: <a class="px-4 py-2 text-sm text-white shadow-sm border-transparent bg-teal-600 hover:bg-teal-700 focus:ring-teal-500 inline-flex items-center border font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2">
+        Communication
+      </a>,
+      content: <img class="imagesize" srcset="https://www.bird.club/assets/backgrounds/conversation@2x-273410a47c7e65828764d0a396e0fd6b259cd520568156b2f2416dddef0ae471.png 2x, https://www.bird.club/assets/backgrounds/conversation@4x-bbd490a157c1afc1306de63fd93470b613f9d02077ea55be51c8a27b201d4a89.png 4x" src="https://www.bird.club/assets/backgrounds/conversation-9ad65d8aa216203b450d432a1cdc9452fa9522f70ea99b6dfbddb507b953fa1d.png" />
+    },
+  ];
+  const tabs1 = [
+    { title: 'Tab 1', content: <div>Content for Tab 1</div> },
+    { title: 'Tab 2', content: <div>Content for Tab 2</div> },
+    { title: 'Tab 3', content: <div>Content for Tab 3</div> },
   ];
   return (
     <div className="flex h-screen overflow-hidden">
-    
+
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
@@ -140,121 +161,199 @@ function Dashboard() {
 
 
           <section class="backgroundcolor1">
-            {/* birdclub made simple */}
             <div class="max-w-2xl md:mx-auto md:text-center xl:max-w-none">
-              <h2 id="features-title" class="font-display text-3xl tracking-tight text-white sm:text-4xl md:text-5xl">
-                Bird clubs made simple.
-              </h2>
-              <p class="mt-6 text-lg tracking-tight text-teal-100">
-                Everything you need is in one place: members, records, photos, and more.
-              </p>
-              <TabPanel tabs={tabs} />
-            </div>
-
-            {/* <div>
-              <h1>Tab Panel Example</h1>
-              <TabPanel tabs={tabs} />
-            </div> */}
-
-            {/* members,record,site guide, communication */}
-            <div>
-              <div class="mt-10 mb-36 lg:mb-44 flex justify-center space-x-6">
-                <a class="px-4 py-2 text-sm text-white shadow-sm border-transparent bg-teal-600 hover:bg-teal-700 focus:ring-teal-500 inline-flex items-center border font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2" href="/main/member_picture">
-                  Members
-                </a>
-                <a class="px-4 py-2 text-sm text-white shadow-sm border-transparent bg-teal-600 hover:bg-teal-700 focus:ring-teal-500 inline-flex items-center border font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2" href="/main/record_and_photo">
-                  Records and Photos
-                </a>
-                <a class="px-4 py-2 text-sm text-white shadow-sm border-transparent bg-teal-600 hover:bg-teal-700 focus:ring-teal-500 inline-flex items-center border font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2" href="/main/site_guide">
-                  Site Guide
-                </a>
-                <a class="px-4 py-2 text-sm text-white shadow-sm border-transparent bg-teal-600 hover:bg-teal-700 focus:ring-teal-500 inline-flex items-center border font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2" href="/main/site_guide">
-                  Communication
-                </a>
+              <div className='margin-top-5'>
+                <h2 id="features-title" class="font-display text-3xl tracking-tight text-white sm:text-4xl md:text-5xl">
+                  Bird clubs made simple.
+                </h2>
+                <p class="mt-6 text-lg tracking-tight text-teal-100">
+                  Everything you need is in one place: members, records, photos, and more.
+                </p>
+                <br />
+                <TabPanel tabs={tabs} />
               </div>
-
-
-              
             </div>
-            {/* mô tả website */}
-            <section class="backgroundcolor2">
-              <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="mx-auto max-w-2xl md:text-center">
-                  <h2 class="font-display text-3xl tracking-tight text-slate-900 sm:text-4xl">
-                    We want birding to thrive.
-                  </h2>
-                  <p class="mt-4 text-lg tracking-tight text-slate-700">
-                    By making it as easy as possible to run an online community of local birdwatchers.
+          </section>
+
+          <section class="backgroundcolor2">
+
+            <div className="margin-top-bot">
+              <div class="mx-auto max-w-2xl md:text-center">
+                <h2 class="font-display text-3xl tracking-tight text-slate-900 sm:text-4xl">
+                  We want birding to thrive.
+                </h2>
+                <p class="mt-4 text-lg tracking-tight text-slate-700">
+                  By making it as easy as possible to run an online community of local birdwatchers.
+                </p>
+              </div>
+            </div>
+            <div class="-mx-4 mt-20 space-y-10 overflow-hidden px-4 sm:-mx-6 sm:px-6 ">
+              <div>
+                <div class="mx-auto max-w-2xl">
+                  <div class="w-10 h-10 rounded-lg bg-teal-600 items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-white ml-0.5 pt-1 w-9 h-9">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+
+                  </div>
+                  <h3 class="mt-6 text-sm font-medium text-teal-600">
+                    Website
+                  </h3>
+                  <p class="mt-2 font-display text-xl text-slate-900">
+                    A free website for your club.
+                  </p>
+                  <p class="mt-4 text-sm text-slate-600">
+                    By creating a club, you get your own customizable website. You can upload a logo, choose your club colours and add your favourite birding spots.
                   </p>
                 </div>
-                <div class="-mx-4 mt-20 space-y-10 overflow-hidden px-4 sm:-mx-6 sm:px-6 lg:hidden">
-                  <div>
-                    <div class="mx-auto max-w-2xl">
-                      <div class="w-10 h-10 rounded-lg bg-teal-600 items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-white ml-0.5 pt-1 w-9 h-9">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                        </svg>
-
-                      </div>
-                      <h3 class="mt-6 text-sm font-medium text-teal-600">
-                        Website
-                      </h3>
-                      <p class="mt-2 font-display text-xl text-slate-900">
-                        A free website for your club.
-                      </p>
-                      <p class="mt-4 text-sm text-slate-600">
-                        By creating a club, you get your own customizable website. You can upload a logo, choose your club colours and add your favourite birding spots.
-                      </p>
-                    </div>
-
-                  </div>
-
-                  <div>
-                    <div class="mx-auto max-w-2xl opacity-75 hover:opacity-100">
-                      <div class="w-10 h-10 rounded-lg bg-teal-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-white ml-0.5 pt-1 w-9 h-9">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
-                        </svg>
-
-                      </div>
-                      <h3 class="mt-6 text-sm font-medium text-slate-600">
-                        Engagement
-                      </h3>
-                      <p class="mt-2 font-display text-xl text-slate-900">
-                        Build a community.
-                      </p>
-                      <p class="mt-4 text-sm text-slate-600">
-                        Members of your club can like, comment and interact with one another via your club’s website. BirdClub is a social network for groups of birders, whether large or small.
-                      </p>
-                    </div>
-
-                  </div>
-
-                  <div>
-                    <div class="mx-auto max-w-2xl opacity-75 hover:opacity-100">
-                      <div class="w-10 h-10 rounded-lg bg-teal-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="text-white ml-0.5 pt-1 w-9 h-9">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
-                        </svg>
-
-                      </div>
-                      <h3 class="mt-6 text-sm font-medium text-slate-600">
-                        Communication
-                      </h3>
-                      <p class="mt-2 font-display text-xl text-slate-900">
-                        No more mailing lists.
-                      </p>
-                      <p class="mt-4 text-sm text-slate-600">
-                        Share and enjoy each other’s photos via our photo gallery. Photos are classified by species to make it easier to find the photo you’re looking for.
-                      </p>
-                    </div>
-
+                <div class="relative mt-10 pb-10">
+                  <div class="absolute -inset-x-4 bottom-0 top-8 bg-slate-100 sm:-inset-x-6"></div>
+                  <div class="relative mx-auto aspect-[844/428] w-[52.75rem] overflow-hidden rounded-xl bg-white shadow-lg shadow-slate-900/5 ring-1 ring-slate-500/10">
+                    <img srcset="https://www.bird.club/assets/backgrounds/website@2x-bfa63e1090723fdee3e143be87d563bfdf02dc854d6abdff26c5d30d4b0ada6f.png 2x, https://www.bird.club/assets/backgrounds/website@4x-a5c11e2e2399523df3f2da4d82e5d2c19f7b724791a02d7f50d074b7f8287e4d.png 4x" src="https://www.bird.club/assets/backgrounds/website-d51062eb79cb61ac20071aee0a4efec3950d40488b991d011f14e442dc48bfdd.png" />
                   </div>
                 </div>
-
               </div>
-            </section>
-            {/* dụ người dùng đăng kí */}
+
+              <div>
+                <div class="mx-auto max-w-2xl opacity-75 hover:opacity-100">
+                  <div class="w-10 h-10 rounded-lg bg-teal-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-white ml-0.5 pt-1 w-9 h-9">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                    </svg>
+
+                  </div>
+                  <h3 class="mt-6 text-sm font-medium text-slate-600">
+                    Engagement
+                  </h3>
+                  <p class="mt-2 font-display text-xl text-slate-900">
+                    Build a community.
+                  </p>
+                  <p class="mt-4 text-sm text-slate-600">
+                    Members of your club can like, comment and interact with one another via your club’s website. BirdClub is a social network for groups of birders, whether large or small.
+                  </p>
+                </div>
+                <div class="relative mt-10 pb-10">
+                  <div class="absolute -inset-x-4 bottom-0 top-8 bg-slate-100 sm:-inset-x-6"></div>
+                  <div class="relative mx-auto aspect-[844/428] w-[52.75rem] overflow-hidden rounded-xl bg-white shadow-lg shadow-slate-900/5 ring-1 ring-slate-500/10">
+                    <img srcset="https://www.bird.club/assets/backgrounds/community@2x-b4ff79f54e755ad845c20b7db6456e7943dec4400eafe9ef6261f09cdeb9ae58.png 2x, https://www.bird.club/assets/backgrounds/community@4x-6cd0c2d49b6f27ab8c641660c2985ad15e9876b643ad910cd3e66b07b9e52227.png 4x" src="https://www.bird.club/assets/backgrounds/community-a06f0005f6b369943ffef398fb9303dea4b1f10dcf0ca6ac5ae263cc787ea9eb.png" />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="mx-auto max-w-2xl opacity-75 hover:opacity-100">
+                  <div class="w-10 h-10 rounded-lg bg-teal-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="text-white ml-0.5 pt-1 w-9 h-9">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                    </svg>
+
+                  </div>
+                  <h3 class="mt-6 text-sm font-medium text-slate-600">
+                    Communication
+                  </h3>
+                  <p class="mt-2 font-display text-xl text-slate-900">
+                    No more mailing lists.
+                  </p>
+                  <p class="mt-4 text-sm text-slate-600">
+                    Share and enjoy each other’s photos via our photo gallery. Photos are classified by species to make it easier to find the photo you’re looking for.
+                  </p>
+                </div>
+                <div class="relative mt-10 pb-10">
+                  <div class="absolute -inset-x-4 bottom-0 top-8 bg-slate-100 sm:-inset-x-6"></div>
+                  <div class="relative mx-auto aspect-[844/428] w-[52.75rem] overflow-hidden rounded-xl bg-white shadow-lg shadow-slate-900/5 ring-1 ring-slate-500/10">
+                    <img srcset="https://www.bird.club/assets/backgrounds/gallery@2x-22d1b2c1b8c289bfcc0887d8f43cdc65d6272c4ab5856d8b3b9a228ad9070a7f.png 2x, https://www.bird.club/assets/backgrounds/gallery@4x-ae2e4d55b59dda20fff057737b79d16c85f2b969700300bc841f33d0bf26cc70.png 4x" src="https://www.bird.club/assets/backgrounds/gallery-3d8fc15c923049ef272a14a00a5c20f516051b7fd45ec53f89cdcb22b9d5d485.png" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="-mx-4 mt-20 space-y-10  px-4 sm:-mx-6 sm:px-6 ">
+              <div>
+                <div class="mx-auto max-w-2xl">
+                  <div class="w-10 h-10 rounded-lg bg-teal-600 items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-white ml-0.5 pt-1 w-9 h-9">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+
+                  </div>
+                  <h3 class="mt-6 text-sm font-medium text-teal-600">
+                    Website
+                  </h3>
+                  <p class="mt-2 font-display text-xl text-slate-900">
+                    A free website for your club.
+                  </p>
+                  <p class="mt-4 text-sm text-slate-600">
+                    By creating a club, you get your own customizable website. You can upload a logo, choose your club colours and add your favourite birding spots.
+                  </p>
+                </div>
+                <div class="relative mt-10 pb-10">
+                  <div class="absolute -inset-x-4 bottom-0 top-8 bg-slate-100 sm:-inset-x-6"></div>
+                  <div class="relative mx-auto aspect-[844/428] w-[52.75rem] overflow-hidden rounded-xl bg-white shadow-lg shadow-slate-900/5 ring-1 ring-slate-500/10">
+                    <img srcset="https://www.bird.club/assets/backgrounds/website@2x-bfa63e1090723fdee3e143be87d563bfdf02dc854d6abdff26c5d30d4b0ada6f.png 2x, https://www.bird.club/assets/backgrounds/website@4x-a5c11e2e2399523df3f2da4d82e5d2c19f7b724791a02d7f50d074b7f8287e4d.png 4x" src="https://www.bird.club/assets/backgrounds/website-d51062eb79cb61ac20071aee0a4efec3950d40488b991d011f14e442dc48bfdd.png" />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="mx-auto max-w-2xl opacity-75 hover:opacity-100">
+                  <div class="w-10 h-10 rounded-lg bg-teal-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-white ml-0.5 pt-1 w-9 h-9">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                    </svg>
+
+                  </div>
+                  <h3 class="mt-6 text-sm font-medium text-slate-600">
+                    Engagement
+                  </h3>
+                  <p class="mt-2 font-display text-xl text-slate-900">
+                    Build a community.
+                  </p>
+                  <p class="mt-4 text-sm text-slate-600">
+                    Members of your club can like, comment and interact with one another via your club’s website. BirdClub is a social network for groups of birders, whether large or small.
+                  </p>
+                </div>
+                <div class="relative mt-10 pb-10">
+                  <div class="absolute -inset-x-4 bottom-0 top-8 bg-slate-100 sm:-inset-x-6"></div>
+                  <div class="relative mx-auto aspect-[844/428] w-[52.75rem] overflow-hidden rounded-xl bg-white shadow-lg shadow-slate-900/5 ring-1 ring-slate-500/10">
+                    <img srcset="https://www.bird.club/assets/backgrounds/community@2x-b4ff79f54e755ad845c20b7db6456e7943dec4400eafe9ef6261f09cdeb9ae58.png 2x, https://www.bird.club/assets/backgrounds/community@4x-6cd0c2d49b6f27ab8c641660c2985ad15e9876b643ad910cd3e66b07b9e52227.png 4x" src="https://www.bird.club/assets/backgrounds/community-a06f0005f6b369943ffef398fb9303dea4b1f10dcf0ca6ac5ae263cc787ea9eb.png" />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="mx-auto max-w-2xl opacity-75 hover:opacity-100">
+                  <div class="w-10 h-10 rounded-lg bg-teal-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="text-white ml-0.5 pt-1 w-9 h-9">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                    </svg>
+
+                  </div>
+                  <h3 class="mt-6 text-sm font-medium text-slate-600">
+                    Communication
+                  </h3>
+                  <p class="mt-2 font-display text-xl text-slate-900">
+                    No more mailing lists.
+                  </p>
+                  <p class="mt-4 text-sm text-slate-600">
+                    Share and enjoy each other’s photos via our photo gallery. Photos are classified by species to make it easier to find the photo you’re looking for.
+                  </p>
+                </div>
+                <div class="relative mt-10 pb-10">
+                  <div class="absolute -inset-x-4 bottom-0 top-8 bg-slate-100 sm:-inset-x-6"></div>
+                  <div class="relative mx-auto aspect-[844/428] w-[52.75rem] overflow-hidden rounded-xl bg-white shadow-lg shadow-slate-900/5 ring-1 ring-slate-500/10">
+                    <img srcset="https://www.bird.club/assets/backgrounds/gallery@2x-22d1b2c1b8c289bfcc0887d8f43cdc65d6272c4ab5856d8b3b9a228ad9070a7f.png 2x, https://www.bird.club/assets/backgrounds/gallery@4x-ae2e4d55b59dda20fff057737b79d16c85f2b969700300bc841f33d0bf26cc70.png 4x" src="https://www.bird.club/assets/backgrounds/gallery-3d8fc15c923049ef272a14a00a5c20f516051b7fd45ec53f89cdcb22b9d5d485.png" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* we want to build thrive */}
+
+
+
+          {/* dụ người dùng đăng kí */}
+          <section>
             <div class="backgroundcolor1">
               <div class="relative sm:py-16">
                 <div class="mx-auto max-w-md px-4 sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
@@ -281,110 +380,111 @@ function Dashboard() {
                 </div>
               </div>
             </div>
+          </section>
             {/* Question for bird club */}
-          </section>
-          <section class="backgroundcolor3">
 
-            <h2 id="faq-title" class="sr-only">
-              Frequently Asked Questions
-            </h2>
-            <div class="absolute top-0 left-1/2 -translate-x-[30%] -translate-y-[25%]">
-            </div>
-            <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <div class="mx-auto max-w-2xl lg:mx-0">
-                <p class="font-display text-3xl tracking-tight text-slate-900 sm:text-4xl">
-                  Frequently Asked Questions
-                </p>
-                <p class="mt-4 text-lg tracking-tight text-slate-700">
-                  Still not convinced? Try reading over our frequently asked questions or <a class="text-teal-600 hover:text-teal-900" href="mailto:hello@bird.club">reach out to us directly</a> to learn more.
-                </p>
+            <section class="backgroundcolor3">
+
+              <h2 id="faq-title" class="sr-only">
+                Frequently Asked Questions
+              </h2>
+              <div class="absolute top-0 left-1/2 -translate-x-[30%] -translate-y-[25%]">
               </div>
-              <ul class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 lg:max-w-none lg:grid-cols-3">
-                <li>
-                  <ul class="space-y-8">
-                    <li key="{faqIndex}">
-                      <h3 class="font-display text-lg leading-7 text-slate-900">
-                        Why is BirdClub free?
-                      </h3>
-                      <p class="mt-4 text-sm text-slate-700">
-                        We are a non-profit organization driven by our purpose. We believe that bird clubs play an important role in birders’ lives and local conservation. We want to help them thrive by providing them and their members with free access to our site.
-                      </p>
-                    </li>
+              <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="mx-auto max-w-2xl lg:mx-0">
+                  <p class="font-display text-3xl tracking-tight text-slate-900 sm:text-4xl">
+                    Frequently Asked Questions
+                  </p>
+                  <p class="mt-4 text-lg tracking-tight text-slate-700">
+                    Still not convinced? Try reading over our frequently asked questions or <a class="text-teal-600 hover:text-teal-900" href="mailto:hello@bird.club">reach out to us directly</a> to learn more.
+                  </p>
+                </div>
+                <ul class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 lg:max-w-none lg:grid-cols-3">
+                  <li>
+                    <ul class="space-y-8">
+                      <li key="{faqIndex}">
+                        <h3 class="font-display text-lg leading-7 text-slate-900">
+                          Why is BirdClub free?
+                        </h3>
+                        <p class="mt-4 text-sm text-slate-700">
+                          We are a non-profit organization driven by our purpose. We believe that bird clubs play an important role in birders’ lives and local conservation. We want to help them thrive by providing them and their members with free access to our site.
+                        </p>
+                      </li>
 
-                    <li key="{faqIndex}">
-                      <h3 class="font-display text-lg leading-7 text-slate-900">
-                        How is BirdClub financed?
-                      </h3>
-                      <p class="mt-4 text-sm text-slate-700">
-                        We rely on donations from our founders. In the future we will also allow clubs and individuals to make voluntary donations to BirdClub to help cover the cost of managing our site.
-                      </p>
-                    </li>
+                      <li key="{faqIndex}">
+                        <h3 class="font-display text-lg leading-7 text-slate-900">
+                          How is BirdClub financed?
+                        </h3>
+                        <p class="mt-4 text-sm text-slate-700">
+                          We rely on donations from our founders. In the future we will also allow clubs and individuals to make voluntary donations to BirdClub to help cover the cost of managing our site.
+                        </p>
+                      </li>
 
-                    <li key="{faqIndex}">
-                      <h3 class="font-display text-lg leading-7 text-slate-900">
-                        Can anyone create a club?
-                      </h3>
-                      <p class="mt-4 text-sm text-slate-700">
-                        Yes. And not every club needs a president, secretary or treasurer! Some of our most active clubs are simply groups of friends who share a passion for birdwatching.
-                      </p>
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  <ul class="space-y-8">
-                    <li key="{faqIndex}">
-                      <h3 class="font-display text-lg leading-7 text-slate-900">
-                        Why can’t I find my local club?
-                      </h3>
-                      <p class="mt-4 text-sm text-slate-700">
-                        Clubs are invite-only, your club admin will need to send you an invite to join. Alternatively, your club might not have been created - just <a class="text-teal-600 hover:text-teal-900" href="/clubs/new">share this link</a> with your club admin!
-                      </p>
-                    </li>
+                      <li key="{faqIndex}">
+                        <h3 class="font-display text-lg leading-7 text-slate-900">
+                          Can anyone create a club?
+                        </h3>
+                        <p class="mt-4 text-sm text-slate-700">
+                          Yes. And not every club needs a president, secretary or treasurer! Some of our most active clubs are simply groups of friends who share a passion for birdwatching.
+                        </p>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <ul class="space-y-8">
+                      <li key="{faqIndex}">
+                        <h3 class="font-display text-lg leading-7 text-slate-900">
+                          Why can’t I find my local club?
+                        </h3>
+                        <p class="mt-4 text-sm text-slate-700">
+                          Clubs are invite-only, your club admin will need to send you an invite to join. Alternatively, your club might not have been created - just <a class="text-teal-600 hover:text-teal-900" href="/clubs/new">share this link</a> with your club admin!
+                        </p>
+                      </li>
 
-                    <li key="{faqIndex}">
-                      <h3 class="font-display text-lg leading-7 text-slate-900">
-                        Can anyone see my club page?
-                      </h3>
-                      <p class="mt-4 text-sm text-slate-700">
-                        No. Clubs are invite-only; only the people you ask to join can access your site.
-                      </p>
-                    </li>
+                      <li key="{faqIndex}">
+                        <h3 class="font-display text-lg leading-7 text-slate-900">
+                          Can anyone see my club page?
+                        </h3>
+                        <p class="mt-4 text-sm text-slate-700">
+                          No. Clubs are invite-only; only the people you ask to join can access your site.
+                        </p>
+                      </li>
 
-                    <li key="{faqIndex}">
-                      <h3 class="font-display text-lg leading-7 text-slate-900">
-                        Is BirdClub only for UK birders?
-                      </h3>
-                      <p class="mt-4 text-sm text-slate-700">
-                        BirdClub was born in the UK, but we support international bird groups via the IOC World Bird List. If you’d like us to add a specific bird list for your country, just let us know!
-                      </p>
-                    </li>
-                  </ul>
-                </li>
+                      <li key="{faqIndex}">
+                        <h3 class="font-display text-lg leading-7 text-slate-900">
+                          Is BirdClub only for UK birders?
+                        </h3>
+                        <p class="mt-4 text-sm text-slate-700">
+                          BirdClub was born in the UK, but we support international bird groups via the IOC World Bird List. If you’d like us to add a specific bird list for your country, just let us know!
+                        </p>
+                      </li>
+                    </ul>
+                  </li>
 
-                <li>
-                  <ul class="space-y-8">
-                    <li key="{faqIndex}">
-                      <h3 class="font-display text-lg leading-7 text-slate-900">
-                        Will you be releasing new features?
-                      </h3>
-                      <p class="mt-4 text-sm text-slate-700">
-                        Yes! We’re constantly working on new features to make running bird clubs as easy as possible. Future features will include a mobile app, online events for clubs and the ability to add trip lists.
-                      </p>
-                    </li>
+                  <li>
+                    <ul class="space-y-8">
+                      <li key="{faqIndex}">
+                        <h3 class="font-display text-lg leading-7 text-slate-900">
+                          Will you be releasing new features?
+                        </h3>
+                        <p class="mt-4 text-sm text-slate-700">
+                          Yes! We’re constantly working on new features to make running bird clubs as easy as possible. Future features will include a mobile app, online events for clubs and the ability to add trip lists.
+                        </p>
+                      </li>
 
-                    <li key="{faqIndex}">
-                      <h3 class="font-display text-lg leading-7 text-slate-900">
-                        Did I see you at Global BirdFair?
-                      </h3>
-                      <p class="mt-4 text-sm text-slate-700">
-                        Yes! We were proud to officially launch BirdClub at the 2022 Global BirdFair and enjoyed speaking with hundreds of birders about how to take their bird club online.
-                      </p>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </div>
-          </section>
+                      <li key="{faqIndex}">
+                        <h3 class="font-display text-lg leading-7 text-slate-900">
+                          Did I see you at Global BirdFair?
+                        </h3>
+                        <p class="mt-4 text-sm text-slate-700">
+                          Yes! We were proud to officially launch BirdClub at the 2022 Global BirdFair and enjoyed speaking with hundreds of birders about how to take their bird club online.
+                        </p>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </section>
         </main>
         <footer class="mt-8" aria-labelledby="footer-heading">
           <h2 id="footer-heading" class="sr-only">Footer</h2>

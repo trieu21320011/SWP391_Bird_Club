@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import Tooltip from '../../components/Tooltip';
-import dayjs from 'dayjs';
-import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
+
+
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Datepicker from '../../components/Datepicker';
