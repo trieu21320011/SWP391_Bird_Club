@@ -98,3 +98,7 @@ input[type=range]::-moz-focus-outer {
     margin-bottom: 2.5cm;
     margin-top: 0.5cm;
 }
+.margin-top-bot{
+    margin-top: 5%;
+    margin-bottom: 5%;
+}

@@ -1,10 +1,72 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { baseURL } from './baseUrl';
 
 import AuthImage from '../images/auth-image.jpg';
 import AuthDecoration from '../images/auth-decoration.png';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 function Signup() {
+  const navigateTo = useNavigate();
+
+  const onRegister = (e) => {
+
+    e.preventDefault()
+    console.log(e);
+
+    const email = e.target.email.value
+    const password = e.target.password.value
+    const displayName = e.target.displayName.value
+    const birthday = e.target.birthday.value
+
+    Swal.fire({
+      title: 'Xác nhận thông tin',
+      html: 'This will close in a minutes',
+
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading()
+        const b = Swal.getHtmlContainer().querySelector('b')
+      },
+    })
+    var data = JSON.stringify({
+      "email": email,
+      "password": password,
+      "displayName":displayName,
+      "birthday":birthday,
+    });
+
+    var config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseURL + '/auth/register', // /auth/register
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(response);
+
+        Swal.close()
+        Swal.fire(
+          "Good job!",
+          "You login susccess!",
+          "success"
+       );
+       navigateTo('/login') // truyền vào login (/login)
+
+      })
+      .catch(function (error) {
+        console.log();
+        Swal.close()
+        Swal.fire("Oops", "User ID exist!", "error");
+      });
+  }
   return (
     <main className="bg-white">
 
@@ -42,28 +104,25 @@ function Signup() {
             <div className="max-w-sm mx-auto px-4 py-8">
               <h1 className="text-3xl text-slate-800 font-bold mb-6">Create your Account ✨</h1>
               {/* Form */}
-              <form>
+              <form onSubmit={e => onRegister(e)}>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1" htmlFor="email">Email Address <span className="text-rose-500">*</span></label>
+                    <label className="block text-sm font-medium mb-1" htmlFor="email"> Email Address <span className="text-rose-500">*</span></label>
                     <input id="email" className="form-input w-full" type="email" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1" htmlFor="name">Full Name <span className="text-rose-500">*</span></label>
-                    <input id="name" className="form-input w-full" type="text" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1" htmlFor="Birthday">Birthday <span className="text-rose-500">*</span></label>
-                    <input id="default" className="form-input w-full" type="date" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1" htmlFor="password">Password</label>
+                    <label className="block text-sm font-medium mb-1" htmlFor="password"> Password</label>
                     <input id="password" className="form-input w-full" type="password" autoComplete="on" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1" htmlFor="password1">Verify Password</label>
-                    <input id="password1" className="form-input w-full" type="password" autoComplete="on" />
+                    <label className="block text-sm font-medium mb-1" htmlFor="displayName"> Display Name <span className="text-rose-500">*</span></label>
+                    <input id="displayName" className="form-input w-full" type="text" />
                   </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1" htmlFor="birthday"> Birthday <span className="text-rose-500">*</span></label>
+                    <input id="birthday" className="form-input w-full" type="date" />
+                  </div>
+                  
                 </div>
                 <div className="flex items-center justify-between mt-6">
                   <div className="mr-1">
@@ -86,7 +145,6 @@ function Signup() {
         {/* Image */}
         <div className="hidden md:block absolute top-0 bottom-0 right-0 md:w-1/2" aria-hidden="true">
           <img className="object-cover object-center w-full h-full" src={AuthImage} width="760" height="1024" alt="Authentication" />
-          <img className="absolute top-1/4 left-0 -translate-x-1/2 ml-8 hidden lg:block" src={AuthDecoration} width="218" height="224" alt="Authentication decoration" />
         </div>
 
       </div>
