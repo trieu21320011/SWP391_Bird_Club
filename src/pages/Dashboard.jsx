@@ -34,11 +34,7 @@ function Dashboard() {
       content: <img class="imagesize" srcset="https://www.bird.club/assets/backgrounds/conversation@2x-273410a47c7e65828764d0a396e0fd6b259cd520568156b2f2416dddef0ae471.png 2x, https://www.bird.club/assets/backgrounds/conversation@4x-bbd490a157c1afc1306de63fd93470b613f9d02077ea55be51c8a27b201d4a89.png 4x" src="https://www.bird.club/assets/backgrounds/conversation-9ad65d8aa216203b450d432a1cdc9452fa9522f70ea99b6dfbddb507b953fa1d.png" />
     },
   ];
-  const tabs1 = [
-    { title: 'Tab 1', content: <div>Content for Tab 1</div> },
-    { title: 'Tab 2', content: <div>Content for Tab 2</div> },
-    { title: 'Tab 3', content: <div>Content for Tab 3</div> },
-  ];
+  
   return (
     <div className="flex h-screen overflow-hidden">
 
