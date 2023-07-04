@@ -23,6 +23,12 @@ function Feed() {
   const name = localStorage.getItem('name')
   const [title, setTitle] = useState();
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false)
+  const [editModalOpen, setEditModalOpen] = useState(false)
+  const [newFeedsDetail,setNewFeedsDetail] = useState({})
+  const [titleEdit, setTitleEdit] = useState("");
+  const [valueEdit, setValueEdit] = useState();
+  
+
   const date = new Date(2023, 11, 13).toDateString()
   const check = new Date("2023-05-20T07:54:08.797").toDateString() === new Date(2023, 4, 20).toDateString();
   const formats = [
@@ -101,6 +107,72 @@ function Feed() {
       });
 
   }
+  const handleEdit = (e) => {
+    e.preventDefault()
+    Swal.fire({
+      title: 'Xác nhận thông tin',
+      html: 'This will close in a minutes',
+
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading()
+        const b = Swal.getHtmlContainer().querySelector('b')
+      },
+    })
+    var data = JSON.stringify({
+      "ownerId": id,
+      "title": title,
+      "content": value
+    });
+
+    var config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseURL + '/newsfeeds/blogs',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(response);
+        Swal.close()
+        Swal.fire(
+          "Good job!",
+          "You success create a blog!",
+          "success",
+        );
+        childRef.current.getDat()
+      })
+      .catch(function (error) {
+        console.log();
+        Swal.close()
+        Swal.fire("Oops", "Wrong id or password!", "error");
+      });
+
+  }
+  const loadData = () => {
+    childRef.current.getDat()
+  }
+  const openEditModal = (id) => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/newsfeeds/blogs/'+ id,
+    };
+
+    axios.request(config)
+      .then((response) => {
+        setTitleEdit(response.data.title)
+        setValueEdit(response.data.content)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    setEditModalOpen(true)
+  }
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -167,7 +239,7 @@ function Feed() {
                                     <ReactQuill theme="snow"
                                       modules={modules}
                                       formats={formats}
-                                      value={value} onChange={setValue} />
+                                      value={valueEdit} onChange={setValueEdit} />
                                   </div>
                                 </div>
                               </div>
@@ -179,12 +251,41 @@ function Feed() {
                                 </div>
                               </div>
                             </ModalBasic>
+
+                            <ModalBasic id="feedback-modal" modalOpen={editModalOpen} setModalOpen={setEditModalOpen} title="What you want to edit your blog ?">
+                              {/* Modal content */}
+                              <div className="px-5 py-4">
+                                <div className="text-sm">
+                                  <div className="font-medium text-slate-800 mb-3">Edit your blog 🙌</div>
+                                </div>
+                                <div className="space-y-3">
+                                  <div>
+                                    <label className="block text-sm font-medium mb-1" htmlFor="name">Title <span className="text-rose-500">*</span></label>
+                                    <input defaultValue={titleEdit} id="name" className="form-input w-full px-2 py-1" type="text" required onChange={e => setTitleEdit(e.target.value)} />
+                                  </div>
+                                  <div>
+                                    <label className="block text-sm font-medium mb-1" htmlFor="feedback">Message <span className="text-rose-500">*</span></label>
+                                    <ReactQuill theme="snow"
+                                      modules={modules}
+                                      formats={formats}
+                                      value={value} onChange={setValue} />
+                                  </div>
+                                </div>
+                              </div>
+                              {/* Modal footer */}
+                              <div className="px-5 py-4 border-t border-slate-200">
+                                <div className="flex flex-wrap justify-end space-x-2">
+                                  <button className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600" onClick={(e) => { e.stopPropagation(); setEditModalOpen(false); }}>Cancel</button>
+                                  <button onClick={e => handleCreate(e)} className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">Edit</button>
+                                </div>
+                              </div>
+                            </ModalBasic>
                           </div>
                         </div>
                       </div>
 
                       {/* Posts */}
-                      <FeedPosts ref={childRef} />
+                      <FeedPosts ref={childRef} openEditModal={openEditModal} />
 
                     </div>
 
@@ -195,7 +296,7 @@ function Feed() {
               </div>
 
               {/* Right content */}
-              <FeedRightContent />
+              <FeedRightContent loadData={loadData} />
 
             </div>
 

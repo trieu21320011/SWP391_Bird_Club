@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
@@ -59,33 +59,33 @@ function MeetupEdit() {
         console.log('argument from Child: ', data);
     }
     const getDetail = () => {
-        axios.get(baseURL + '/activities/'+ eventId)
-        .then((response) => {
-          setEventsDetail(response.data)
-          setTile(response.data.name)
-          setLocation(response.data.location)
-          setType(response.data.type)
-          setDescription(response.data.description)
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        axios.get(baseURL + '/activities/' + eventId)
+            .then((response) => {
+                setEventsDetail(response.data)
+                setTile(response.data.name)
+                setLocation(response.data.location)
+                setType(response.data.type)
+                setDescription(response.data.description)
+            })
+            .catch((error) => {
+                console.log(error);
+            });
 
     }
     useEffect(() => {
         getDetail()
-      }, [])
+    }, [])
     const handleCreate = (e) => {
         e.preventDefault()
         Swal.fire({
-          title: 'Xác nhận thông tin',
-          html: 'This will close in a minutes',
-    
-          timerProgressBar: true,
-          didOpen: () => {
-            Swal.showLoading()
-            const b = Swal.getHtmlContainer().querySelector('b')
-          },
+            title: 'Xác nhận thông tin',
+            html: 'This will close in a minutes',
+
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+            },
         })
         var data = JSON.stringify({
             "name": title,
@@ -94,37 +94,37 @@ function MeetupEdit() {
             "location": location,
             "description": description,
             "activityType": type,
-            "background" : "",
+            "background": "",
         });
-    console.log(data);
+        console.log(data);
         var config = {
-          method: 'put',
-          maxBodyLength: Infinity,
-          url: baseURL + '/activities/' + eventId,
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data: data
+            method: 'put',
+            maxBodyLength: Infinity,
+            url: baseURL + '/activities/' + eventId,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
-    
+
         axios(config)
-          .then(function (response) {
-            console.log(response);
-            Swal.close()
-            Swal.fire(
-              "Good job!",
-              "You success edit a event!",
-              "success",
-            );
-            nav("/activity/meetups-post?id=" + eventId)
-          })
-          .catch(function (error) {
-            console.log();
-            Swal.close()
-           
-          });
-    
-      }
+            .then(function (response) {
+                console.log(response);
+                Swal.close()
+                Swal.fire(
+                    "Good job!",
+                    "You success edit a event!",
+                    "success",
+                );
+                nav("/activity/meetups-post?id=" + eventId)
+            })
+            .catch(function (error) {
+                console.log();
+                Swal.close()
+
+            });
+
+    }
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [value, setValue] = useState()
     const [startTime, setStartTime] = useState('10:00');
@@ -150,7 +150,7 @@ function MeetupEdit() {
                     <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
                         {/* Page header */}
                         <div className="mb-8">
-                            <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">Create Event ✨</h1>
+                            <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">Edit Event ✨</h1>
                             <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
 
                                 {/* Add board button */}

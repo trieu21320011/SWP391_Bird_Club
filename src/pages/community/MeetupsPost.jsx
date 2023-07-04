@@ -147,8 +147,7 @@ function MeetupsPost(props) {
                   {moment(eventDetail.startTime).format('MMMM Do YYYY, h:mm:ss a')}-&gt; {moment(eventDetail.endTime).format('MMMM Do YYYY, h:mm:ss a')}</div>
                 <header className="mb-4">
                   {/* Title */}
-                  <h1 className="text-2xl md:text-3xl text-slate-800 font-bold mb-2">{eventDetail.name}</h1>
-                  <p>{eventDetail.description}</p>
+                  <h1 className="text-2xl md:text-3xl text-slate-800 font-bold mb-2">{eventDetail.name}</h1>                 
                 </header>
 
                 {/* Meta */}
@@ -185,6 +184,8 @@ function MeetupsPost(props) {
                 {/* Post content */}
                 <div>
                   <h2 className="text-xl leading-snug text-slate-800 font-bold mb-2">Meetup Details</h2>
+ 
+                  <p dangerouslySetInnerHTML={{ __html: eventDetail.description}} />
                   <p className="mb-6">In the world of AI, behavioural predictions are leading the charge to better machine learning.</p>
                   <p className="mb-6">
                     There is so much happening in the AI space. Advances in the economic sectors have seen automated business practices rapidly
@@ -201,7 +202,7 @@ function MeetupsPost(props) {
                 <hr className="my-6 border-t border-slate-200" />
 
                 {/* Photos */}
-                <div>
+                {/* <div>
                   <h2 className="text-xl leading-snug text-slate-800 font-bold mb-2">Photos (3)</h2>
                   <div className="grid grid-cols-3 gap-4 my-6">
                     <a className="block" href="#0">
@@ -214,7 +215,7 @@ function MeetupsPost(props) {
                       <img className="w-full rounded-sm" src={MeetupPhoto03} width="203" height="152" alt="Meetup photo 03" />
                     </a>
                   </div>
-                </div>
+                </div> */}
 
                 <hr className="my-6 border-t border-slate-200" />
 

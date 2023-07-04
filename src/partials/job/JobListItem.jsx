@@ -41,6 +41,37 @@ function JobListItem(props) {
         console.log();
       });
   }
+  const setDecline = (e) => {
+    e.preventDefault()
+    var data = JSON.stringify({
+      "memberId": parseInt(props.id, 10),
+      "activityId": parseInt(props.event, 10)
+    });
+    var config = {
+      method: 'delete',
+      maxBodyLength: Infinity,
+      url: baseURL + '/activities/attendance-requests',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+    axios(config)
+      .then(function (response) {
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'Từ chối cho request này',
+          showConfirmButton: false,
+          timer: 1100
+        })
+        props.callParentFunction();
+      })
+      .catch(function (error) {
+        console.log();
+      });
+  }
   return (
     <div
       className={`shadow-lg rounded-sm border px-5 py-4 bg-white border-slate-200'}`}
@@ -81,7 +112,7 @@ function JobListItem(props) {
             <div className="m-1.5">
               {/* Start */}
               <button className="btn border-slate-200 hover:border-slate-300">
-                <CancelIcon color='error' />
+                <CancelIcon color='error' onClick={(e) => { setDecline(e); }} />
               </button>
               {/* End */}
             </div>
