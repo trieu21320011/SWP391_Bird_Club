@@ -17,7 +17,7 @@ import React, { useEffect, useState } from 'react';
 function ProfileBody({
   profileSidebarOpen,
   setProfileSidebarOpen,
-
+  profileId,
 }) {
 
   const [data, setData] = useState([]);
@@ -25,7 +25,7 @@ function ProfileBody({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://bird-club.azurewebsites.net/api/v1/members/1'); // Replace with your API endpoint
+        const response = await axios.get('https://bird-club.azurewebsites.net/api/v1/members/' + profileId); // Replace with your API endpoint
         setData(response.data);
       } catch (error) {
         console.error(error);
@@ -34,15 +34,19 @@ function ProfileBody({
 
     fetchData();
   }, []);
-    
+
+  const [SelectTab, SelectTabinfo] = useState('')
+
+  useEffect(() => {
+    SelectTabinfo()
+  }, [])
+
   const tabs = [
     {
       title: <div>
-        <a className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
-          Infomation
-        </a>
+        Infomation
       </div>,
-      content: <div className="flex flex-col xl:flex-row xl:space-x-16">
+      content: <div className="flex flex-col xl:flex-row xl:space-x-16 pt-8">
         {/* Main content */}
         <div className="space-y-5 mb-8 xl:mb-0">
           {/* About Me */}
@@ -269,10 +273,8 @@ function ProfileBody({
       </div>
     },
     {
-      title: <div className='margin-left'>
-        <a className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
-          Records
-        </a>
+      title: <div>
+        Records
       </div>,
       content: <main class="pb-8 pt-8">
         <div class="max-w-3xl mx-auto sm:px-6 lg:max-w-7xl lg:px-8">
@@ -669,6 +671,7 @@ function ProfileBody({
     <div
       className={`grow flex flex-col md:translate-x-0 transition-transform duration-300 ease-in-out ${profileSidebarOpen ? 'translate-x-1/3' : 'translate-x-0'}`}
     >
+      {profileId}
       {/* Profile background */}
       <div className="relative h-56 bg-slate-200">
         <img className="object-cover h-full w-full" src={ProfileBg} width="979" height="220" alt="Profile background" />
