@@ -29,7 +29,23 @@ input[type=range]::-webkit-slider-thumb {
 .avatar {
     height: 40px !important; 
 }
-
+.backgroundcolor1{
+    background-color: rgb(50, 183, 138);
+    
+}
+.backgroundcolor2{
+    background-color: white;
+}
+.backgroundcolor3{
+    background-color: white;
+    margin-top: 5cm;
+    margin-right: 3cm;
+    margin-bottom: 5cm;
+    margin-left: 3cm;
+}
+.margin-top-5{
+    margin-top: 5%;
+}
 input[type=range]::-moz-range-thumb {
     background-color: #000;
     background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 .5v7L12 4zM0 4l4 3.5v-7z' fill='%23FFF' fill-rule='nonzero'/%3E%3C/svg%3E");
@@ -57,4 +73,32 @@ input[type=range]::-ms-thumb {
 
 input[type=range]::-moz-focus-outer {
     border: 0;
+}
+.backgroundcolor1{
+    background-color: rgb(50, 183, 138);
+}
+.backgroundcolor2{
+    background-color: white;
+}
+.backgroundcolor3{
+    background-color: white;
+    margin-top: 3cm;
+    margin-right: 3cm;
+    margin-bottom: 3cm;
+    margin-left: 3cm;
+}
+.image{
+    margin-top: 5cm;
+    margin-right: 3cm;
+    margin-bottom: 5cm;
+    margin-left: 3cm;
+}
+.imagesize{
+    margin-left: 2.5cm;
+    margin-bottom: 2.5cm;
+    margin-top: 0.5cm;
+}
+.margin-top-bot{
+    margin-top: 5%;
+    margin-bottom: 5%;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
@@ -16,7 +16,8 @@ import { Link } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-function MeetupCreate() {
+function MeetupEdit() {
+    var eventId = window.location.search.split("=")[1];
     const nav = useNavigate()
     const formats = [
         "header",
@@ -36,6 +37,7 @@ function MeetupCreate() {
         "font"
     ];
     const uid = localStorage.getItem("uid")
+    const [eventDetail, setEventsDetail] = useState({})
     const modules = {
         toolbar: [
             [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -56,17 +58,34 @@ function MeetupCreate() {
         setToTime(data[1])
         console.log('argument from Child: ', data);
     }
+    const getDetail = () => {
+        axios.get(baseURL + '/activities/' + eventId)
+            .then((response) => {
+                setEventsDetail(response.data)
+                setTile(response.data.name)
+                setLocation(response.data.location)
+                setType(response.data.type)
+                setDescription(response.data.description)
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+    }
+    useEffect(() => {
+        getDetail()
+    }, [])
     const handleCreate = (e) => {
         e.preventDefault()
         Swal.fire({
-          title: 'Xác nhận thông tin',
-          html: 'This will close in a minutes',
-    
-          timerProgressBar: true,
-          didOpen: () => {
-            Swal.showLoading()
-            const b = Swal.getHtmlContainer().querySelector('b')
-          },
+            title: 'Xác nhận thông tin',
+            html: 'This will close in a minutes',
+
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+            },
         })
         var data = JSON.stringify({
             "name": title,
@@ -75,43 +94,39 @@ function MeetupCreate() {
             "location": location,
             "description": description,
             "activityType": type,
-            "ownerId": parseInt(uid, 10),
             "background": "",
         });
-    console.log(data);
+        console.log(data);
         var config = {
-          method: 'post',
-          maxBodyLength: Infinity,
-          url: baseURL + '/activities',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data: data
+            method: 'put',
+            maxBodyLength: Infinity,
+            url: baseURL + '/activities/' + eventId,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
-    
+
         axios(config)
-          .then(function (response) {
-            console.log(response);
-            Swal.close()
-            Swal.fire(
-              "Good job!",
-              "You success create a blog!",
-              "success",
-            );
-            nav("/activity/meetups")
-          })
-          .catch(function (error) {
-            console.log();
-            Swal.close()
-           
-          });
-    
-      }
+            .then(function (response) {
+                console.log(response);
+                Swal.close()
+                Swal.fire(
+                    "Good job!",
+                    "You success edit a event!",
+                    "success",
+                );
+                nav("/activity/meetups-post?id=" + eventId)
+            })
+            .catch(function (error) {
+                console.log();
+                Swal.close()
+
+            });
+
+    }
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [value, setValue] = useState()
-    const [toggle1, setToggle1] = useState(true);
-    const [toggle2, setToggle2] = useState(false);
-    const [toggle3, setToggle3] = useState(false);
     const [startTime, setStartTime] = useState('10:00');
     const [endTime, setEndTime] = useState('10:00');
     const [title, setTile] = useState("");
@@ -135,7 +150,7 @@ function MeetupCreate() {
                     <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
                         {/* Page header */}
                         <div className="mb-8">
-                            <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">Create Event ✨</h1>
+                            <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">Edit Event ✨</h1>
                             <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
 
                                 {/* Add board button */}
@@ -159,7 +174,7 @@ function MeetupCreate() {
                                         Title
                                     </label>
                                     <div className="grid gap-5 md:grid-cols-1">
-                                        <input onChange={(e) => setTile(e.target.value)} className="form-input w-full pl-9" type="search" />
+                                        <input defaultValue={title} onChange={(e) => setTile(e.target.value)} className="form-input w-full pl-9" type="search" />
                                     </div>
                                 </div>
 
@@ -203,7 +218,7 @@ function MeetupCreate() {
                                         Location
                                     </label>
                                     <div className="grid gap-5 md:grid-cols-1">
-                                        <input onChange={(e) => setLocation(e.target.value)} className="form-input w-full pl-9" type="search" />
+                                        <input defaultValue={location} onChange={(e) => setLocation(e.target.value)} className="form-input w-full pl-9" type="search" />
                                     </div>
                                 </div>
 
@@ -214,6 +229,7 @@ function MeetupCreate() {
                                         Description
                                     </label>
                                     <ReactQuill theme="snow"
+                                        defaultValue={description}
                                         modules={modules}
                                         formats={formats}
                                         value={description} onChange={setDescription} />
@@ -224,7 +240,7 @@ function MeetupCreate() {
                                     <label className="block text-sm font-medium mb-1" htmlFor="country">
                                         Loại event
                                     </label>
-                                    <select value={type} onChange={(e) => setType(e.target.value)} id="country" className="form-select">
+                                    <select defaultValue={type} value={type} onChange={(e) => setType(e.target.value)} id="country" className="form-select">
                                         <option value={"ONLINE"}>Online Event</option>
                                         <option value={"OFFLINE"}>Offline Event</option>
                                         <option value={"TOURAMENT"}>Tourament</option>
@@ -241,4 +257,4 @@ function MeetupCreate() {
     );
 }
 
-export default MeetupCreate;
+export default MeetupEdit;

@@ -81,7 +81,7 @@ function JobPost() {
 
                 {/* Things You Might Do */}
                 <div>
-                  <h2 className="text-xl leading-snug text-slate-800 font-bold mb-2">Bird clubs made simple.</h2>
+                  <h2 className="text-xl leading-snug text-slate-800 font-bold mb-2">Bird made simple.</h2>
                   <div className="space-y-6">
                     <p>
                     Everything you need is in one place: members, records, photos, and more.

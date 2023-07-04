@@ -7,6 +7,7 @@ import DateSelect from '../../components/DateSelect';
 import FilterButton from '../../components/DropdownFilter';
 import OrdersTable from '../../partials/orders/OrdersTable';
 import PaginationClassic from '../../components/PaginationClassic';
+import { Link } from 'react-router-dom';
 
 function Orders() {
 
@@ -49,12 +50,12 @@ function Orders() {
                 {/* Filter button */}
                 <FilterButton align="right" />
                 {/* Add order button */}
-                <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white">
-                  <svg className="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
+                <Link to="/activity/meetups-create" className="btn bg-indigo-500 hover:bg-indigo-600 text-white">
+                  <svg  className="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
                     <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                   </svg>
                   <span className="hidden xs:block ml-2">Tạo event</span>
-                </button>
+                </Link>
               </div>
 
             </div>
