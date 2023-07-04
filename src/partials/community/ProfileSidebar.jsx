@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState ,useEffect} from 'react';
 
 import ProfileImage from '../../images/user-avatar-32.png';
 import UserImage01 from '../../images/user-32-01.jpg';
@@ -9,10 +9,42 @@ import UserImage05 from '../../images/user-32-05.jpg';
 import UserImage06 from '../../images/user-32-06.jpg';
 import UserImage08 from '../../images/user-32-08.jpg';
 
+import { baseURL } from '../../pages/baseUrl';
+import axios from 'axios';
+
 function ProfileSidebar({
   profileSidebarOpen,
-  setProfileSidebarOpen
+  setProfileSidebarOpen,
+  setProfileId,
 }) {
+  const [members, setMembers] = useState([])
+  const [selectedId, selectMember] = useState('')
+
+  const getMembers = () => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/members' ,
+    };
+
+    axios.request(config)
+      .then((response) => {
+        setMembers(response.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  const onSelectMember = (id) => {
+    selectMember(id)
+    setProfileId(id)
+  }
+
+  useEffect(() => {
+    getMembers()
+  }, [])
+
   return (
     <div
       id="profile-sidebar"
@@ -68,93 +100,24 @@ function ProfileSidebar({
             <div className="mt-4">
               <div className="text-xs font-semibold text-slate-400 uppercase mb-3">Staff members</div>
               <ul className="mb-6">
-                <li className="-mx-2">
-                  <button className="w-full p-2 rounded bg-indigo-100" onClick={() => setProfileSidebarOpen(false)}>
-                    <div className="flex items-center">
-                      <div className="relative mr-2">
-                        <img className="w-8 h-8 rounded-full" src={UserImage08} width="32" height="32" alt="User 08" />
-                      </div>
-                      <div className="truncate">
-                        <span className="text-sm font-medium text-slate-800">Carolyn McNeail</span>
-                      </div>
-                    </div>
-                  </button>
-                </li>
-                <li className="-mx-2">
-                  <button className="w-full p-2 rounded" onClick={() => setProfileSidebarOpen(false)}>
-                    <div className="flex items-center truncate">
-                      <div className="relative mr-2">
-                        <img className="w-8 h-8 rounded-full" src={UserImage06} width="32" height="32" alt="User 06" />
-                      </div>
-                      <div className="truncate">
-                        <span className="text-sm font-medium text-slate-800">Mary Roszczewski</span>
-                      </div>
-                    </div>
-                  </button>
-                </li>
-                <li className="-mx-2">
-                  <button className="w-full p-2 rounded" onClick={() => setProfileSidebarOpen(false)}>
-                    <div className="flex items-center truncate">
-                      <div className="relative mr-2">
-                        <img className="w-8 h-8 rounded-full" src={UserImage03} width="32" height="32" alt="User 03" />
-                      </div>
-                      <div className="truncate">
-                        <span className="text-sm font-medium text-slate-800">Jerzy Wierzy</span>
-                      </div>
-                    </div>
-                  </button>
-                </li>
-                <li className="-mx-2">
-                  <button className="w-full p-2 rounded" onClick={() => setProfileSidebarOpen(false)}>
-                    <div className="flex items-center truncate">
-                      <div className="relative mr-2">
-                        <img className="w-8 h-8 rounded-full" src={UserImage02} width="32" height="32" alt="User 02" />
-                        <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full"></div>
-                      </div>
-                      <div className="truncate">
-                        <span className="text-sm font-medium text-slate-800">Tisha Yanchev</span>
-                      </div>
-                    </div>
-                  </button>
-                </li>
-                <li className="-mx-2">
-                  <button className="w-full p-2 rounded" onClick={() => setProfileSidebarOpen(false)}>
-                    <div className="flex items-center truncate">
-                      <div className="relative mr-2">
-                        <img className="w-8 h-8 rounded-full" src={UserImage05} width="32" height="32" alt="User 05" />
-                        <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full"></div>
-                      </div>
-                      <div className="truncate">
-                        <span className="text-sm font-medium text-slate-800">Simona Lürwer</span>
-                      </div>
-                    </div>
-                  </button>
-                </li>
-                <li className="-mx-2">
-                  <button className="w-full p-2 rounded" onClick={() => setProfileSidebarOpen(false)}>
-                    <div className="flex items-center truncate">
-                      <div className="relative mr-2">
-                        <img className="w-8 h-8 rounded-full" src={UserImage04} width="32" height="32" alt="User 04" />
-                      </div>
-                      <div className="truncate">
-                        <span className="text-sm font-medium text-slate-800">Adrian Przetocki</span>
-                      </div>
-                    </div>
-                  </button>
-                </li>
-                <li className="-mx-2">
-                  <button className="w-full p-2 rounded" onClick={() => setProfileSidebarOpen(false)}>
-                    <div className="flex items-center truncate">
-                      <div className="relative mr-2">
-                        <img className="w-8 h-8 rounded-full" src={UserImage01} width="32" height="32" alt="User 01" />
-                        <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full"></div>
-                      </div>
-                      <div className="truncate">
-                        <span className="text-sm font-medium text-slate-800">Brian Halligan</span>
-                      </div>
-                    </div>
-                  </button>
-                </li>
+                {
+                  members.length > 0 ?
+                    members.map((member) => {
+                      return <li className="-mx-2">
+                          <button className={"w-full p-2 rounded " + (selectedId === member.id ? "bg-indigo-100" : "")} onClick={() => onSelectMember(member.id)}>
+                            <div className="flex items-center">
+                              <div className="relative mr-2">
+                                <img className="w-8 h-8 rounded-full" src={member.avatar} width="32" height="32" alt="User 08" />
+                              </div>
+                              <div className="truncate">
+                                <span className="text-sm font-medium text-slate-800">{member.displayName}</span>
+                              </div>
+                            </div>
+                          </button>
+                        </li>
+                    })
+                  : <div></div>
+                }
               </ul>
             </div>
           </div>

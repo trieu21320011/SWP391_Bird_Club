@@ -239,7 +239,7 @@ function Feed() {
                                     <ReactQuill theme="snow"
                                       modules={modules}
                                       formats={formats}
-                                      value={valueEdit} onChange={setValueEdit} />
+                                      value={value} onChange={setValue} />
                                   </div>
                                 </div>
                               </div>
@@ -268,7 +268,7 @@ function Feed() {
                                     <ReactQuill theme="snow"
                                       modules={modules}
                                       formats={formats}
-                                      value={value} onChange={setValue} />
+                                      value={valueEdit} onChange={setValueEdit} />
                                   </div>
                                 </div>
                               </div>
