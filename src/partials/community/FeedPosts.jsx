@@ -29,25 +29,39 @@ const FeedPosts = forwardRef((props, ref) => {
       getDat: getDataDefault,
     };
   })
+  const [, updateState] = React.useState();
+  const forceUpdate = React.useCallback(() => updateState({}), []);
   const [newFeeds, setNewFeeds] = useState(null);
   const [totalPage, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
+  const [commentContent, setCommentContent] = useState('')
+  const [targetNewsfeedId, setTargetNewsfeedId] = useState('')
   const onClickPage = (e, page) => {
     setPage(page);
     getData(page);
   }
   const getData = (page) => {
+    const uid = localStorage.getItem("uid")
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: baseURL + '/newsfeeds?limit=50&page=' + page + '&size=10',
+      url: baseURL + '/newsfeeds?limit=50&page=' + page + '&size=10' + ( uid ? '&memberId=' + uid : ''),
     };
 
     axios.request(config)
       .then((response) => {
-        setNewFeeds(response.data.newsfeeds)
+        var data = response.data.newsfeeds
+        var result = []
+        data.forEach(element => {
+          element = {
+            ...element, // Spread the existing properties
+            maxCommentsToShow: 2
+          };
+          result.push(element)
+        });
+        setNewFeeds(result)
         setTotalCount(response.data.total)
         setTotalPages(Math.ceil(response.data.total / 10))
       })
@@ -56,10 +70,11 @@ const FeedPosts = forwardRef((props, ref) => {
       });
   }
   const getDataDefault = (page) => {
+    const uid = localStorage.getItem("uid")
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: baseURL + '/newsfeeds?limit=50&page=1&size=10',
+      url: baseURL + '/newsfeeds?limit=50&page=1&size=10'  + ( uid ? '&memberId=' + uid : ''),
     };
 
     axios.request(config)
@@ -72,6 +87,72 @@ const FeedPosts = forwardRef((props, ref) => {
         console.log(error);
       });
   }
+
+  const viewMoreComment = (blogId) => {
+    newFeeds.find(e => e.id === blogId).maxCommentsToShow += 2;
+    setNewFeeds(newFeeds)
+    forceUpdate()
+  }
+
+  const postComment = (newsFeedId, content) => {
+    const uid = localStorage.getItem("uid")
+    var data = JSON.stringify({
+      "newsfeedId": newsFeedId,
+      "ownerId": uid,
+      "content": content
+    });
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseURL + '/newsfeeds/' + newsFeedId + '/comment',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+    axios.request(config)
+      .then((response) => {
+        console.log(response)
+        getData(page)
+        forceUpdate()
+        setTargetNewsfeedId('')
+        setCommentContent('')
+      })
+  }
+
+  const handleChange = (event) => {
+    setCommentContent(event.target.value);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      postComment(targetNewsfeedId, commentContent);
+    }
+  };
+
+  const likeNewsfeed = (newsfeedId) => {
+    const uid = localStorage.getItem("uid")
+    var data = JSON.stringify({
+      "newsFeedId": newsfeedId,
+      "memberId": uid
+    });
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseURL + '/newsfeeds/like',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+    axios.request(config)
+      .then((response) => {
+        console.log(response)
+        getData(page)
+        forceUpdate()
+      })
+  }
+
   useEffect(() => {
     getData(page)
   }, [])
@@ -121,74 +202,61 @@ const FeedPosts = forwardRef((props, ref) => {
               {/* Footer */}
               <footer className="flex items-center space-x-4">
                 {/* Like button */}
-                <button className="flex items-center text-slate-400 hover:text-indigo-500">
-                  <svg className="w-4 h-4 shrink-0 fill-current mr-1.5" viewBox="0 0 16 16">
-                    <path d="M14.682 2.318A4.485 4.485 0 0011.5 1 4.377 4.377 0 008 2.707 4.383 4.383 0 004.5 1a4.5 4.5 0 00-3.182 7.682L8 15l6.682-6.318a4.5 4.5 0 000-6.364zm-1.4 4.933L8 12.247l-5.285-5A2.5 2.5 0 014.5 3c1.437 0 2.312.681 3.5 2.625C9.187 3.681 10.062 3 11.5 3a2.5 2.5 0 011.785 4.251h-.003z" />
-                  </svg>
-                  <div className="text-sm text-slate-500">122</div>
-                </button>
-                {/* Share button */}
-                <button className="flex items-center text-slate-400 hover:text-indigo-500">
-                  <svg className="w-4 h-4 shrink-0 fill-current mr-1.5" viewBox="0 0 16 16">
-                    <path d="M13 7h2v6a1 1 0 0 1-1 1H4v2l-4-3 4-3v2h9V7ZM3 9H1V3a1 1 0 0 1 1-1h10V0l4 3-4 3V4H3v5Z" />
-                  </svg>
-                  <div className="text-sm text-slate-500">7</div>
+                <button
+                onClick={() => likeNewsfeed(n.id)}
+                className="flex items-center text-slate-400 hover:text-indigo-500">
+                  {
+                    n.blog.isLiked ?   
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-heart-filled text-indigo-500 mr-1.5" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                      <path d="M6.979 3.074a6 6 0 0 1 4.988 1.425l.037 .033l.034 -.03a6 6 0 0 1 4.733 -1.44l.246 .036a6 6 0 0 1 3.364 10.008l-.18 .185l-.048 .041l-7.45 7.379a1 1 0 0 1 -1.313 .082l-.094 -.082l-7.493 -7.422a6 6 0 0 1 3.176 -10.215z" stroke-width="0" fill="currentColor" />
+                    </svg>
+                    :
+                    <svg className="w-4 h-4 shrink-0 fill-current mr-1.5" viewBox="0 0 16 16">
+                      <path d="M14.682 2.318A4.485 4.485 0 0011.5 1 4.377 4.377 0 008 2.707 4.383 4.383 0 004.5 1a4.5 4.5 0 00-3.182 7.682L8 15l6.682-6.318a4.5 4.5 0 000-6.364zm-1.4 4.933L8 12.247l-5.285-5A2.5 2.5 0 014.5 3c1.437 0 2.312.681 3.5 2.625C9.187 3.681 10.062 3 11.5 3a2.5 2.5 0 011.785 4.251h-.003z" />
+                    </svg>
+                  }
+                  <div className="text-sm text-slate-500">{ n.blog.likeCount ?? 0 }</div>
                 </button>
                 {/* Replies button */}
                 <button className="flex items-center text-slate-400 hover:text-indigo-500">
                   <svg className="w-4 h-4 shrink-0 fill-current mr-1.5" viewBox="0 0 16 16">
                     <path d="M8 0C3.6 0 0 3.1 0 7s3.6 7 8 7h.6l5.4 2v-4.4c1.2-1.2 2-2.8 2-4.6 0-3.9-3.6-7-8-7zm4 10.8v2.3L8.9 12H8c-3.3 0-6-2.2-6-5s2.7-5 6-5 6 2.2 6 5c0 2.2-2 3.8-2 3.8z" />
                   </svg>
-                  <div className="text-sm text-slate-500">298</div>
+                  <div className="text-sm text-slate-500">{ n.blog.comments.length }</div>
                 </button>
               </footer>
               {/* Comments */}
               <div className="mt-5 pt-3 border-t border-slate-200">
                 <ul className="space-y-2 mb-3">
                   {/* Comment */}
-                  <li className="p-3 bg-slate-50 rounded">
-                    <div className="flex items-start space-x-3">
-                      <img className="rounded-full shrink-0" src={CommenterImage04} width="32" height="32" alt="User 04" />
-                      <div>
-                        <div className="text-xs text-slate-500">
-                          <a className="font-semibold text-slate-800" href="#0">
-                            Sophie Wenner
-                          </a>{' '}
-                          · 44min
+                  {
+                    n.blog.comments.slice(0, n.maxCommentsToShow).map((comment) => {
+                      return <li className="p-3 bg-slate-50 rounded">
+                        <div className="flex items-start space-x-3">
+                          <img className="rounded-full shrink-0" src={comment.owner.avatar} width="32" height="32" alt="User 04" />
+                          <div>
+                            <div className="text-xs text-slate-500">
+                              <a className="font-semibold text-slate-800" href="#0">
+                                {comment.owner.displayName}
+                              </a>{' '}
+                              · {moment(new Date(comment.publicationTime)).format("DD/MM/YYYY, h:mm:ss A")}
+                            </div>
+                            <div className="text-sm">
+                              {comment.content}
+                            </div>
+                          </div>
                         </div>
-                        <div className="text-sm">
-                          <a className="font-medium text-indigo-500 hover:text-indigo-600" href="#0">
-                            @EricaSpriggs
-                          </a>{' '}
-                          Reading through and really enjoying "Zero to Sold" by Arvid.
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  {/* Comment */}
-                  <li className="p-3 bg-slate-50 rounded">
-                    <div className="flex items-start space-x-3">
-                      <img className="rounded-full shrink-0" src={CommenterImage05} width="32" height="32" alt="User 05" />
-                      <div>
-                        <div className="text-xs text-slate-500">
-                          <a className="font-semibold text-slate-800" href="#0">
-                            Kyla Scanlon
-                          </a>{' '}
-                          · 1h
-                        </div>
-                        <div className="text-sm">
-                          Depends on the company you're running, but if I had to choose just one book, it'd be The Personal MBA by Josh Kaufman.
-                        </div>
-                      </div>
-                    </div>
-                  </li>
+                      </li>
+                    })
+                  }
                 </ul>
                 {/* Comments footer */}
                 <div className="flex justify-between space-x-2">
                   <div className="text-sm text-slate-500">
-                    <span className="font-medium text-slate-600">2</span> of <span className="font-medium text-slate-600">67</span> comments
+                    <span className="font-medium text-slate-600">{n.blog.comments.slice(0, n.maxCommentsToShow).length}</span> of <span className="font-medium text-slate-600">{n.blog.comments.length}</span> comments
                   </div>
-                  <button className="text-sm  font-medium text-indigo-500 hover:text-indigo-600">View More Comments</button>
+                  <button className="text-sm  font-medium text-indigo-500 hover:text-indigo-600" onClick={() => viewMoreComment(n.id)}>View More Comments</button>
                 </div>
                 {/* Comment form */}
                 <div className="flex items-center space-x-3 mt-3">
@@ -197,11 +265,15 @@ const FeedPosts = forwardRef((props, ref) => {
                     <label htmlFor="comment-form" className="sr-only">
                       Write a comment…
                     </label>
-                    <input
+                    <input 
                       id="comment-form"
                       className="form-input w-full bg-slate-100 border-transparent focus:bg-white focus:border-slate-300 placeholder-slate-500"
                       type="text"
                       placeholder="Write a comment…"
+                      value={commentContent}
+                      onChange={handleChange}
+                      onFocus={() => setTargetNewsfeedId(n.id)}
+                      onKeyDown={handleKeyDown}
                     />
                   </div>
                 </div>
@@ -255,25 +327,21 @@ const FeedPosts = forwardRef((props, ref) => {
                 {/* Footer */}
                 <footer className="flex items-center space-x-4">
                   {/* Like button */}
-                  <button className="flex items-center text-indigo-400">
+                  <button
+                  onClick={() => likeNewsfeed(n.id)}
+                  className={"flex items-center " + `${n.record.isLiked ? "text-indigo-500" : "text-slate-400"}`}>
+                    {
+                    n.record.isLiked ?   
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-heart-filled text-indigo-500 mr-1.5" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                      <path d="M6.979 3.074a6 6 0 0 1 4.988 1.425l.037 .033l.034 -.03a6 6 0 0 1 4.733 -1.44l.246 .036a6 6 0 0 1 3.364 10.008l-.18 .185l-.048 .041l-7.45 7.379a1 1 0 0 1 -1.313 .082l-.094 -.082l-7.493 -7.422a6 6 0 0 1 3.176 -10.215z" stroke-width="0" fill="currentColor" />
+                    </svg>
+                    :
                     <svg className="w-4 h-4 shrink-0 fill-current mr-1.5" viewBox="0 0 16 16">
                       <path d="M14.682 2.318A4.485 4.485 0 0011.5 1 4.377 4.377 0 008 2.707 4.383 4.383 0 004.5 1a4.5 4.5 0 00-3.182 7.682L8 15l6.682-6.318a4.5 4.5 0 000-6.364zm-1.4 4.933L8 12.247l-5.285-5A2.5 2.5 0 014.5 3c1.437 0 2.312.681 3.5 2.625C9.187 3.681 10.062 3 11.5 3a2.5 2.5 0 011.785 4.251h-.003z" />
                     </svg>
-                    <div className="text-sm text-indigo-500">2.2K</div>
-                  </button>
-                  {/* Share button */}
-                  <button className="flex items-center text-slate-400 hover:text-indigo-500">
-                    <svg className="w-4 h-4 shrink-0 fill-current mr-1.5" viewBox="0 0 16 16">
-                      <path d="M13 7h2v6a1 1 0 0 1-1 1H4v2l-4-3 4-3v2h9V7ZM3 9H1V3a1 1 0 0 1 1-1h10V0l4 3-4 3V4H3v5Z" />
-                    </svg>
-                    <div className="text-sm text-slate-500">4.3K</div>
-                  </button>
-                  {/* Replies button */}
-                  <button className="flex items-center text-slate-400 hover:text-indigo-500">
-                    <svg className="w-4 h-4 shrink-0 fill-current mr-1.5" viewBox="0 0 16 16">
-                      <path d="M8 0C3.6 0 0 3.1 0 7s3.6 7 8 7h.6l5.4 2v-4.4c1.2-1.2 2-2.8 2-4.6 0-3.9-3.6-7-8-7zm4 10.8v2.3L8.9 12H8c-3.3 0-6-2.2-6-5s2.7-5 6-5 6 2.2 6 5c0 2.2-2 3.8-2 3.8z" />
-                    </svg>
-                    <div className="text-sm text-slate-500">92</div>
+                  }
+                    <div className={"text-sm "  + `${n.record.isLiked ? "text-indigo-500" : "text-slate-400"}`}>{ n.record.likeCount ?? 0 }</div>
                   </button>
                 </footer>
               </div>
