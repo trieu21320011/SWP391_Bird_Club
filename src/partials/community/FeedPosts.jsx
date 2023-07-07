@@ -36,15 +36,18 @@ const FeedPosts = forwardRef((props, ref) => {
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
+  const [commentContent, setCommentContent] = useState('')
+  const [targetNewsfeedId, setTargetNewsfeedId] = useState('')
   const onClickPage = (e, page) => {
     setPage(page);
     getData(page);
   }
   const getData = (page) => {
+    const uid = localStorage.getItem("uid")
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: baseURL + '/newsfeeds?limit=50&page=' + page + '&size=10',
+      url: baseURL + '/newsfeeds?limit=50&page=' + page + '&size=10' + ( uid ? '&memberId=' + uid : ''),
     };
 
     axios.request(config)
@@ -67,10 +70,11 @@ const FeedPosts = forwardRef((props, ref) => {
       });
   }
   const getDataDefault = (page) => {
+    const uid = localStorage.getItem("uid")
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: baseURL + '/newsfeeds?limit=50&page=1&size=10',
+      url: baseURL + '/newsfeeds?limit=50&page=1&size=10'  + ( uid ? '&memberId=' + uid : ''),
     };
 
     axios.request(config)
@@ -89,6 +93,66 @@ const FeedPosts = forwardRef((props, ref) => {
     setNewFeeds(newFeeds)
     forceUpdate()
   }
+
+  const postComment = (newsFeedId, content) => {
+    const uid = localStorage.getItem("uid")
+    var data = JSON.stringify({
+      "newsfeedId": newsFeedId,
+      "ownerId": uid,
+      "content": content
+    });
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseURL + '/newsfeeds/' + newsFeedId + '/comment',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+    axios.request(config)
+      .then((response) => {
+        console.log(response)
+        getData(page)
+        forceUpdate()
+        setTargetNewsfeedId('')
+        setCommentContent('')
+      })
+  }
+
+  const handleChange = (event) => {
+    setCommentContent(event.target.value);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      postComment(targetNewsfeedId, commentContent);
+    }
+  };
+
+  const likeNewsfeed = (newsfeedId) => {
+    const uid = localStorage.getItem("uid")
+    var data = JSON.stringify({
+      "newsFeedId": newsfeedId,
+      "memberId": uid
+    });
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseURL + '/newsfeeds/like',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+    axios.request(config)
+      .then((response) => {
+        console.log(response)
+        getData(page)
+        forceUpdate()
+      })
+  }
+
   useEffect(() => {
     getData(page)
   }, [])
@@ -138,11 +202,21 @@ const FeedPosts = forwardRef((props, ref) => {
               {/* Footer */}
               <footer className="flex items-center space-x-4">
                 {/* Like button */}
-                <button className="flex items-center text-slate-400 hover:text-indigo-500">
-                  <svg className="w-4 h-4 shrink-0 fill-current mr-1.5" viewBox="0 0 16 16">
-                    <path d="M14.682 2.318A4.485 4.485 0 0011.5 1 4.377 4.377 0 008 2.707 4.383 4.383 0 004.5 1a4.5 4.5 0 00-3.182 7.682L8 15l6.682-6.318a4.5 4.5 0 000-6.364zm-1.4 4.933L8 12.247l-5.285-5A2.5 2.5 0 014.5 3c1.437 0 2.312.681 3.5 2.625C9.187 3.681 10.062 3 11.5 3a2.5 2.5 0 011.785 4.251h-.003z" />
-                  </svg>
-                  <div className="text-sm text-slate-500">122</div>
+                <button
+                onClick={() => likeNewsfeed(n.id)}
+                className="flex items-center text-slate-400 hover:text-indigo-500">
+                  {
+                    n.blog.isLiked ?   
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-heart-filled text-indigo-500 mr-1.5" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                      <path d="M6.979 3.074a6 6 0 0 1 4.988 1.425l.037 .033l.034 -.03a6 6 0 0 1 4.733 -1.44l.246 .036a6 6 0 0 1 3.364 10.008l-.18 .185l-.048 .041l-7.45 7.379a1 1 0 0 1 -1.313 .082l-.094 -.082l-7.493 -7.422a6 6 0 0 1 3.176 -10.215z" stroke-width="0" fill="currentColor" />
+                    </svg>
+                    :
+                    <svg className="w-4 h-4 shrink-0 fill-current mr-1.5" viewBox="0 0 16 16">
+                      <path d="M14.682 2.318A4.485 4.485 0 0011.5 1 4.377 4.377 0 008 2.707 4.383 4.383 0 004.5 1a4.5 4.5 0 00-3.182 7.682L8 15l6.682-6.318a4.5 4.5 0 000-6.364zm-1.4 4.933L8 12.247l-5.285-5A2.5 2.5 0 014.5 3c1.437 0 2.312.681 3.5 2.625C9.187 3.681 10.062 3 11.5 3a2.5 2.5 0 011.785 4.251h-.003z" />
+                    </svg>
+                  }
+                  <div className="text-sm text-slate-500">{ n.blog.likeCount ?? 0 }</div>
                 </button>
                 {/* Replies button */}
                 <button className="flex items-center text-slate-400 hover:text-indigo-500">
@@ -191,11 +265,15 @@ const FeedPosts = forwardRef((props, ref) => {
                     <label htmlFor="comment-form" className="sr-only">
                       Write a comment…
                     </label>
-                    <input
+                    <input 
                       id="comment-form"
                       className="form-input w-full bg-slate-100 border-transparent focus:bg-white focus:border-slate-300 placeholder-slate-500"
                       type="text"
                       placeholder="Write a comment…"
+                      value={commentContent}
+                      onChange={handleChange}
+                      onFocus={() => setTargetNewsfeedId(n.id)}
+                      onKeyDown={handleKeyDown}
                     />
                   </div>
                 </div>
