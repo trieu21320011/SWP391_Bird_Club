@@ -29,6 +29,8 @@ const FeedPosts = forwardRef((props, ref) => {
       getDat: getDataDefault,
     };
   })
+  const [, updateState] = React.useState();
+  const forceUpdate = React.useCallback(() => updateState({}), []);
   const [newFeeds, setNewFeeds] = useState(null);
   const [totalPage, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
@@ -47,7 +49,16 @@ const FeedPosts = forwardRef((props, ref) => {
 
     axios.request(config)
       .then((response) => {
-        setNewFeeds(response.data.newsfeeds)
+        var data = response.data.newsfeeds
+        var result = []
+        data.forEach(element => {
+          element = {
+            ...element, // Spread the existing properties
+            maxCommentsToShow: 2
+          };
+          result.push(element)
+        });
+        setNewFeeds(result)
         setTotalCount(response.data.total)
         setTotalPages(Math.ceil(response.data.total / 10))
       })
@@ -71,6 +82,12 @@ const FeedPosts = forwardRef((props, ref) => {
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  const viewMoreComment = (blogId) => {
+    newFeeds.find(e => e.id === blogId).maxCommentsToShow += 2;
+    setNewFeeds(newFeeds)
+    forceUpdate()
   }
   useEffect(() => {
     getData(page)
@@ -127,68 +144,45 @@ const FeedPosts = forwardRef((props, ref) => {
                   </svg>
                   <div className="text-sm text-slate-500">122</div>
                 </button>
-                {/* Share button */}
-                <button className="flex items-center text-slate-400 hover:text-indigo-500">
-                  <svg className="w-4 h-4 shrink-0 fill-current mr-1.5" viewBox="0 0 16 16">
-                    <path d="M13 7h2v6a1 1 0 0 1-1 1H4v2l-4-3 4-3v2h9V7ZM3 9H1V3a1 1 0 0 1 1-1h10V0l4 3-4 3V4H3v5Z" />
-                  </svg>
-                  <div className="text-sm text-slate-500">7</div>
-                </button>
                 {/* Replies button */}
                 <button className="flex items-center text-slate-400 hover:text-indigo-500">
                   <svg className="w-4 h-4 shrink-0 fill-current mr-1.5" viewBox="0 0 16 16">
                     <path d="M8 0C3.6 0 0 3.1 0 7s3.6 7 8 7h.6l5.4 2v-4.4c1.2-1.2 2-2.8 2-4.6 0-3.9-3.6-7-8-7zm4 10.8v2.3L8.9 12H8c-3.3 0-6-2.2-6-5s2.7-5 6-5 6 2.2 6 5c0 2.2-2 3.8-2 3.8z" />
                   </svg>
-                  <div className="text-sm text-slate-500">298</div>
+                  <div className="text-sm text-slate-500">{ n.blog.comments.length }</div>
                 </button>
               </footer>
               {/* Comments */}
               <div className="mt-5 pt-3 border-t border-slate-200">
                 <ul className="space-y-2 mb-3">
                   {/* Comment */}
-                  <li className="p-3 bg-slate-50 rounded">
-                    <div className="flex items-start space-x-3">
-                      <img className="rounded-full shrink-0" src={CommenterImage04} width="32" height="32" alt="User 04" />
-                      <div>
-                        <div className="text-xs text-slate-500">
-                          <a className="font-semibold text-slate-800" href="#0">
-                            Sophie Wenner
-                          </a>{' '}
-                          · 44min
+                  {
+                    n.blog.comments.slice(0, n.maxCommentsToShow).map((comment) => {
+                      return <li className="p-3 bg-slate-50 rounded">
+                        <div className="flex items-start space-x-3">
+                          <img className="rounded-full shrink-0" src={comment.owner.avatar} width="32" height="32" alt="User 04" />
+                          <div>
+                            <div className="text-xs text-slate-500">
+                              <a className="font-semibold text-slate-800" href="#0">
+                                {comment.owner.displayName}
+                              </a>{' '}
+                              · {moment(new Date(comment.publicationTime)).format("DD/MM/YYYY, h:mm:ss A")}
+                            </div>
+                            <div className="text-sm">
+                              {comment.content}
+                            </div>
+                          </div>
                         </div>
-                        <div className="text-sm">
-                          <a className="font-medium text-indigo-500 hover:text-indigo-600" href="#0">
-                            @EricaSpriggs
-                          </a>{' '}
-                          Reading through and really enjoying "Zero to Sold" by Arvid.
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  {/* Comment */}
-                  <li className="p-3 bg-slate-50 rounded">
-                    <div className="flex items-start space-x-3">
-                      <img className="rounded-full shrink-0" src={CommenterImage05} width="32" height="32" alt="User 05" />
-                      <div>
-                        <div className="text-xs text-slate-500">
-                          <a className="font-semibold text-slate-800" href="#0">
-                            Kyla Scanlon
-                          </a>{' '}
-                          · 1h
-                        </div>
-                        <div className="text-sm">
-                          Depends on the company you're running, but if I had to choose just one book, it'd be The Personal MBA by Josh Kaufman.
-                        </div>
-                      </div>
-                    </div>
-                  </li>
+                      </li>
+                    })
+                  }
                 </ul>
                 {/* Comments footer */}
                 <div className="flex justify-between space-x-2">
                   <div className="text-sm text-slate-500">
-                    <span className="font-medium text-slate-600">2</span> of <span className="font-medium text-slate-600">67</span> comments
+                    <span className="font-medium text-slate-600">{n.blog.comments.slice(0, n.maxCommentsToShow).length}</span> of <span className="font-medium text-slate-600">{n.blog.comments.length}</span> comments
                   </div>
-                  <button className="text-sm  font-medium text-indigo-500 hover:text-indigo-600">View More Comments</button>
+                  <button className="text-sm  font-medium text-indigo-500 hover:text-indigo-600" onClick={() => viewMoreComment(n.id)}>View More Comments</button>
                 </div>
                 {/* Comment form */}
                 <div className="flex items-center space-x-3 mt-3">
