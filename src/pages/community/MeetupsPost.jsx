@@ -30,7 +30,7 @@ import Swal from 'sweetalert2';
 
 
 
-function MeetupsPost(props) {
+function MeetupsPost() {
   var eventId = window.location.search.split("=")[1];
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [infoModalOpen, setInfoModalOpen] = useState(false)
@@ -125,7 +125,7 @@ function MeetupsPost(props) {
       });
 
   }
-  if (eventDetail === null || eventDetailAttend.length === 0) return;
+  if (eventDetail === null) return;
   return (
     <div className="flex h-screen overflow-hidden">
 
@@ -178,7 +178,7 @@ function MeetupsPost(props) {
 
                 {/* Image */}
                 <figure className="mb-6">
-                  <img className="w-full rounded-sm" src={MeetupImage} width="640" height="360" alt="Meetup" />
+                  <img className="w-full rounded-sm" src={eventDetail.background} width="640" height="360" alt="Meetup" />
                 </figure>
 
                 {/* Post content */}
@@ -186,18 +186,6 @@ function MeetupsPost(props) {
                   <h2 className="text-xl leading-snug text-slate-800 font-bold mb-2">Meetup Details</h2>
  
                   <p dangerouslySetInnerHTML={{ __html: eventDetail.description}} />
-                  <p className="mb-6">In the world of AI, behavioural predictions are leading the charge to better machine learning.</p>
-                  <p className="mb-6">
-                    There is so much happening in the AI space. Advances in the economic sectors have seen automated business practices rapidly
-                    increasing economic value. While the realm of the human sciences has used the power afforded by computational capabilities to
-                    solve many human based dilemmas. Even the art scene has adopted carefully selected ML applications to usher in the technological
-                    movement.
-                  </p>
-                  <p className="mb-6">
-                    Join us every second Wednesday as we host an open discussion about the amazing things happening in the world of AI and machine
-                    learning. Feel free to share your experiences, ask questions, ponder the possibilities, or just listen as we explore new topics
-                    and revisit old ones.
-                  </p>
                 </div>
                 <hr className="my-6 border-t border-slate-200" />
 
@@ -335,18 +323,12 @@ function MeetupsPost(props) {
                   <div className="space-y-2">
                     {status.message === 'NOT_ATTEND' && (
                       <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white" aria-controls="info-modal" onClick={(e) => { e.stopPropagation(); setInfoModalOpen(true); }}>
-                        <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 16 16">
-                          <path d="m2.457 8.516.969-.99 2.516 2.481 5.324-5.304.985.989-6.309 6.284z" />
-                        </svg>
-                        <span className="ml-1">Attending</span>
+                        <span className="ml-1">Join event</span>
                       </button>
                     )}
                     {status.message === 'PENDING' && (
                       <button disabled={true} className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white" aria-controls="info-modal" onClick={(e) => { e.stopPropagation(); setInfoModalOpen(true); }}>
-                        <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 16 16">
-                          <path d="m2.457 8.516.969-.99 2.516 2.481 5.324-5.304.985.989-6.309 6.284z" />
-                        </svg>
-                        <span className="ml-1">Đợi được xác nhận</span>
+                        <span className="ml-1">Pending request</span>
                       </button>
                     )}
                     {status.message === 'ACCEPTED' && (
@@ -392,7 +374,7 @@ function MeetupsPost(props) {
                           {/* Modal content */}
                           <div className="text-sm mb-10">
                             <div className="space-y-2">
-                              <p>Semper eget duis at tellus at urna condimentum mattis pellentesque lacus suspendisse faucibus interdum.</p>
+                              <p>We would love to have you in the event !!</p>
                             </div>
                           </div>
                           {/* Modal footer */}

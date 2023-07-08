@@ -19,11 +19,12 @@ function Calendar() {
   const [startingBlankDays, setStartingBlankDays] = useState([])
   const [endingBlankDays, setEndingBlankDays] = useState([])
   const [event, setEvents] = useState([])
+  const uid = localStorage.getItem("uid")
   const getData = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: baseURL + '/activities/calender',
+      url: baseURL + '/activities/calender-of-member?memberId='+ uid,
     };
 
     axios.request(config)

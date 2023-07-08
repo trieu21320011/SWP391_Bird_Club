@@ -55,7 +55,7 @@ function Signup() {
         Swal.close()
         Swal.fire(
           "Good job!",
-          "You login susccess!",
+          "You signup susccess!",
           "success"
        );
        navigateTo('/login') // truyền vào login (/login)
@@ -128,7 +128,7 @@ function Signup() {
                   <div className="mr-1">
                     
                   </div>
-                  <Link className="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3 whitespace-nowrap" to="/">Sign Up</Link>
+                  <button type='submit' className="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3" >Sign up</button>
                 </div>
               </form>
               {/* Footer */}
