@@ -20,16 +20,17 @@ import UserImage04 from '../../images/avatar-04.jpg';
 import UserImage05 from '../../images/avatar-05.jpg';
 import UserImage06 from '../../images/avatar-06.jpg';
 import NotFoundImage from '../../images/404-illustration.svg';
+import moment from 'moment';
 
 function MeetupsPosts(props) {
   console.log(props.data);
   const event = props.data;
   return (
 
-    <div className="grid xl:grid-cols-2 gap-6">
+    <div>
       {
         event.length > 0 ? (
-          <div>
+          <div className="grid xl:grid-cols-2 gap-6">
             {
               event.map(e => {
                 return (
@@ -55,8 +56,8 @@ function MeetupsPosts(props) {
                     </Link>
                     {/* Content */}
                     <div className="grow p-5 flex flex-col">
-                      <div className="grow">
-                        <div className="text-sm font-semibold text-indigo-500 uppercase mb-2">{e.startTime}</div>
+                      <div className="grow">{}
+                        <div className="text-sm font-semibold text-indigo-500 uppercase mb-2">{moment(e.startTime).format('MMMM Do YYYY, h:mm:ss a')}-&gt; {moment(e.endTime).format('MMMM Do YYYY, h:mm:ss a')}</div>
                         <Link className="inline-flex mb-2" to={"/activity/meetups-post?id=" + e.id}>
                           <h3 className="text-lg font-bold text-slate-800">{e.name}</h3>
                         </Link>

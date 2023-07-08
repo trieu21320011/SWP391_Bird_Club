@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import Tooltip from '../../components/Tooltip';
+import dayjs from 'dayjs';
 
 
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
@@ -58,62 +59,91 @@ function MeetupCreate() {
     }
     const handleCreate = (e) => {
         e.preventDefault()
-        Swal.fire({
-            title: 'Xác nhận thông tin',
-            html: 'This will close in a minutes',
+        if (title === '' 
+        || fromTime === null 
+        || toTime === null
+        || startTime === null 
+        || endTime === null
+        || location === ''
+        || description === ''
+        || type === ''
+        || image === '') {
 
-            timerProgressBar: true,
-            didOpen: () => {
-                Swal.showLoading()
-                const b = Swal.getHtmlContainer().querySelector('b')
-            },
-        })
-        var data = JSON.stringify({
-            "name": title,
-            "startTime": fromTime,
-            "endTime": toTime,
-            "location": location,
-            "description": description,
-            "activityType": type,
-            "ownerId": parseInt(uid, 10),
-            "background": image,
-        });
-        console.log(data);
-        var config = {
-            method: 'post',
-            maxBodyLength: Infinity,
-            url: baseURL + '/activities',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: data
-        };
+            Swal.fire(
+                "Oops!",
+                "Missing some field",
+                "error",
+            );
+        } else {            
+            const newFromDate = new Date(fromTime);
+            newFromDate.setUTCHours(dayjs(startTime).hour());
+            newFromDate.setUTCMinutes(dayjs(startTime).minute());
+            const newFromDate1 = newFromDate.toISOString();
+            const newToDate = new Date(toTime);
+            newToDate.setUTCHours(dayjs(endTime).hour());
+            newToDate.setUTCMinutes(dayjs(endTime).minute());
+            const newToDate1 = newToDate.toISOString();
+            Swal.fire({
+                title: 'Xác nhận thông tin',
+                html: 'This will close in a minutes',
 
-        axios(config)
-            .then(function (response) {
-                console.log(response);
-                Swal.close()
-                Swal.fire(
-                    "Good job!",
-                    "You success create a blog!",
-                    "success",
-                );
-                nav("/activity/meetups")
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                    const b = Swal.getHtmlContainer().querySelector('b')
+                },
             })
-            .catch(function (error) {
-                console.log();
-                Swal.close()
-
+            var data = JSON.stringify({
+                "name": title,
+                "startTime": newFromDate1,
+                "endTime": newToDate1,
+                "location": location,
+                "description": description,
+                "activityType": type,
+                "ownerId": parseInt(uid, 10),
+                "background": image,
             });
+            console.log(data);
+            var config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: baseURL + '/activities',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            axios(config)
+                .then(function (response) {
+                    console.log(response);
+                    Swal.close()
+                    Swal.fire(
+                        "Good job!",
+                        "You success create a blog!",
+                        "success",
+                    );
+                    nav("/activity/meetups")
+                })
+                .catch(function (error) {
+                    console.log();
+                    Swal.close()
+                    Swal.fire(
+                        "Oops!",
+                        "Some thing went wrong",
+                        "error",
+                    );
+        
+
+                });
+
+        }
+
 
     }
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [value, setValue] = useState()
-    const [toggle1, setToggle1] = useState(true);
-    const [toggle2, setToggle2] = useState(false);
-    const [toggle3, setToggle3] = useState(false);
-    const [startTime, setStartTime] = useState('10:00');
-    const [endTime, setEndTime] = useState('10:00');
+    const [startTime, setStartTime] = useState(null);
+    const [endTime, setEndTime] = useState(null);
     const [title, setTile] = useState("");
     const [description, setDescription] = useState("");
     const [fromTime, setFromTime] = useState(null);
