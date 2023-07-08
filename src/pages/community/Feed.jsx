@@ -27,6 +27,7 @@ function Feed() {
   const [newFeedsDetail,setNewFeedsDetail] = useState({})
   const [titleEdit, setTitleEdit] = useState("");
   const [valueEdit, setValueEdit] = useState();
+  const [newFeedId, setNewFeedsId] = useState();
   
 
   const date = new Date(2023, 11, 13).toDateString()
@@ -120,15 +121,14 @@ function Feed() {
       },
     })
     var data = JSON.stringify({
-      "ownerId": id,
-      "title": title,
-      "content": value
+      "title": titleEdit,
+      "content": valueEdit
     });
 
     var config = {
-      method: 'post',
+      method: 'put',
       maxBodyLength: Infinity,
-      url: baseURL + '/newsfeeds/blogs',
+      url: baseURL + '/newsfeeds/blogs/' + newFeedId,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -141,7 +141,7 @@ function Feed() {
         Swal.close()
         Swal.fire(
           "Good job!",
-          "You success create a blog!",
+          "You success edit a blog!",
           "success",
         );
         childRef.current.getDat()
@@ -149,7 +149,7 @@ function Feed() {
       .catch(function (error) {
         console.log();
         Swal.close()
-        Swal.fire("Oops", "Wrong id or password!", "error");
+        Swal.fire("Oops", "Some thing went wrong!", "error");
       });
 
   }
@@ -157,6 +157,7 @@ function Feed() {
     childRef.current.getDat()
   }
   const openEditModal = (id) => {
+    setNewFeedsId(id)
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
@@ -276,7 +277,7 @@ function Feed() {
                               <div className="px-5 py-4 border-t border-slate-200">
                                 <div className="flex flex-wrap justify-end space-x-2">
                                   <button className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600" onClick={(e) => { e.stopPropagation(); setEditModalOpen(false); }}>Cancel</button>
-                                  <button onClick={e => handleCreate(e)} className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">Edit</button>
+                                  <button onClick={e => handleEdit(e)} className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">Edit</button>
                                 </div>
                               </div>
                             </ModalBasic>

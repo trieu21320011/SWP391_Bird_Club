@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
@@ -6,17 +6,61 @@ import SearchForm from '../../partials/actions/SearchForm';
 import DeleteButton from '../../partials/actions/DeleteButton';
 import DateSelect from '../../components/DateSelect';
 import FilterButton from '../../components/DropdownFilter';
-import InvoicesTable from '../../partials/invoices/InvoicesTable';
+import { baseURL } from '../../pages/baseUrl';
+import NotFoundImage from '../../images/404-illustration.svg';
 import PaginationClassic from '../../components/PaginationClassic';
+import axios from 'axios';
 
 function Invoices() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
-
-  const handleSelectedItems = (selectedItems) => {
-    setSelectedItems([...selectedItems]);
+  const [blog, setBlog] = useState([]);
+  const totalColor = (status) => {
+    switch (status) {
+      case 'Paid':
+        return 'text-emerald-500';
+      case 'Due':
+        return 'text-amber-500';
+      case 'Overdue':
+        return 'text-rose-500';
+      default:
+        return 'text-slate-500';
+    }
   };
+
+  const statusColor = (status) => {
+    switch (status) {
+      case 'Paid':
+        return 'bg-emerald-100 text-emerald-600';
+      case 'Due':
+        return 'bg-amber-100 text-amber-600';
+      case 'Overdue':
+        return 'bg-rose-100 text-rose-500';
+      default:
+        return 'bg-slate-100 text-slate-500';
+    }
+  };
+  const uid = localStorage.getItem("uid")
+  useEffect(() => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/newsfeeds/by-member/' + uid,
+    };
+    axios.request(config)
+      .then((response) => {
+        let newFeedList = response.data.newsfeeds
+        let blogList = newFeedList.filter(i => i.newsfeedType === 0)
+        console.log(blogList);
+        setBlog(blogList)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [])
+
+
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -44,20 +88,20 @@ function Invoices() {
               {/* Right: Actions */}
               <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
                 {/* Search form */}
-                <SearchForm placeholder="Search by invoice ID…" />
+                <SearchForm placeholder="Search by Blog title" />
                 {/* Create invoice button */}
                 <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white">
                   <svg className="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
                     <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                   </svg>
-                  <span className="hidden xs:block ml-2">Create Invoice</span>
+                  <span className="hidden xs:block ml-2">Create Blogs</span>
                 </button>
               </div>
 
             </div>
 
             {/* More actions */}
-            <div className="sm:flex sm:justify-between sm:items-center mb-5">           
+            <div className="sm:flex sm:justify-between sm:items-center mb-5">
 
               {/* Right side */}
               <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
@@ -72,12 +116,101 @@ function Invoices() {
             </div>
 
             {/* Table */}
-            <InvoicesTable selectedItems={handleSelectedItems} />
+            <div className="bg-white shadow-lg rounded-sm border border-slate-200 relative">
+              <header className="px-5 py-4">
+                <h2 className="font-semibold text-slate-800">Blogs <span className="text-slate-400 font-medium">{blog.length}</span></h2>
+              </header>
+              <div>
 
-            {/* Pagination */}
-            <div className="mt-8">
-              <PaginationClassic />
+                {/* Table */}
+                <div className="overflow-x-auto">
+                  <table className="table-auto w-full">
+                    {/* Table header */}
+                    <thead className="text-xs font-semibold uppercase text-slate-500 bg-slate-50 border-t border-b border-slate-200">
+                      <tr>
+                        <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-left">Title</div>
+                        </th>
+                        <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-left">Ngày tạo</div>
+                        </th>
+                        <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-left">Số comment</div>
+                        </th>
+                        <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-left">Số like</div>
+                        </th>
+
+                        <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-left">Actions</div>
+                        </th>
+                      </tr>
+                    </thead>
+                    {/* Table body */}
+                    {
+                      blog.length > 0 ? (
+                        <tbody className="text-sm divide-y divide-slate-200">
+                          {
+                            blog.map(b => {
+                              return (
+                                <tr>
+                                  <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                    <div className="font-medium text-sky-500">{b.blog.title}</div>
+                                  </td>
+                                  <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                    <div className={`font-medium `}>{b.publicationTime}</div>
+                                  </td>
+                                  <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                    <div className="font-medium text-slate-800">{b.blog.comments.length}</div>
+                                  </td>
+                                  <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                    <div>{b.blog.likeCount ? (b.blog.likeCount) : ("0")}</div>
+                                  </td>
+                                  <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
+                                    <div className="space-x-1">
+                                      <button className="text-slate-400 hover:text-slate-500 rounded-full">
+                                        <span className="sr-only">Edit</span>
+                                        <svg className="w-8 h-8 fill-current" viewBox="0 0 32 32">
+                                          <path d="M19.7 8.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM12.6 22H10v-2.6l6-6 2.6 2.6-6 6zm7.4-7.4L17.4 12l1.6-1.6 2.6 2.6-1.6 1.6z" />
+                                        </svg>
+                                      </button>
+                                      <button className="text-rose-500 hover:text-rose-600 rounded-full">
+                                        <span className="sr-only">Delete</span>
+                                        <svg className="w-8 h-8 fill-current" viewBox="0 0 32 32">
+                                          <path d="M13 15h2v6h-2zM17 15h2v6h-2z" />
+                                          <path d="M20 9c0-.6-.4-1-1-1h-6c-.6 0-1 .4-1 1v2H8v2h1v10c0 .6.4 1 1 1h12c.6 0 1-.4 1-1V13h1v-2h-4V9zm-6 1h4v1h-4v-1zm7 3v9H11v-9h10z" />
+                                        </svg>
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              )
+                            })
+                          }
+
+                        </tbody>
+                      ) : (<div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+
+                        <div className="max-w-2xl m-auto mt-16">
+
+                          <div className="text-center px-4">
+                            <div className="inline-flex mb-8">
+                              <img src={NotFoundImage} width="176" height="176" alt="404 illustration" />
+                            </div>
+                            <div className="mb-6">Hiện chưa có event nào. Hãy tạo một event đi</div>
+                          </div>
+
+                        </div>
+
+                      </div>)}
+
+                  </table>
+
+                </div>
+              </div>
             </div>
+
+            
 
           </div>
         </main>

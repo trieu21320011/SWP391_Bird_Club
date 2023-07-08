@@ -178,7 +178,7 @@ function MeetupsPost(props) {
 
                 {/* Image */}
                 <figure className="mb-6">
-                  <img className="w-full rounded-sm" src={MeetupImage} width="640" height="360" alt="Meetup" />
+                  <img className="w-full rounded-sm" src={eventDetail.background} width="640" height="360" alt="Meetup" />
                 </figure>
 
                 {/* Post content */}
@@ -186,18 +186,6 @@ function MeetupsPost(props) {
                   <h2 className="text-xl leading-snug text-slate-800 font-bold mb-2">Meetup Details</h2>
  
                   <p dangerouslySetInnerHTML={{ __html: eventDetail.description}} />
-                  <p className="mb-6">In the world of AI, behavioural predictions are leading the charge to better machine learning.</p>
-                  <p className="mb-6">
-                    There is so much happening in the AI space. Advances in the economic sectors have seen automated business practices rapidly
-                    increasing economic value. While the realm of the human sciences has used the power afforded by computational capabilities to
-                    solve many human based dilemmas. Even the art scene has adopted carefully selected ML applications to usher in the technological
-                    movement.
-                  </p>
-                  <p className="mb-6">
-                    Join us every second Wednesday as we host an open discussion about the amazing things happening in the world of AI and machine
-                    learning. Feel free to share your experiences, ask questions, ponder the possibilities, or just listen as we explore new topics
-                    and revisit old ones.
-                  </p>
                 </div>
                 <hr className="my-6 border-t border-slate-200" />
 

@@ -59,14 +59,14 @@ function MeetupCreate() {
     const handleCreate = (e) => {
         e.preventDefault()
         Swal.fire({
-          title: 'Xác nhận thông tin',
-          html: 'This will close in a minutes',
-    
-          timerProgressBar: true,
-          didOpen: () => {
-            Swal.showLoading()
-            const b = Swal.getHtmlContainer().querySelector('b')
-          },
+            title: 'Xác nhận thông tin',
+            html: 'This will close in a minutes',
+
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+            },
         })
         var data = JSON.stringify({
             "name": title,
@@ -76,37 +76,37 @@ function MeetupCreate() {
             "description": description,
             "activityType": type,
             "ownerId": parseInt(uid, 10),
-            "background": "",
+            "background": image,
         });
-    console.log(data);
+        console.log(data);
         var config = {
-          method: 'post',
-          maxBodyLength: Infinity,
-          url: baseURL + '/activities',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data: data
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: baseURL + '/activities',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
-    
+
         axios(config)
-          .then(function (response) {
-            console.log(response);
-            Swal.close()
-            Swal.fire(
-              "Good job!",
-              "You success create a blog!",
-              "success",
-            );
-            nav("/activity/meetups")
-          })
-          .catch(function (error) {
-            console.log();
-            Swal.close()
-           
-          });
-    
-      }
+            .then(function (response) {
+                console.log(response);
+                Swal.close()
+                Swal.fire(
+                    "Good job!",
+                    "You success create a blog!",
+                    "success",
+                );
+                nav("/activity/meetups")
+            })
+            .catch(function (error) {
+                console.log();
+                Swal.close()
+
+            });
+
+    }
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [value, setValue] = useState()
     const [toggle1, setToggle1] = useState(true);
@@ -120,6 +120,7 @@ function MeetupCreate() {
     const [toTime, setToTime] = useState(null);
     const [location, setLocation] = useState("");
     const [type, setType] = useState('');
+    const [image, setImage] = useState('');
 
     return (
         <div className="flex h-screen overflow-hidden">
@@ -217,6 +218,10 @@ function MeetupCreate() {
                                         modules={modules}
                                         formats={formats}
                                         value={description} onChange={setDescription} />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1" htmlFor="name">Image URL <span className="text-rose-500">*</span></label>
+                                    <input id="name" className="form-input w-full px-2 py-1" type="text" required onChange={e => setImage(e.target.value)} />
                                 </div>
 
                                 {/* Select */}
