@@ -13,7 +13,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import ModalBlank from '../../components/ModalBlank';
 import Swal from 'sweetalert2';
 
-function Customers() {
+function Blogs() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -204,7 +204,7 @@ function Customers() {
 
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0">
-                <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">Manage Guest ✨</h1>
+                <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">Manage Blogs ✨</h1>
               </div>
 
               {/* Right: Actions */}
@@ -304,4 +304,4 @@ function Customers() {
   );
 }
 
-export default Customers;
+export default Blogs;
