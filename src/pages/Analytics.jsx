@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
@@ -6,9 +6,9 @@ import { baseURL } from '../pages/baseUrl';
 import axios from 'axios';
 
 function Analytics({
-  setProfileId,
-}) {
 
+}) {
+  const [records, setRecords] = useState([])
   const getRecords = () => {
     const uid = localStorage.getItem("uid")
     let config = {
@@ -25,6 +25,9 @@ function Analytics({
         console.log(error);
       });
   }
+  useEffect(() => {
+    getRecords()
+  }, [])
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [bird, setBird] = useState('');
@@ -100,31 +103,42 @@ function Analytics({
                             <div className='popup-margin'>
                               <form onSubmit={handleSubmit}>
                                 <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
+                                  BirdId:
+                                  <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
+                                    type="text"
+                                    value={bird}
+                                    onChange={(e) => setBirdId(e.target.value)}
+                                  />
+                                </label>
+                                <br/>
+                                <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
+                                  BirdName:
+                                  <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
+                                    type="text"
+                                    value={bird}
+                                    onChange={(e) => setBirdName(e.target.value)}
+                                  />
+                                </label>
+                                <br/>
+                                <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
                                   Species:
                                   <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
                                     type="text"
                                     value={bird}
-                                    onChange={(e) => setBird(e.target.value)}
+                                    onChange={(e) => setBirdSpecies(e.target.value)}
                                   />
                                 </label>
-                                <br />
+                                <br/>
                                 <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                  Number:
+                                  Quantity:
                                   <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
                                     type="number"
                                     value={number}
-                                    onChange={(e) => setNumber(e.target.value)}
+                                    onChange={(e) => setQuantity(e.target.value)}
                                   />
                                 </label>
-                                <br />
-                                <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                  Note:
-                                  <textarea class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
-                                    value={note}
-                                    onChange={(e) => setNote(e.target.value)}
-                                  />
-                                </label>
-                                <br />
+                                <br/>
+
                                 <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
                                   Picture:
                                   <input
@@ -133,7 +147,7 @@ function Analytics({
                                     onChange={handlePictureChange}
                                   />
                                 </label>
-                                <br />
+                                <br/>
 
                                 <a type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" href='#'>Submit</a>
                               </form>
@@ -144,8 +158,6 @@ function Analytics({
                     </div>
                   </div>
                 </div>
-
-
 
 
 
@@ -187,16 +199,19 @@ function Analytics({
                         <div class="bg-gray-50 table-header-group">
                           <div class="table-row">
                             <div class="table-cell border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 pl-4 pr-3 sm:pl-6">
-                              Date
+                              Bird ID
                             </div>
                             <div class="table-cell border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 relative">
                               <span class="sr-only">Photo</span>
                             </div>
                             <div class="table-cell border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3">
-                              Species
+                              Bird Name
                             </div>
                             <div class="border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 hidden sm:table-cell">
-                              Number
+                              Species
+                            </div>
+                            <div class="border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 hidden lg:table-cell">
+                              Quantity
                             </div>
                             <div class="border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 hidden lg:table-cell">
                               Picture
@@ -206,134 +221,151 @@ function Analytics({
                             </div>
                           </div>
                         </div>
-                        <div class="table-header-group bg-white">
-                          <turbo-frame id="row_record_10444" class="contents" target="_top">
-                            <div class="table-row">
-                              <div class="table-cell border-b border-gray-200 text-sm w-full max-w-0 py-4 pl-4 pr-3 sm:w-auto sm:max-w-none sm:pl-6 text-gray-900">
-                                Jun 22, 2023
-                                <dl class="font-normal lg:hidden">
-                                  <dt class="sr-only">Member</dt>
-                                  <dd class="mt-1 truncate text-gray-700 lg:hidden">
-                                    <a class="hover:text-gray-900" href="/clubs/vn-bird/members/806"></a>
-                                  </dd>
-                                  <dt class="sr-only">Location</dt>
-                                  <dd class="mt-1 truncate text-gray-500 sm:hidden">
-                                    <a class="hover:text-gray-900" href="/clubs/vn-bird/locations/at-home">At Home</a>
-                                  </dd>
-                                </dl>
-                              </div>
-                              <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                <div class="flex flex-row items-center space-x-2">
-                                </div>
-                              </div>
-                              <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                5 x Redhead
-                              </div>
-                              <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden lg:table-cell">
-                                <a class="hover:text-gray-900" href="/clubs/vn-bird/locations/at-home">At Home</a>
-                              </div>
-                              <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden sm:table-cell">
-                                <a class="hover:text-gray-900" href="/clubs/vn-bird/members/806">Thông Hoàng</a>
-                              </div>
-                              <div class="table-cell border-b border-gray-200 text-sm text-gray-500 pl-3 pr-4  sm:pr-6">
-                                <div >
-                                  <div class="relative inline-block">
-                                    <a href='#popup2' id='openPopUp' className='btn-sm bg-indigo-500 hover:bg-indigo-600 text-white m-1'>Edit</a>
+                        {
+                          records.length > 0 ? records.map((records) => {
+                            return (
+                              <div class="table-header-group bg-white">
+                                <turbo-frame id="row_record_10444" class="contents" target="_top">
 
-                                    <div id='popup2' className='overlay'>
-                                      <div className='popup'>
-                                        <a className='close' href='#'>&times;</a>
 
-                                        <div class="bg-white shadow sm:rounded-lg">
-                                          <div class="bg-white px-4 py-5 border-b border-gray-200 sm:px-6 sm:rounded-t-lg">
-                                            <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
-                                              <div class="ml-4 mt-2">
-                                                <h3 class="text-lg leading-6 font-medium text-gray-900">
-                                                  Bird List
-                                                </h3>
-                                                <p class="mt-1 text-sm text-gray-500">
-                                                  Add as many records as you like and attach any photos you've taken.
-                                                </p>
+                                  <div class="table-row">
+                                    <div class="table-cell border-b border-gray-200 text-sm w-full max-w-0 py-4 pl-4 pr-3 sm:w-auto sm:max-w-none sm:pl-6 text-gray-900">
+                                      {records.birdId}
+                                    </div>
+                                    <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
+                                      <div class="flex flex-row items-center space-x-2">
+                                      </div>
+                                    </div>
+                                    <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
+                                      {records.birdName}
+                                    </div>
+                                    <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden lg:table-cell">
+                                      <a class="hover:text-gray-900" href="/clubs/vn-bird/locations/at-home">{records.species}</a>
+                                    </div>
+                                    <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden sm:table-cell">
+                                      <a class="hover:text-gray-900" href="/clubs/vn-bird/members/806">{records.quantity}</a>
+                                    </div>
+                                    <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden sm:table-cell">
+                                      <img className='w-20 mt-4' src={records.photo} width="32" height="32" alt="User 08" />
+                                    </div>
+                                    <div class="table-cell border-b border-gray-200 text-sm text-gray-500 pl-3 pr-4  sm:pr-6">
+                                      <div >
+                                        <div class="relative inline-block">
+                                          <a href='#popup2' id='openPopUp' className='btn-sm bg-indigo-500 hover:bg-indigo-600 text-white m-1'>Edit</a>
+
+                                          <div id='popup2' className='overlay'>
+                                            <div className='popup'>
+                                              <a className='close' href='#'>&times;</a>
+
+                                              <div class="bg-white shadow sm:rounded-lg">
+                                                <div class="bg-white px-4 py-5 border-b border-gray-200 sm:px-6 sm:rounded-t-lg">
+                                                  <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
+                                                    <div class="ml-4 mt-2">
+                                                      <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                                        Bird List
+                                                      </h3>
+                                                      <p class="mt-1 text-sm text-gray-500">
+                                                        Add as many records as you like and attach any photos you've taken.
+                                                      </p>
+                                                    </div>
+
+                                                  </div>
+                                                </div>
+                                                <div class="bg-white sm:rounded-b-lg sm:rounded-t-lg">
+
+                                                  <div class="flex flex-col w-full">
+                                                    <div className='popup-margin'>
+                                                      <form onSubmit={handleSubmit}>
+                                                        <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
+                                                          BirdId:
+                                                          <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
+                                                            type="text"
+                                                            value={bird}
+                                                            onChange={(e) => setBirdId(e.target.value)}
+                                                          />
+                                                        </label>
+                                                        <br />
+                                                        <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
+                                                          BirdName:
+                                                          <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
+                                                            type="text"
+                                                            value={bird}
+                                                            onChange={(e) => setBirdName(e.target.value)}
+                                                          />
+                                                        </label>
+                                                        <br />
+                                                        <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
+                                                          Species:
+                                                          <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
+                                                            type="text"
+                                                            value={bird}
+                                                            onChange={(e) => setBirdSpecies(e.target.value)}
+                                                          />
+                                                        </label>
+                                                        <br />
+                                                        <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
+                                                          Quantity:
+                                                          <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
+                                                            type="number"
+                                                            value={number}
+                                                            onChange={(e) => setQuantity(e.target.value)}
+                                                          />
+                                                        </label>
+                                                        <br />
+
+                                                        <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
+                                                          Picture:
+                                                          <input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            onChange={handlePictureChange}
+                                                          />
+                                                        </label>
+                                                        <br />
+
+                                                        <a type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" href='#'>Submit</a>
+                                                      </form>
+                                                    </div>
+                                                  </div>
+                                                </div>
                                               </div>
-
                                             </div>
                                           </div>
-                                          <div class="bg-white sm:rounded-b-lg sm:rounded-t-lg">
 
-                                            <div class="flex flex-col w-full">
-                                              <div className='popup-margin'>
-                                                <form onSubmit={handleSubmit}>
-                                                  <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                                    Species:
-                                                    <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
-                                                      type="text"
-                                                      value={bird}
-                                                      onChange={(e) => setBird(e.target.value)}
-                                                    />
-                                                  </label>
-                                                  <br />
-                                                  <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                                    Number:
-                                                    <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
-                                                      type="number"
-                                                      value={number}
-                                                      onChange={(e) => setNumber(e.target.value)}
-                                                    />
-                                                  </label>
-                                                  <br />
-                                                  <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                                    Note:
-                                                    <textarea class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
-                                                      value={note}
-                                                      onChange={(e) => setNote(e.target.value)}
-                                                    />
-                                                  </label>
-                                                  <br />
-                                                  <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                                    Picture:
-                                                    <input
-                                                      type="file"
-                                                      accept="image/*"
-                                                      onChange={handlePictureChange}
-                                                    />
-                                                  </label>
-                                                  <br />
+                                          <a href='#popup3' id='openPopUp' className='btn-sm bg-indigo-500 hover:bg-indigo-600 text-white m-1'>Delete</a>
 
-                                                  <a type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" href='#'>Submit</a>
-                                                </form>
-                                              </div>
+                                          <div id='popup3' className='overlay'>
+                                            <div className='popup'>
+
+                                              <h1 className='text-center text-2xl mt-4 '> Do you want to Delete this Record? </h1>
+                                              <a className='btn w-full bg-indigo-500 hover:bg-indigo-600 text-white' href='#'>Yes</ a >
+                                              <a className='btn w-full border-slate-200 hover:border-slate-300 text-slate-600' href='#'>No</a>
                                             </div>
                                           </div>
+
+
                                         </div>
                                       </div>
                                     </div>
-
-                                    <a href='#popup3' id='openPopUp' className='btn-sm bg-indigo-500 hover:bg-indigo-600 text-white m-1'>Delete</a>
-
-                                    <div id='popup3' className='overlay'>
-                                      <div className='popup'>
-                                        
-                                        <h1 className='text-center text-2xl mt-4 '> Do you want to Delete this Record? </h1>
-                                        <a className='btn w-full bg-indigo-500 hover:bg-indigo-600 text-white' href='#'>Yes</ a >
-                                        <a className='btn w-full border-slate-200 hover:border-slate-300 text-slate-600' href='#'>No</a>
-                                      </div>
-                                    </div>
-
-
                                   </div>
-                                </div>
+
+
+                                </turbo-frame>
+
+
                               </div>
-                            </div>
-                          </turbo-frame>
-
-
-                        </div>
+                            )
+                          }
+                          ) : <div></div>
+                        }
                       </div>
                     </div>
 
                   </div>
 
                 </turbo-frame>
+
+
 
               </div>
             </div>
