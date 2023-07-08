@@ -1,145 +1,214 @@
-import React, { useState, useRef } from 'react';
-import { useEffect } from 'react';
-import GroupAvatar01 from '../../images/group-avatar-01.png';
-import GroupAvatar02 from '../../images/group-avatar-02.png';
-import GroupAvatar03 from '../../images/group-avatar-03.png';
-import GroupAvatar04 from '../../images/group-avatar-04.png';
-import UserImage01 from '../../images/user-32-01.jpg';
-import UserImage02 from '../../images/user-32-02.jpg';
-import ModalBasic from '../../components/ModalBasic';
-import UserImage04 from '../../images/user-32-04.jpg';
-import UserImage05 from '../../images/user-32-05.jpg';
-import Swal from 'sweetalert2';
-import { baseURL } from '../../pages/baseUrl';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useRef } from "react";
+import { useEffect } from "react";
+import GroupAvatar01 from "../../images/group-avatar-01.png";
+import GroupAvatar02 from "../../images/group-avatar-02.png";
+import GroupAvatar03 from "../../images/group-avatar-03.png";
+import GroupAvatar04 from "../../images/group-avatar-04.png";
+import UserImage01 from "../../images/user-32-01.jpg";
+import UserImage02 from "../../images/user-32-02.jpg";
+import ModalBasic from "../../components/ModalBasic";
+import UserImage04 from "../../images/user-32-04.jpg";
+import UserImage05 from "../../images/user-32-05.jpg";
+import Swal from "sweetalert2";
+import { baseURL } from "../../pages/baseUrl";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Link } from 'react-router-dom';
 
 function FeedRightContent(props) {
   const navigate = useNavigate();
-  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false)
-  const [species, setSpecies] = useState("")
-  const [imgUrl, setImgUrl] = useState("")
-  const [birds, setBirds] = useState([])
-  const [quantity, setQuantity] = useState(0)
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+  const [species, setSpecies] = useState("");
+  const [imgUrl, setImgUrl] = useState("");
+  const [birds, setBirds] = useState([]);
+  const [quantity, setQuantity] = useState(0);
+  const [members, setMembers] = useState([]);
+  const [maxViewMember, setMaxViewMember] = useState(5);
   const handleNavigate = () => {
-    navigate('/activity/create-blog')
-  }
-  const id = localStorage.getItem('uid')
+    navigate("/activity/create-blog");
+  };
+  const id = localStorage.getItem("uid");
   const handleCreate = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     Swal.fire({
-      title: 'Xác nhận thông tin',
-      html: 'This will close in a minutes',
+      title: "Xác nhận thông tin",
+      html: "This will close in a minutes",
 
       timerProgressBar: true,
       didOpen: () => {
-        Swal.showLoading()
-        const b = Swal.getHtmlContainer().querySelector('b')
+        Swal.showLoading();
+        const b = Swal.getHtmlContainer().querySelector("b");
       },
-    })
+    });
     var data = JSON.stringify({
-      "ownerId": id,
-      "birdId": species,
-      "quantity": quantity,
-      "photo": imgUrl
+      ownerId: id,
+      birdId: species,
+      quantity: quantity,
+      photo: imgUrl,
     });
 
     var config = {
-      method: 'post',
+      method: "post",
       maxBodyLength: Infinity,
-      url: baseURL + '/records',
+      url: baseURL + "/records",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      data: data
+      data: data,
     };
 
     axios(config)
       .then(function (response) {
         console.log(response);
-        Swal.close()
-        Swal.fire(
-          "Good job!",
-          "You success create a record!",
-          "success",
-        );
-        props.loadData()
+        Swal.close();
+        Swal.fire("Good job!", "You success create a record!", "success");
+        props.loadData();
       })
       .catch(function (error) {
         console.log();
-        Swal.close()
+        Swal.close();
         Swal.fire("Oops", "Something went wrong!", "error");
-        setFeedbackModalOpen(false)
-        props.loadData()
+        setFeedbackModalOpen(false);
+        props.loadData();
       });
+  };
 
-  }
-  useEffect(() => {
+  const getMember = () => {
     let config = {
-      method: 'get',
+      method: "get",
       maxBodyLength: Infinity,
-      url: baseURL + '/birds',
+      url: baseURL + "/members",
     };
 
-    axios.request(config)
+    axios
+      .request(config)
       .then((response) => {
-        setBirds(response.data)
+        setMembers(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [])
+  };
+
+  const expandViewMember = () => {
+    setMaxViewMember(members.length);
+  };
+
+  useEffect(() => {
+    getMember();
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: baseURL + "/birds",
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        setBirds(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   return (
     <div className="w-full hidden xl:block xl:w-72">
-      <ModalBasic id="feedback-modal" modalOpen={feedbackModalOpen} setModalOpen={setFeedbackModalOpen} title="Let's write a blog">
+      <ModalBasic
+        id="feedback-modal"
+        modalOpen={feedbackModalOpen}
+        setModalOpen={setFeedbackModalOpen}
+        title="Let's write a blog"
+      >
         {/* Modal content */}
         <div className="px-5 py-4">
           <div className="text-sm">
-            <div className="font-medium text-slate-800 mb-3">Let us know what you think 🙌</div>
+            <div className="font-medium text-slate-800 mb-3">
+              Let us know what you think 🙌
+            </div>
           </div>
           <div className="space-y-3">
             <div>
-              <label className="block text-sm font-medium mb-1" htmlFor="name">Species <span className="text-rose-500">*</span></label>
-              <select onChange={(e) => setSpecies(e.target.value)} id="country" className="form-select w-full">
-                {birds && birds.map((n, index) => {
-                  return (
-                    <option value={n.id}>{n.species}</option>
-                )
-                })}
-
+              <label className="block text-sm font-medium mb-1" htmlFor="name">
+                Species <span className="text-rose-500">*</span>
+              </label>
+              <select
+                onChange={(e) => setSpecies(e.target.value)}
+                id="country"
+                className="form-select w-full"
+              >
+                {birds &&
+                  birds.map((n, index) => {
+                    return <option value={n.id}>{n.species}</option>;
+                  })}
               </select>
             </div>
+            <div></div>
             <div>
+              <label className="block text-sm font-medium mb-1" htmlFor="name">
+                Quantity <span className="text-rose-500">*</span>
+              </label>
+              <input
+                id="name"
+                className="form-input w-full px-2 py-1"
+                type="number"
+                required
+                onChange={(e) => setQuantity(e.target.value)}
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1" htmlFor="name">Quantity <span className="text-rose-500">*</span></label>
-              <input id="name" className="form-input w-full px-2 py-1" type="number" required onChange={e => setQuantity(e.target.value)} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1" htmlFor="name">Image URL <span className="text-rose-500">*</span></label>
-              <input id="name" className="form-input w-full px-2 py-1" type="text" required onChange={e => setImgUrl(e.target.value)} />
+              <label className="block text-sm font-medium mb-1" htmlFor="name">
+                Image URL <span className="text-rose-500">*</span>
+              </label>
+              <input
+                id="name"
+                className="form-input w-full px-2 py-1"
+                type="text"
+                required
+                onChange={(e) => setImgUrl(e.target.value)}
+              />
             </div>
           </div>
         </div>
         {/* Modal footer */}
         <div className="px-5 py-4 border-t border-slate-200">
           <div className="flex flex-wrap justify-end space-x-2">
-            <button className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600" onClick={(e) => { e.stopPropagation(); setFeedbackModalOpen(false); }}>Cancel</button>
-            <button onClick={e => handleCreate(e)} className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">Create</button>
+            <button
+              className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600"
+              onClick={(e) => {
+                e.stopPropagation();
+                setFeedbackModalOpen(false);
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={(e) => handleCreate(e)}
+              className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white"
+            >
+              Create
+            </button>
           </div>
         </div>
       </ModalBasic>
       <div className="lg:sticky lg:top-16 lg:h-[calc(100vh-64px)] lg:overflow-x-hidden lg:overflow-y-auto no-scrollbar">
         <div className="md:py-8">
-
           {/* Search form */}
           <div className="mb-6">
             <form className="relative">
               <label htmlFor="feed-search-desktop" className="sr-only">
                 Search
               </label>
-              <input id="feed-search-desktop" className="form-input w-full pl-9 focus:border-slate-300" type="search" placeholder="Search…" />
-              <button className="absolute inset-0 right-auto group" type="submit" aria-label="Search">
+              <input
+                id="feed-search-desktop"
+                className="form-input w-full pl-9 focus:border-slate-300"
+                type="search"
+                placeholder="Search…"
+              />
+              <button
+                className="absolute inset-0 right-auto group"
+                type="submit"
+                aria-label="Search"
+              >
                 <svg
                   className="w-4 h-4 shrink-0 fill-current text-slate-400 group-hover:text-slate-500 ml-3 mr-2"
                   viewBox="0 0 16 16"
@@ -154,78 +223,71 @@ function FeedRightContent(props) {
 
           {/* Blocks */}
           <div className="space-y-4">
-
-
             {/* Block 2 */}
             <div className="mb-6">
-              <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white" onClick={(e) => { e.stopPropagation(); setFeedbackModalOpen(true); }}>Add Record</button>
+              <button
+                className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setFeedbackModalOpen(true);
+                }}
+              >
+                Add Record
+              </button>
             </div>
             <div className="bg-slate-50 p-4 rounded border border-slate-200">
-              <div className="text-xs font-semibold text-slate-400 uppercase mb-4">Who to follow</div>
+              <div className="text-xs font-semibold text-slate-400 uppercase mb-4">
+                Who to follow
+              </div>
               <ul className="space-y-3">
-                <li>
-                  <div className="flex items-center justify-between">
-                    <div className="grow flex items-center">
-                      <div className="relative mr-3">
-                        <img className="w-8 h-8 rounded-full" src={UserImage02} width="32" height="32" alt="User 02" />
+                {members.slice(0, maxViewMember).map((member, index) => {
+                  return (
+                    <li>
+                      <div className="flex items-center justify-between">
+                        <div className="grow flex items-center">
+                          <div className="relative mr-3">
+                            <img
+                              className="w-8 h-8 rounded-full"
+                              src={member.avatar ?? UserImage02}
+                              width="32"
+                              height="32"
+                              alt="User 02"
+                            />
+                          </div>
+                          <div className="truncate">
+                            <span className="text-sm font-medium text-slate-800">
+                              {member.displayName}
+                            </span>
+                          </div>
+                        </div>
+                        <Link to={"/job/profile?id="+ member.id }>
+                          <button className="text-xs inline-flex font-medium bg-indigo-100 text-indigo-600 rounded-full text-center px-2.5 py-1">
+                            Visit
+                          </button>
+                        </Link>
                       </div>
-                      <div className="truncate">
-                        <span className="text-sm font-medium text-slate-800">Elly Boutin</span>
-                      </div>
-                    </div>
-                    <button className="text-xs inline-flex font-medium bg-indigo-100 text-indigo-600 rounded-full text-center px-2.5 py-1">
-                      Follow
-                    </button>
-                  </div>
-                </li>
-                <li>
-                  <div className="flex items-center justify-between">
-                    <div className="grow flex items-center">
-                      <div className="relative mr-3">
-                        <img className="w-8 h-8 rounded-full" src={UserImage04} width="32" height="32" alt="User 04" />
-                      </div>
-                      <div className="truncate">
-                        <span className="text-sm font-medium text-slate-800">Rich Harris</span>
-                      </div>
-                    </div>
-                    <button className="text-xs inline-flex font-medium bg-indigo-100 text-indigo-600 rounded-full text-center px-2.5 py-1">
-                      Follow
-                    </button>
-                  </div>
-                </li>
-                <li>
-                  <div className="flex items-center justify-between">
-                    <div className="grow flex items-center">
-                      <div className="relative mr-3">
-                        <img className="w-8 h-8 rounded-full" src={UserImage05} width="32" height="32" alt="User 05" />
-                      </div>
-                      <div className="truncate">
-                        <span className="text-sm font-medium text-slate-800">Mary Porzio</span>
-                      </div>
-                    </div>
-                    <button className="text-xs inline-flex font-medium bg-indigo-100 text-indigo-600 rounded-full text-center px-2.5 py-1">
-                      Follow
-                    </button>
-                  </div>
-                </li>
-                <li>
-                  <div className="flex items-center justify-between">
-                    <div className="grow flex items-center">
-                      <div className="relative mr-3">
-                        <img className="w-8 h-8 rounded-full" src={UserImage01} width="32" height="32" alt="User 01" />
-                      </div>
-                      <div className="truncate">
-                        <span className="text-sm font-medium text-slate-800">Brian Lovin</span>
-                      </div>
-                    </div>
-                    <button className="text-xs inline-flex font-medium bg-indigo-100 text-indigo-600 rounded-full text-center px-2.5 py-1">
-                      Follow
-                    </button>
-                  </div>
-                </li>
+                    </li>
+                  );
+                })}
               </ul>
               <div className="mt-4">
-                <button className="btn-sm w-full bg-white border-slate-200 hover:border-slate-300 text-indigo-500 shadow-none">View All</button>
+                {maxViewMember === members.length ? (
+                  <button
+                    onClick={() => {
+                      setMaxViewMember(5)
+                    }}
+                    className="btn-sm w-full bg-white border-slate-200 hover:border-slate-300 text-indigo-500 shadow-none"
+                  >
+                    View Less
+                  </button>
+                ) : (
+                  <button
+                    onClick={expandViewMember}
+                    className="btn-sm w-full bg-white border-slate-200 hover:border-slate-300 text-indigo-500 shadow-none"
+                  >
+                    View All
+                  </button>
+                )}
               </div>
             </div>
           </div>

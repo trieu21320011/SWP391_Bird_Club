@@ -15,6 +15,7 @@ function DropdownProfile({
   const dropdown = useRef(null);
   const name = localStorage.getItem('name')
   const role = localStorage.getItem('role')
+  const [infor, setInfor] = useState('')
   const signOut = (() => {
     localStorage.clear()
     setDropdownOpen(!dropdownOpen)
@@ -31,15 +32,21 @@ function DropdownProfile({
     return () => document.removeEventListener('click', clickHandler);
   });
 
+  const getInfo = () => {
+    var temp = localStorage.getItem('infor')
+    setInfor(JSON.parse(temp))
+  }
+
   // close if the esc key is pressed
   useEffect(() => {
+    getInfo()
     const keyHandler = ({ keyCode }) => {
       if (!dropdownOpen || keyCode !== 27) return;
       setDropdownOpen(false);
     };
     document.addEventListener('keydown', keyHandler);
     return () => document.removeEventListener('keydown', keyHandler);
-  });
+  }, []);
 
   return (
     <div className="relative inline-flex">
@@ -50,7 +57,7 @@ function DropdownProfile({
         onClick={() => setDropdownOpen(!dropdownOpen)}
         aria-expanded={dropdownOpen}
       >
-        <img className="w-8 h-8 rounded-full" src={UserAvatar} width="32" height="32" alt="User" />
+        <img className="w-8 h-8 rounded-full" src={infor ? infor.avatar : UserAvatar} width="32" height="32" alt="User" />
         <div className="flex items-center truncate">
         {name !== null && (<span className="truncate ml-2 text-sm font-medium group-hover:text-slate-800">{name}</span> )} 
         {name === null && (<span className="truncate ml-2 text-sm font-medium group-hover:text-slate-800">GUEST</span> )} 

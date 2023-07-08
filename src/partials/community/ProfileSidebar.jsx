@@ -1,55 +1,57 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 
-import ProfileImage from '../../images/user-avatar-32.png';
-import UserImage01 from '../../images/user-32-01.jpg';
-import UserImage02 from '../../images/user-32-02.jpg';
-import UserImage03 from '../../images/user-32-03.jpg';
-import UserImage04 from '../../images/user-32-04.jpg';
-import UserImage05 from '../../images/user-32-05.jpg';
-import UserImage06 from '../../images/user-32-06.jpg';
-import UserImage08 from '../../images/user-32-08.jpg';
+import ProfileImage from "../../images/user-avatar-32.png";
+import UserImage01 from "../../images/user-32-01.jpg";
+import UserImage02 from "../../images/user-32-02.jpg";
+import UserImage03 from "../../images/user-32-03.jpg";
+import UserImage04 from "../../images/user-32-04.jpg";
+import UserImage05 from "../../images/user-32-05.jpg";
+import UserImage06 from "../../images/user-32-06.jpg";
+import UserImage08 from "../../images/user-32-08.jpg";
 
-import { baseURL } from '../../pages/baseUrl';
-import axios from 'axios';
+import { baseURL } from "../../pages/baseUrl";
+import axios from "axios";
 
 function ProfileSidebar({
   profileSidebarOpen,
   setProfileSidebarOpen,
   setProfileId,
+  profile,
 }) {
-  const [members, setMembers] = useState([])
-  const [selectedId, selectMember] = useState('')
+  const [members, setMembers] = useState([]);
+  const [selectedId, selectMember] = useState("");
 
   const getMembers = () => {
     let config = {
-      method: 'get',
+      method: "get",
       maxBodyLength: Infinity,
-      url: baseURL + '/members' ,
+      url: baseURL + "/members",
     };
 
-    axios.request(config)
+    axios
+      .request(config)
       .then((response) => {
-        setMembers(response.data)
+        setMembers(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
 
   const onSelectMember = (id) => {
-    selectMember(id)
-    setProfileId(id)
-  }
+    selectMember(id);
+    setProfileId(id);
+  };
 
   useEffect(() => {
-    getMembers()
-  }, [])
+    getMembers();
+  }, []);
 
   return (
     <div
       id="profile-sidebar"
       className={`absolute z-20 top-0 bottom-0 w-full md:w-auto md:static md:top-auto md:bottom-auto -mr-px md:translate-x-0 transition-transform duration-200 ease-in-out ${
-        profileSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        profileSidebarOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
       <div className="sticky top-16 bg-white overflow-x-hidden overflow-y-auto no-scrollbar shrink-0 border-r border-slate-200 md:w-72 xl:w-80 h-[calc(100vh-64px)]">
@@ -62,15 +64,26 @@ function ProfileSidebar({
                 {/* Profile image */}
                 <div className="relative">
                   <div className="grow flex items-center truncate">
-                    <img className="w-8 h-8 rounded-full mr-2" src={ProfileImage} width="32" height="32" alt="Group 01" />
+                    <img
+                      className="w-8 h-8 rounded-full mr-2"
+                      src={profile ? profile.avatar : ProfileImage}
+                      width="32"
+                      height="32"
+                      alt="Group 01"
+                    />
                     <div className="truncate">
-                      <span className="font-semibold text-slate-800">Acme Inc.</span>
+                      <span className="font-semibold text-slate-800">
+                        {profile ? profile.displayName : ""}
+                      </span>
                     </div>
                   </div>
                 </div>
                 {/* Add button */}
                 <button className="p-1.5 shrink-0 rounded border border-slate-200 hover:border-slate-300 shadow-sm ml-2">
-                  <svg className="w-4 h-4 fill-current text-indigo-500" viewBox="0 0 16 16">
+                  <svg
+                    className="w-4 h-4 fill-current text-indigo-500"
+                    viewBox="0 0 16 16"
+                  >
                     <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1Z" />
                   </svg>
                 </button>
@@ -84,8 +97,17 @@ function ProfileSidebar({
               <label htmlFor="profile-search" className="sr-only">
                 Search
               </label>
-              <input id="profile-search" className="form-input w-full pl-9 focus:border-slate-300" type="search" placeholder="Search…" />
-              <button className="absolute inset-0 right-auto group" type="submit" aria-label="Search">
+              <input
+                id="profile-search"
+                className="form-input w-full pl-9 focus:border-slate-300"
+                type="search"
+                placeholder="Search…"
+              />
+              <button
+                className="absolute inset-0 right-auto group"
+                type="submit"
+                aria-label="Search"
+              >
                 <svg
                   className="w-4 h-4 shrink-0 fill-current text-slate-400 group-hover:text-slate-500 ml-3 mr-2"
                   viewBox="0 0 16 16"
@@ -98,26 +120,44 @@ function ProfileSidebar({
             </form>
             {/* Team members */}
             <div className="mt-4">
-              <div className="text-xs font-semibold text-slate-400 uppercase mb-3">Staff members</div>
+              <div className="text-xs font-semibold text-slate-400 uppercase mb-3">
+                Club Members
+              </div>
               <ul className="mb-6">
-                {
-                  members.length > 0 ?
-                    members.map((member) => {
-                      return <li className="-mx-2">
-                          <button className={"w-full p-2 rounded " + (selectedId === member.id ? "bg-indigo-100" : "")} onClick={() => onSelectMember(member.id)}>
-                            <div className="flex items-center">
-                              <div className="relative mr-2">
-                                <img className="w-8 h-8 rounded-full" src={member.avatar} width="32" height="32" alt="User 08" />
-                              </div>
-                              <div className="truncate">
-                                <span className="text-sm font-medium text-slate-800">{member.displayName}</span>
-                              </div>
+                {members.length > 0 ? (
+                  members.map((member) => {
+                    return (
+                      <li className="-mx-2">
+                        <button
+                          className={
+                            "w-full p-2 rounded " +
+                            (selectedId === member.id ? "bg-indigo-100" : "")
+                          }
+                          onClick={() => onSelectMember(member.id)}
+                        >
+                          <div className="flex items-center">
+                            <div className="relative mr-2">
+                              <img
+                                className="w-8 h-8 rounded-full"
+                                src={member.avatar}
+                                width="32"
+                                height="32"
+                                alt="User 08"
+                              />
                             </div>
-                          </button>
-                        </li>
-                    })
-                  : <div></div>
-                }
+                            <div className="truncate">
+                              <span className="text-sm font-medium text-slate-800">
+                                {member.displayName}
+                              </span>
+                            </div>
+                          </div>
+                        </button>
+                      </li>
+                    );
+                  })
+                ) : (
+                  <div></div>
+                )}
               </ul>
             </div>
           </div>

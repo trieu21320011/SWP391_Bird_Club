@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { convertToRaw, EditorState } from "draft-js";
 
 import Sidebar from '../../partials/Sidebar';
@@ -28,6 +28,7 @@ function Feed() {
   const [titleEdit, setTitleEdit] = useState("");
   const [valueEdit, setValueEdit] = useState();
   const [newFeedId, setNewFeedsId] = useState();
+  const [infor, setInfor] = useState()
   
 
   const date = new Date(2023, 11, 13).toDateString()
@@ -175,6 +176,15 @@ function Feed() {
     setEditModalOpen(true)
   }
 
+  const getInfo = () => {
+    var temp = localStorage.getItem('infor')
+    setInfor(JSON.parse(temp))
+  }
+
+  useEffect(() => {
+    getInfo()
+  });
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -206,7 +216,7 @@ function Feed() {
                       {/* Post Block */}
                       <div className="bg-white shadow-md rounded border border-slate-200 p-5">
                         <div className="flex items-center space-x-3 mb-5">
-                          <img className="rounded-full shrink-0" src={Avatar} width="40" height="40" alt="User 02" />
+                          <img className="rounded-full shrink-0 avatar" src={infor ? infor.avatar : Avatar} width="40" height="40" alt="User 02" />
                           <div className="grow">
                             <label htmlFor="status-input" className="sr-only">
                               Let write a blog, {name}?
@@ -215,7 +225,7 @@ function Feed() {
                               id="status-input"
                               className="form-input w-full bg-slate-100 border-transparent focus:bg-white focus:border-slate-300 placeholder-slate-500"
                               type="text"
-                              placeholder="What's happening, Mark?"
+                              placeholder={"What's happening, " + name +"?"}
                             />
                           </div>
                         </div>

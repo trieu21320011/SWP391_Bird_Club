@@ -125,7 +125,7 @@ function MeetupsPost(props) {
       });
 
   }
-  if (eventDetail === null || eventDetailAttend.length === 0) return;
+  if (eventDetail === null) return;
   return (
     <div className="flex h-screen overflow-hidden">
 
