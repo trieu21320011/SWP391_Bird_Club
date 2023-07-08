@@ -11,6 +11,7 @@ function Sidebar({
   const location = useLocation();
   const { pathname } = location;
 
+
   const trigger = useRef(null);
   const sidebar = useRef(null);
 
@@ -242,7 +243,8 @@ function Sidebar({
                   );
                 }}
               </SidebarLinkGroup>
-              <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname.includes('calendar') && 'bg-slate-900'}`}>
+              {(role === Role.member || role === Role.admin || role === Role.manager || role === Role.staff) && (
+                <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname.includes('calendar') && 'bg-slate-900'}`}>
                 <NavLink
                   end
                   to="/calendar"
@@ -263,6 +265,8 @@ function Sidebar({
                   </div>
                 </NavLink>
               </li>
+              )}
+              
 
               {(role === Role.admin || role === Role.manager || role === Role.staff) && (
                 <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname.includes('your-event') && 'bg-slate-900'}`}>

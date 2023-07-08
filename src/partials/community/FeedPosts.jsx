@@ -14,6 +14,7 @@ import UserImage06 from "../../images/user-40-06.jpg";
 import UserImage08 from "../../images/user-40-08.jpg";
 import CommenterImage04 from "../../images/user-32-04.jpg";
 import CommenterImage05 from "../../images/user-32-05.jpg";
+import { Role } from "../../pages/enum/roleEnum";
 import { Pagination } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
@@ -43,6 +44,7 @@ const FeedPosts = forwardRef((props, ref) => {
   const [commentContent, setCommentContent] = useState("");
   const [targetNewsfeedId, setTargetNewsfeedId] = useState("");
   const [infor, setInfor] = useState();
+  const role = localStorage.getItem('role')
   const onClickPage = (e, page) => {
     setPage(page);
     getData(page);
@@ -51,22 +53,22 @@ const FeedPosts = forwardRef((props, ref) => {
     const uid = localStorage.getItem("uid");
     let config = props.memberId
       ? {
-          method: "get",
-          maxBodyLength: Infinity,
-          url:
-            baseURL +
-            "/newsfeeds/by-member/" + props.memberId,
-        }
+        method: "get",
+        maxBodyLength: Infinity,
+        url:
+          baseURL +
+          "/newsfeeds/by-member/" + props.memberId,
+      }
       : {
-          method: "get",
-          maxBodyLength: Infinity,
-          url:
-            baseURL +
-            "/newsfeeds?limit=50&page=" +
-            page +
-            "&size=10" +
-            (uid ? "&memberId=" + uid : ""),
-        };
+        method: "get",
+        maxBodyLength: Infinity,
+        url:
+          baseURL +
+          "/newsfeeds?limit=50&page=" +
+          page +
+          "&size=10" +
+          (uid ? "&memberId=" + uid : ""),
+      };
 
     axios
       .request(config)
@@ -117,15 +119,21 @@ const FeedPosts = forwardRef((props, ref) => {
     forceUpdate();
   };
 
+  const viewLessComment = (blogId) => {
+    newFeeds.find((e) => e.id === blogId).maxCommentsToShow -= 2;
+    setNewFeeds(newFeeds);
+    forceUpdate();
+  };
+
   const onLoadNewsfeedCallBack = (id) => {
     const uid = localStorage.getItem("uid");
     let config = {
-          method: "get",
-          maxBodyLength: Infinity,
-          url:
-            baseURL +
-            "/newsfeeds/by-member/" + id,
-        }
+      method: "get",
+      maxBodyLength: Infinity,
+      url:
+        baseURL +
+        "/newsfeeds/by-member/" + id,
+    }
 
     axios
       .request(config)
@@ -390,38 +398,50 @@ const FeedPosts = forwardRef((props, ref) => {
                       </span>{" "}
                       comments
                     </div>
-                    <button
-                      className="text-sm  font-medium text-indigo-500 hover:text-indigo-600"
-                      onClick={() => viewMoreComment(n.id)}
-                    >
-                      View More Comments
-                    </button>
+                    {n.blog.comments.slice(0, n.maxCommentsToShow).length === n.blog.comments.length ? (
+                      <button
+                        className="text-sm  font-medium text-indigo-500 hover:text-indigo-600"
+                        onClick={() => viewLessComment(n.id)}
+                      >
+                        View Less Comments
+                      </button>
+                    ) : (
+                      <button
+                        className="text-sm  font-medium text-indigo-500 hover:text-indigo-600"
+                        onClick={() => viewMoreComment(n.id)}
+                      >
+                        View More Comments
+                      </button>
+                    )}
+
                   </div>
                   {/* Comment form */}
-                  <div className="flex items-center space-x-3 mt-3">
-                    <img
-                      className="rounded-full shrink-0 avatar max-h-8"
-                      src={infor ? infor.avatar : UserImage02}
-                      width="32"
-                      height="32"
-                      alt="User 02"
-                    />
-                    <div className="grow">
-                      <label htmlFor="comment-form" className="sr-only">
-                        Write a comment…
-                      </label>
-                      <input
-                        id="comment-form"
-                        className="form-input w-full bg-slate-100 border-transparent focus:bg-white focus:border-slate-300 placeholder-slate-500"
-                        type="text"
-                        placeholder="Write a comment…"
-                        value={commentContent}
-                        onChange={handleChange}
-                        onFocus={() => setTargetNewsfeedId(n.id)}
-                        onKeyDown={handleKeyDown}
+                  {(role === Role.member || role === Role.admin || role === Role.manager || role === Role.staff) && (
+                    <div className="flex items-center space-x-3 mt-3">
+                      <img
+                        className="rounded-full shrink-0 avatar max-h-8"
+                        src={infor ? infor.avatar : UserImage02}
+                        width="32"
+                        height="32"
+                        alt="User 02"
                       />
+                      <div className="grow">
+                        <label htmlFor="comment-form" className="sr-only">
+                          Write a comment…
+                        </label>
+                        <input
+                          id="comment-form"
+                          className="form-input w-full bg-slate-100 border-transparent focus:bg-white focus:border-slate-300 placeholder-slate-500"
+                          type="text"
+                          placeholder="Write a comment…"
+                          value={commentContent}
+                          onChange={handleChange}
+                          onFocus={() => setTargetNewsfeedId(n.id)}
+                          onKeyDown={handleKeyDown}
+                        />
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             );
@@ -512,10 +532,9 @@ const FeedPosts = forwardRef((props, ref) => {
                       onClick={() => likeNewsfeed(n.id)}
                       className={
                         "flex items-center " +
-                        `${
-                          n.record.isLiked
-                            ? "text-indigo-500"
-                            : "text-slate-400"
+                        `${n.record.isLiked
+                          ? "text-indigo-500"
+                          : "text-slate-400"
                         }`
                       }
                     >
@@ -550,10 +569,9 @@ const FeedPosts = forwardRef((props, ref) => {
                       <div
                         className={
                           "text-sm " +
-                          `${
-                            n.record.isLiked
-                              ? "text-indigo-500"
-                              : "text-slate-400"
+                          `${n.record.isLiked
+                            ? "text-indigo-500"
+                            : "text-slate-400"
                           }`
                         }
                       >

@@ -4,7 +4,8 @@ import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import axios from 'axios';
 import { baseURL } from './baseUrl';
-
+import { Role } from '../pages/enum/roleEnum';
+import { Link } from 'react-router-dom';
 function Calendar() {
 
 
@@ -13,6 +14,7 @@ function Calendar() {
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [month, setMonth] = useState(today.getMonth());
+  const role = localStorage.getItem('role')
   // eslint-disable-next-line no-unused-vars
   const [year, setYear] = useState(today.getFullYear());
   const [daysInMonth, setDaysInMonth] = useState([])
@@ -307,12 +309,15 @@ function Calendar() {
                 <hr className="w-px h-full bg-slate-200 mx-1" />
 
                 {/* Create event button */}
-                <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white">
-                  <svg className="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
-                    <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
-                  </svg>
-                  <span className="hidden xs:block ml-2">Create Event</span>
-                </button>
+                {role !== Role.member && (
+                     <Link to="/activity/meetups-create" className="btn bg-indigo-500 hover:bg-indigo-600 text-white">
+                     <svg className="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
+                       <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
+                     </svg>
+                     <span className="hidden xs:block ml-2">Create Event</span>
+                   </Link>
+                  )}
+               
 
               </div>
 

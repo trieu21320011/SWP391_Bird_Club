@@ -130,7 +130,7 @@ function App() {
         <Route path="/your-blog" element={
           <ProtectedRoute
             redirectPath="*"
-            isAllowed={role === Role.staff || role === Role.admin || role === Role.manager}
+            isAllowed={role === Role.staff || role === Role.admin || role === Role.manager || role === Role.member}
           >
             <Invoices />
           </ProtectedRoute>
