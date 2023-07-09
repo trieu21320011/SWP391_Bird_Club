@@ -4,12 +4,27 @@ import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import { baseURL } from '../pages/baseUrl';
 import axios from 'axios';
+import ModalBasic from '../components/ModalBasic';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
-function Analytics({
-  BrowseRecordsInfo,
-}) {
+
+function Analytics(props) {
+
   const [records, setRecords] = useState([])
   const [browserecords, setBrowserecords] = useState(null)
+  const [editrecords, setEditrecords] = useState([])
+  const [delrecords, setDelrecords] = useState([])
+  const navigate = useNavigate();
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false)
+  const [species, setSpecies] = useState("")
+  const [imgUrl, setImgUrl] = useState("")
+  const [birds, setBirds] = useState([])
+  const [quantity, setQuantity] = useState(0)
+  const handleNavigate = () => {
+    navigate('/activity/create-blog')
+  }
+  
   const getRecords = () => {
     const uid = localStorage.getItem("uid")
     let config = {
@@ -27,7 +42,56 @@ function Analytics({
       });
   }
 
-  const [editrecords, setEditrecords] = useState([])
+  const id = localStorage.getItem('uid')
+  const handleCreate = (e) => {
+    e.preventDefault()
+    Swal.fire({
+      title: 'Xác nhận thông tin',
+      html: 'This will close in a minutes',
+
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading()
+        const b = Swal.getHtmlContainer().querySelector('b')
+      },
+    })
+    var data = JSON.stringify({
+      "ownerId": id,
+      "birdId": species,
+      "quantity": quantity,
+      "photo": imgUrl
+    });
+
+    var config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: baseURL + '/records',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(response);
+        Swal.close()
+        Swal.fire(
+          "Good job!",
+          "You success create a record!",
+          "success",
+        );
+        getRecords()
+      })
+      .catch(function (error) {
+        console.log();
+        Swal.close()
+        Swal.fire("Oops", "Something went wrong!", "error");
+        setFeedbackModalOpen(false)
+        getRecords()
+      });
+  }
+
   const getEditrecords = () => {
     const uid = localStorage.getItem("uid")
     let config = {
@@ -45,7 +109,6 @@ function Analytics({
       });
   }
 
-  const [delrecords, setDelrecords] = useState([])
   const getDelrecords = (bookingid) => {
 
     let config = {
@@ -57,37 +120,44 @@ function Analytics({
     axios.request(config)
       .then((response) => {
         setDelrecords(response.data)
+        getRecords()
       })
       .catch((error) => {
         console.log(error);
       });
-  }
 
+  }
   useEffect(() => {
     getRecords()
     getEditrecords()
     getDelrecords()
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/birds',
+    };
+
+    axios.request(config)
+      .then((response) => {
+        setBirds(response.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, [])
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [bird, setBird] = useState('');
-  const [number, setNumber] = useState('');
-  const [note, setNote] = useState('');
-  const [picture, setPicture] = useState(null);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Xử lý dữ liệu form tại đây (ví dụ: gửi đi, lưu trữ, ...)
-    console.log('Bird:', bird);
-    console.log('Number:', number);
-    console.log('Note:', note);
-    console.log('Picture:', picture);
+    console.log('species', species);
+    console.log('quantity', quantity);
+    console.log('photo', photo);
   };
 
-  const handlePictureChange = (e) => {
-    const file = e.target.files[0];
-    setPicture(file);
-  };
+  
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -100,6 +170,44 @@ function Analytics({
 
         {/*  Site header */}
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+
+        <ModalBasic id="feedback-modal" modalOpen={feedbackModalOpen} setModalOpen={setFeedbackModalOpen} title="Let's write a blog">
+          {/* Modal content */}
+          <div className="px-5 py-4">
+            <div className="text-sm">
+              <div className="font-medium text-slate-800 mb-3">Let us know what you think 🙌</div>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium mb-1" htmlFor="name">Species <span className="text-rose-500">*</span></label>
+                <select onChange={(e) => setSpecies(e.target.value)} id="country" className="form-select w-full">
+                  {birds && birds.map((n, index) => {
+                    return (
+                      <option value={n.id}>{n.species}</option>
+                    )
+                  })}
+                </select>
+              </div>
+              <div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1" htmlFor="name">Quantity <span className="text-rose-500">*</span></label>
+                <input id="name" className="form-input w-full px-2 py-1" type="number" required onChange={e => setQuantity(e.target.value)} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1" htmlFor="name">Image URL <span className="text-rose-500">*</span></label>
+                <input id="name" className="form-input w-full px-2 py-1" type="text" required onChange={e => setImgUrl(e.target.value)} />
+              </div>
+            </div>
+          </div>
+          {/* Modal footer */}
+          <div className="px-5 py-4 border-t border-slate-200">
+            <div className="flex flex-wrap justify-end space-x-2">
+              <button className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600" onClick={(e) => { e.stopPropagation(); setFeedbackModalOpen(false); }}>Cancel</button>
+              <button onClick={e => handleCreate(e)} className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">Create</button>
+            </div>
+          </div>
+        </ModalBasic>
 
         <main class="pb-8 pt-8">
           <div class="max-w-3xl mx-auto sm:px-6 lg:max-w-7xl lg:px-8">
@@ -115,81 +223,9 @@ function Analytics({
                     </p>
                   </div>
                   <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                    <a href='#popup1' id='openPopUp' class="px-4 py-2 text-sm text-white shadow-sm border-transparent bg-teal-600 hover:bg-teal-700 focus:ring-teal-500 inline-flex items-center border font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2">
+                    <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white" onClick={(e) => { e.stopPropagation(); setFeedbackModalOpen(true); }}>
                       Add Records
-                    </a>
-                  </div>
-                  <div id='popup1' className='overlay'>
-                    <div className='popup'>
-                      <a className='close' href='#'>&times;</a>
-
-                      <div class="bg-white shadow sm:rounded-lg">
-                        <div class="bg-white px-4 py-5 border-b border-gray-200 sm:px-6 sm:rounded-t-lg">
-                          <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
-                            <div class="ml-4 mt-2">
-                              <h3 class="text-lg leading-6 font-medium text-gray-900">
-                                Bird List
-                              </h3>
-                              <p class="mt-1 text-sm text-gray-500">
-                                Add as many records as you like and attach any photos you've taken.
-                              </p>
-                            </div>
-
-                          </div>
-                        </div>
-                        <div class="bg-white sm:rounded-b-lg sm:rounded-t-lg">
-
-                          <div class="flex flex-col w-full">
-                            <div className='popup-margin'>
-                              <form onSubmit={handleSubmit}>
-                                <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                  BirdId:
-                                  <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
-                                    type="text"
-                                    value={bird}
-                                    onChange={(e) => setBirdId(e.target.value)}
-                                  />
-                                </label>
-                                <br />
-
-
-                                <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                  Species:
-                                  <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
-                                    type="text"
-                                    value={bird}
-                                    onChange={(e) => setBirdSpecies(e.target.value)}
-                                  />
-                                </label>
-                                <br />
-                                <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                  Quantity:
-                                  <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
-                                    type="number"
-                                    value={number}
-                                    onChange={(e) => setQuantity(e.target.value)}
-                                  />
-                                </label>
-                                <br />
-
-                                <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                  Picture:
-                                  <br />
-                                  <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handlePictureChange}
-                                  />
-                                </label>
-                                <br />
-
-                                <a type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" href='#'>Submit</a>
-                              </form>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    </button>
                   </div>
                 </div>
 
@@ -298,14 +334,6 @@ function Analytics({
                                                   <div class="flex flex-col w-full">
                                                     <div className='popup-margin'>
                                                       <form onSubmit={handleSubmit}>
-                                                        <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                                          BirdId:
-                                                          <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
-                                                            type="text"
-                                                            defaultValue={browserecords ? (browserecords.birdId) : ("")}
-                                                            onChange={(e) => getEditrecords(e.target.value)}
-                                                          />
-                                                        </label>
                                                         <br />
                                                         <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
                                                           Species:
@@ -329,10 +357,10 @@ function Analytics({
                                                         <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
                                                           Picture:
                                                           <br />
-                                                          <input
-                                                            type="file"
-                                                            accept="image/*"
-                                                            onChange={handlePictureChange}
+                                                          <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
+                                                            type="text"
+                                                            defaultValue={browserecords ? (browserecords.photo) : ("")}
+                                                            onChange={(e) => getEditrecords(e.target.value)}
                                                           />
                                                         </label>
                                                         <br />
