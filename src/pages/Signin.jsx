@@ -58,8 +58,19 @@ function Signin() {
           "You login susccess!",
           "success"
        );
-       navigateTo('/')
-
+          return response.data;
+      }).then((res) => {
+        var config = {
+          method: 'get',
+          maxBodyLength: Infinity,
+          url: baseURL + '/members/' + res.userId
+        };
+        axios(config).then((response) => {
+          console.log(response)
+          localStorage.setItem('infor', JSON.stringify(response.data))
+        })
+      }).then(() => {
+        navigateTo('/')
       })
       .catch(function (error) {
         console.log();

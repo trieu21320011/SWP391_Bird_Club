@@ -12,11 +12,16 @@ import { baseURL } from '../baseUrl';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ModalBlank from '../../components/ModalBlank';
 import Swal from 'sweetalert2';
+import ModalBasic from '../../components/ModalBasic';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Link } from 'react-router-dom';
+import Rating from '@mui/material/Rating';
 
-function Customers() {
+function Events() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [scrollbarModalOpen, setScrollbarModalOpen] = useState(false)
   const [guest, setGuest] = useState([])
   const [infoModalOpen, setInfoModalOpen] = useState(false)
   const [rejectModal, setRejectModal] = useState(false)
@@ -63,7 +68,7 @@ function Customers() {
     var config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseURL + '/auth/'+uid+'/approve',
+      url: baseURL + '/auth/' + uid + '/approve',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -79,7 +84,7 @@ function Customers() {
           "success",
         );
         getData()
-      
+
       })
       .catch(function (error) {
         console.log();
@@ -94,7 +99,7 @@ function Customers() {
     var config = {
       method: 'delete',
       maxBodyLength: Infinity,
-      url: baseURL + '/auth/'+uid+'/reject',
+      url: baseURL + '/auth/' + uid + '/reject',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -110,7 +115,7 @@ function Customers() {
           "success",
         );
         getData()
-      
+
       })
       .catch(function (error) {
         console.log();
@@ -131,6 +136,7 @@ function Customers() {
   return (
     <div className="flex h-screen overflow-hidden">
       <ModalBlank id="info-modal" modalOpen={infoModalOpen} setModalOpen={setInfoModalOpen}>
+
         <div className="p-5 flex space-x-4">
           {/* Icon */}
           <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-indigo-100">
@@ -158,6 +164,61 @@ function Customers() {
           </div>
         </div>
       </ModalBlank>
+      <ModalBasic id="scrollbar-modal" modalOpen={scrollbarModalOpen} setModalOpen={setScrollbarModalOpen} title={"Event"+"'s feedbacks"}>
+        {/* Modal content */}
+        <table className="table-auto w-full">
+          {/* Table header */}
+          <thead className="text-xs font-semibold uppercase text-slate-500 bg-slate-50 border-t border-b border-slate-200 w-full">
+            <tr>
+              <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                <div className="font-semibold text-left">Member</div>
+              </th>
+              <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                <div className="font-semibold text-left">Feedback date</div>
+              </th>
+              <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                <div className="font-semibold text-left">Rating</div>
+              </th>
+
+              <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap max-w-lg">
+                <div className="font-semibold text-left">Description</div>
+              </th>
+            </tr>
+          </thead>
+          {/* Table body */}
+          <tbody className="text-sm divide-y divide-slate-200">
+            {
+              guest.map(g => {
+                return (
+                  <tr>
+                    <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                      <div className="text-left">{g.displayName}</div>
+                    </td>
+                    <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                      <div className="text-left">{g.email}</div>
+                    </td>
+                    <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                      <div className="text-left"><Rating name="size-small" defaultValue={2} size="small" readOnly /></div>
+                    </td>
+                    <td className="px-2 first:pl-5 last:pr-5 py-3 ">
+                      
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua                        
+                    </td>
+
+
+                  </tr>
+                )
+              })
+            }
+          </tbody>
+        </table>
+        {/* Modal footer */}
+        <div className="sticky bottom-0 px-5 py-4 bg-white border-t border-slate-200">
+          <div className="flex flex-wrap justify-end space-x-2">
+            <button className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600" onClick={(e) => { e.stopPropagation(); setScrollbarModalOpen(false); }}>Close</button>
+          </div>
+        </div>
+      </ModalBasic>
       <ModalBlank id="info-modal" modalOpen={rejectModal} setModalOpen={setRejectModal}>
         <div className="p-5 flex space-x-4">
           {/* Icon */}
@@ -204,7 +265,7 @@ function Customers() {
 
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0">
-                <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">Manage Guest ✨</h1>
+                <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">Manage Event ✨</h1>
               </div>
 
               {/* Right: Actions */}
@@ -231,16 +292,20 @@ function Customers() {
                     <thead className="text-xs font-semibold uppercase text-slate-500 bg-slate-50 border-t border-b border-slate-200">
                       <tr>
                         <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                          <div className="font-semibold text-left">User name</div>
+                          <div className="font-semibold text-left">Event Name</div>
                         </th>
                         <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                          <div className="font-semibold text-left">Email</div>
+                          <div className="font-semibold text-left">Publication date</div>
                         </th>
                         <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                          <div className="font-semibold text-left">Birthday</div>
+                          <div className="font-semibold text-left">Number of feedback</div>
+                        </th>
+
+                        <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-left">Disabled event</div>
                         </th>
                         <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                          <div className="font-semibold text-left">Promote/Reject</div>
+                          <div className="font-semibold text-left">View Feedbacks</div>
                         </th>
                       </tr>
                     </thead>
@@ -251,7 +316,7 @@ function Customers() {
                           return (
                             <tr>
                               <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                                <div className="text-left">{g.displayName}</div>
+                                <Link className="font-semibold text-left" to='/activity/meetups-post?id=40'>{g.displayName}</Link>
                               </td>
                               <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                                 <div className="text-left">{g.email}</div>
@@ -261,16 +326,6 @@ function Customers() {
                               </td>
                               <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                                 <div className="flex flex-wrap items-center -m-1.5">
-
-                                  <div className="m-1.5">
-                                    {/* Start */}
-                                    <button className="btn border-slate-200 hover:border-slate-300" onClick={(e) => { e.stopPropagation(); handleApprove(e, g.id); }}>
-                                      <svg className="w-4 h-4 fill-current text-indigo-500 shrink-0" viewBox="0 0 16 16">
-                                        <path d="M14.3 2.3L5 11.6 1.7 8.3c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4l4 4c.2.2.4.3.7.3.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0z" />
-                                      </svg>
-                                    </button>
-                                    {/* End */}
-                                  </div>
                                   <div className="m-1.5">
                                     {/* Start */}
                                     <button className="btn border-slate-200 hover:border-slate-300" onClick={(e) => { e.stopPropagation(); handleDecline(e, g.id); }}>
@@ -279,6 +334,18 @@ function Customers() {
                                     {/* End */}
                                   </div>
 
+                                </div>
+                              </td>
+                              <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                <div className="flex flex-wrap items-center -m-1.5">
+
+                                  <div className="m-1.5">
+                                    {/* Start */}
+                                    <button className="btn border-slate-200 hover:border-slate-300" onClick={(e) => { e.stopPropagation(); setScrollbarModalOpen(true); }}>
+                                      <VisibilityIcon />
+                                    </button>
+                                    {/* End */}
+                                  </div>
                                 </div>
                               </td>
 
@@ -304,4 +371,4 @@ function Customers() {
   );
 }
 
-export default Customers;
+export default Events;

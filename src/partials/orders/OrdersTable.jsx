@@ -210,19 +210,19 @@ function OrdersTable({
                 <thead className="text-xs uppercase text-slate-500 bg-slate-50 border-t border-slate-200">
                   <tr>
                     <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                      <div className="font-semibold text-left">Tên</div>
+                      <div className="font-semibold text-left">Name</div>
                     </th>
                     <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                      <div className="font-semibold text-left">Date</div>
+                      <div className="font-semibold text-left">Start date</div>
                     </th>
                     <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                      <div className="font-semibold text-left">Tổng tham dự</div>
+                      <div className="font-semibold text-left">End date</div>
                     </th>
                     <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                      <div className="font-semibold text-left">Status</div>
+                      <div className="font-semibold text-left">Type</div>
                     </th>
                     <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                      <div className="font-semibold">Đơn chưa duyệt</div>
+                      <div className="font-semibold">Peding Request</div>
                     </th>
                     <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                       <div className="font-semibold text-left">Location</div>
@@ -244,7 +244,9 @@ function OrdersTable({
                   image={e.background}
                   order={e.name}
                   date={e.startTime}
+                  edate={e.endTime}
                   status={e.status}
+                  noRequest={e.requestCount}
                   location={e.location}
                   type={e.activityType}
                   description={e.description}

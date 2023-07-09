@@ -10,6 +10,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Datepicker from '../../components/Datepicker';
 import ReactQuill from 'react-quill';
 import { baseURL } from '../baseUrl';
+import dayjs from 'dayjs';
 import axios from 'axios';
 import { TimePicker } from '@mui/x-date-pickers';
 import { Link } from 'react-router-dom';
@@ -17,6 +18,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 function MeetupEdit() {
+    const [image, setImage] = useState('');
     var eventId = window.location.search.split("=")[1];
     const nav = useNavigate()
     const formats = [
@@ -58,6 +60,7 @@ function MeetupEdit() {
         setToTime(data[1])
         console.log('argument from Child: ', data);
     }
+
     const getDetail = () => {
         axios.get(baseURL + '/activities/' + eventId)
             .then((response) => {
@@ -66,6 +69,12 @@ function MeetupEdit() {
                 setLocation(response.data.location)
                 setType(response.data.type)
                 setDescription(response.data.description)
+                setImage(response.data.background)
+                setStartTime(response.data.startTime)
+                setEndTime(response.data.endTime)
+                setImage(response.data.background)
+                setFromTime(response.data.startTime)
+                setToTime(response.data.endTime)
             })
             .catch((error) => {
                 console.log(error);
@@ -74,61 +83,88 @@ function MeetupEdit() {
     }
     useEffect(() => {
         getDetail()
+
     }, [])
     const handleCreate = (e) => {
         e.preventDefault()
-        Swal.fire({
-            title: 'Xác nhận thông tin',
-            html: 'This will close in a minutes',
+        debugger
+        if (title === ''
+            || fromTime === null
+            || toTime === null
+            || startTime === null
+            || endTime === null
+            || location === ''
+            || description === ''
+            || type === ''
+            || image === '') {
 
-            timerProgressBar: true,
-            didOpen: () => {
-                Swal.showLoading()
-                const b = Swal.getHtmlContainer().querySelector('b')
-            },
-        })
-        var data = JSON.stringify({
-            "name": title,
-            "startTime": fromTime,
-            "endTime": toTime,
-            "location": location,
-            "description": description,
-            "activityType": type,
-            "background": "",
-        });
-        console.log(data);
-        var config = {
-            method: 'put',
-            maxBodyLength: Infinity,
-            url: baseURL + '/activities/' + eventId,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: data
-        };
+            Swal.fire(
+                "Oops!",
+                "Missing some field",
+                "error",
+            );
+        } else {
+            const newFromDate = new Date(fromTime);
+            newFromDate.setUTCHours(dayjs(startTime).hour());
+            newFromDate.setUTCMinutes(dayjs(startTime).minute());
+            const newFromDate1 = newFromDate.toISOString();
+            const newToDate = new Date(toTime);
+            newToDate.setUTCHours(dayjs(endTime).hour());
+            newToDate.setUTCMinutes(dayjs(endTime).minute());
+            const newToDate1 = newToDate.toISOString();
+            Swal.fire({
+                title: 'Xác nhận thông tin',
+                html: 'This will close in a minutes',
 
-        axios(config)
-            .then(function (response) {
-                console.log(response);
-                Swal.close()
-                Swal.fire(
-                    "Good job!",
-                    "You success edit a event!",
-                    "success",
-                );
-                nav("/activity/meetups-post?id=" + eventId)
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                    const b = Swal.getHtmlContainer().querySelector('b')
+                },
             })
-            .catch(function (error) {
-                console.log();
-                Swal.close()
-
+            var data = JSON.stringify({
+                "name": title,
+                "startTime": newFromDate1,
+                "endTime": newToDate1,
+                "location": location,
+                "description": description,
+                "activityType": type,
+                "background": image,
             });
+            console.log(data);
+            var config = {
+                method: 'put',
+                maxBodyLength: Infinity,
+                url: baseURL + '/activities/' + eventId,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
 
+            axios(config)
+                .then(function (response) {
+                    console.log(response);
+                    Swal.close()
+                    Swal.fire(
+                        "Good job!",
+                        "You success edit a event!",
+                        "success",
+                    );
+                    nav("/activity/meetups-post?id=" + eventId)
+                })
+                .catch(function (error) {
+                    console.log();
+                    Swal.close()
+
+                });
+
+        }
     }
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [value, setValue] = useState()
-    const [startTime, setStartTime] = useState('10:00');
-    const [endTime, setEndTime] = useState('10:00');
+    const [startTime, setStartTime] = useState(null);
+    const [endTime, setEndTime] = useState(null);
     const [title, setTile] = useState("");
     const [description, setDescription] = useState("");
     const [fromTime, setFromTime] = useState(null);
@@ -136,6 +172,8 @@ function MeetupEdit() {
     const [location, setLocation] = useState("");
     const [type, setType] = useState('');
 
+
+    if (endTime === null || startTime === null) return null;
     return (
         <div className="flex h-screen overflow-hidden">
             {/* Sidebar */}
@@ -184,7 +222,7 @@ function MeetupEdit() {
                                         Pick date
                                     </label>
                                     <div className="grid gap-5 md:grid-cols-1">
-                                        <Datepicker handleChoose={handleChoose} ></Datepicker>
+                                        <Datepicker endTime={endTime} startTime={startTime} handleChoose={handleChoose} ></Datepicker>
                                     </div>
                                 </div>
                                 <div className="grid gap-5 md:grid-cols-2">
@@ -195,7 +233,7 @@ function MeetupEdit() {
                                         <div className="grid gap-2 md:grid-cols-1">
                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                 <DemoContainer components={['TimePicker']}>
-                                                    <TimePicker onChange={(e) => setStartTime(e)} label="Input start time" />
+                                                    <TimePicker defaultValue={dayjs(startTime)} onChange={(e) => setStartTime(e)} label="Input start time" />
                                                 </DemoContainer>
                                             </LocalizationProvider>
                                         </div>
@@ -207,7 +245,7 @@ function MeetupEdit() {
                                         <div className="grid gap-5 md:grid-cols-1">
                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                 <DemoContainer components={['TimePicker']}>
-                                                    <TimePicker onChange={(e) => setEndTime(e)} label="Input end time" />
+                                                    <TimePicker defaultValue={dayjs(endTime)} onChange={(e) => setEndTime(e)} label="Input end time" />
                                                 </DemoContainer>
                                             </LocalizationProvider>
                                         </div>
@@ -233,6 +271,10 @@ function MeetupEdit() {
                                         modules={modules}
                                         formats={formats}
                                         value={description} onChange={setDescription} />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1" htmlFor="name">Image URL <span className="text-rose-500">*</span></label>
+                                    <input defaultValue={image} id="name" className="form-input w-full px-2 py-1" type="text" required onChange={e => setImage(e.target.value)} />
                                 </div>
 
                                 {/* Select */}

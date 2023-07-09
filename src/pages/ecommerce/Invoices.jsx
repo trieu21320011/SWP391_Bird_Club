@@ -2,8 +2,16 @@ import React, { useState, useEffect } from 'react';
 
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
+import SearchForm from '../../partials/actions/SearchForm';
+import DeleteButton from '../../partials/actions/DeleteButton';
+import DateSelect from '../../components/DateSelect';
+import FilterButton from '../../components/DropdownFilter';
 import { baseURL } from '../../pages/baseUrl';
+import NotFoundImage from '../../images/404-illustration.svg';
+import PaginationClassic from '../../components/PaginationClassic';
 import axios from 'axios';
+import moment from 'moment';
+import ModalBlank from '../../components/ModalBlank';
 import { Switch } from '@mui/material';
 
 function Invoices({
@@ -31,21 +39,109 @@ function Invoices({
   }, [])
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Xử lý dữ liệu form tại đây (ví dụ: gửi đi, lưu trữ, ...)
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [dangerModalOpen, setDangerModalOpen] = useState(false)
+  const [blogId, setBlogId] = useState('')
+  const [blog, setBlog] = useState([]);
+  const totalColor = (status) => {
+    switch (status) {
+      case 'Paid':
+        return 'text-emerald-500';
+      case 'Due':
+        return 'text-amber-500';
+      case 'Overdue':
+        return 'text-rose-500';
+      default:
+        return 'text-slate-500';
+    }
   };
 
-  if(newsfeeds.length === 0 ) return null;
-  
+  const deleteBlog = (e) => {
+    e.preventDefault();
+    let config = {
+      method: "delete",
+      maxBodyLength: Infinity,
+      url: baseURL + "/blogs/" + blogId,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    axios.request(config).then((response) => {
+      console.log(response);
+      setDangerModalOpen(false)
+      getData();
+    });
+  };
+
+  const statusColor = (status) => {
+    switch (status) {
+      case 'Paid':
+        return 'bg-emerald-100 text-emerald-600';
+      case 'Due':
+        return 'bg-amber-100 text-amber-600';
+      case 'Overdue':
+        return 'bg-rose-100 text-rose-500';
+      default:
+        return 'bg-slate-100 text-slate-500';
+    }
+  };
+  const uid = localStorage.getItem("uid")
+  useEffect(() => {
+    getData()
+  }, [])
+
+  const getData = () => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/newsfeeds/by-member/' + uid,
+    };
+    axios.request(config)
+      .then((response) => {
+        let newFeedList = response.data.newsfeeds
+        let blogList = newFeedList.filter(i => i.newsfeedType === 0)
+        console.log(blogList);
+        setBlog(blogList)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
 
   return (
     <div className="flex h-screen overflow-hidden">
 
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <ModalBlank id="danger-modal" modalOpen={dangerModalOpen} setModalOpen={setDangerModalOpen}>
+        <div className="p-5 flex space-x-4">
+          {/* Icon */}
+          <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-rose-100">
+            <svg className="w-4 h-4 shrink-0 fill-current text-rose-500" viewBox="0 0 16 16">
+              <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 12c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1zm1-3H7V4h2v5z" />
+            </svg>
+          </div>
+          {/* Content */}
+          <div>
+            {/* Modal header */}
+            <div className="mb-2">
+              <div className="text-lg font-semibold text-slate-800">Remove the blog ?</div>
+            </div>
+            {/* Modal content */}
+            <div className="text-sm mb-10">
+              <div className="space-y-2">
+                <p>Are you sure you want to remove the blog.</p>
+              </div>
+            </div>
+            {/* Modal footer */}
+            <div className="flex flex-wrap justify-end space-x-2">
+              <button className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600" onClick={(e) => { e.stopPropagation(); setDangerModalOpen(false); }}>Cancel</button>
+              <button onClick={(e) => { e.stopPropagation(); deleteBlog(e); }} className="btn-sm bg-rose-500 hover:bg-rose-600 text-white">Yes, Remove it</button>
+            </div>
+          </div>
+        </div>
+      </ModalBlank>
 
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
@@ -56,104 +152,124 @@ function Invoices({
         <main class="pb-8 pt-8">
           <div class="max-w-3xl mx-auto sm:px-6 lg:max-w-7xl lg:px-8">
 
-            <div class="grid grid-cols-1 items-start lg:grid-cols-5 lg:gap-8">
-              <div class="grid grid-cols-1 gap-4 lg:col-span-5">
 
-                <div class="sm:flex sm:items-center px-4 sm:px-0">
-                  <div class="sm:flex-auto">
-                    <h1 class="text-xl font-semibold text-gray-900">Yours Blogs</h1>
-                    <p class="mt-2 text-sm text-gray-700">
-                      A list of all yours Blogs.
-                    </p>
-                  </div>
+            {/* More actions */}
+            <div className="sm:flex sm:justify-between sm:items-center mb-5">
+
+              {/* Right side */}
+              <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
+                {/* Delete button */}
+                <DeleteButton selectedItems={selectedItems} />
+                {/* Dropdown */}
+                <DateSelect />
+                {/* Filter button */}
+                <FilterButton align="right" />
+              </div>
+
+            </div>
+
+            {/* Table */}
+            <div className="bg-white shadow-lg rounded-sm border border-slate-200 relative">
+              <header className="px-5 py-4">
+                <h2 className="font-semibold text-slate-800">Blogs <span className="text-slate-400 font-medium">{blog.length}</span></h2>
+              </header>
+              <div>
+
+                {/* Table */}
+                <div className="overflow-x-auto">
+                  <table className="table-auto w-full">
+                    {/* Table header */}
+                    <thead className="text-xs font-semibold uppercase text-slate-500 bg-slate-50 border-t border-b border-slate-200">
+                      <tr>
+                        <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-left">Title</div>
+                        </th>
+                        <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-left">Create date</div>
+                        </th>
+                        <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-left">Number of comment</div>
+                        </th>
+                        <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-left">Number of like</div>
+                        </th>
+
+                        <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-left">Actions</div>
+                        </th>
+                      </tr>
+                    </thead>
+                    {/* Table body */}
+                    {
+                      blog.length > 0 ? (
+                        <tbody className="text-sm divide-y divide-slate-200">
+                          {
+                            blog.map(b => {
+                              return (
+                                <tr>
+                                  <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                    <div className="font-medium text-sky-500">{b.blog.title}</div>
+                                  </td>
+                                  <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                    <div className={`font-medium `}>{moment(new Date(b.publicationTime)).format("DD/MM/YYYY, h:mm:ss A")}</div>
+                                  </td>
+                                  <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                    <div className="font-medium text-slate-800">{b.blog.comments.length}</div>
+                                  </td>
+                                  <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                    <div>{b.blog.likeCount ? (b.blog.likeCount) : ("0")}</div>
+                                  </td>
+                                  <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
+                                    <div className="space-x-1">
+                                      <button className="text-slate-400 hover:text-slate-500 rounded-full">
+                                        <span className="sr-only">Edit</span>
+                                        <svg className="w-8 h-8 fill-current" viewBox="0 0 32 32">
+                                          <path d="M19.7 8.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM12.6 22H10v-2.6l6-6 2.6 2.6-6 6zm7.4-7.4L17.4 12l1.6-1.6 2.6 2.6-1.6 1.6z" />
+                                        </svg>
+                                      </button>
+                                      <button className="text-rose-500 hover:text-rose-600 rounded-full" onClick={(e) => {
+                                        e.stopPropagation();
+                                        setDangerModalOpen(true);
+                                        setBlogId(b.id);
+                                      }}>
+                                        <span className="sr-only">Delete</span>
+                                        <svg className="w-8 h-8 fill-current" viewBox="0 0 32 32">
+                                          <path d="M13 15h2v6h-2zM17 15h2v6h-2z" />
+                                          <path d="M20 9c0-.6-.4-1-1-1h-6c-.6 0-1 .4-1 1v2H8v2h1v10c0 .6.4 1 1 1h12c.6 0 1-.4 1-1V13h1v-2h-4V9zm-6 1h4v1h-4v-1zm7 3v9H11v-9h10z" />
+                                        </svg>
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              )
+                            })
+                          }
+
+                        </tbody>
+                      ) : (
+                        <tbody className="text-sm divide-y divide-slate-200">
+                          <td colSpan={5}>
+                            <div className="max-w-2xl m-auto mt-16">
+
+                              <div className="text-center px-4">
+                                <div className="inline-flex mb-8">
+                                  <img src={NotFoundImage} width="176" height="176" alt="404 illustration" />
+                                </div>
+                                <div className="mb-6">There is no blog here, let create one</div>
+                              </div>
+
+                            </div>
+                          </td>
+
+                        </tbody>)}
+
+                  </table>
 
                 </div>
-
-                <turbo-frame id="filters">
-                  <div class="flex flex-col sm:rounded-lg shadow">
-                    <div>
-                      <dl class="sm:rounded-t-lg grid grid-cols-1 bg-white overflow-hidden border-b border-gray-200 divide-y divide-gray-200 md:grid-cols-3 md:divide-y-0 md:divide-x">
-                        <div class="px-4 py-5 sm:p-6">
-                          <dt class="text-base font-normal text-gray-900">Total Records</dt>
-                          <dd class="mt-1 flex justify-between items-baseline md:block lg:flex">
-                            <div class="flex items-baseline text-2xl font-semibold text-teal-600">
-                              6
-                            </div>
-                          </dd>
-                        </div>
-
-                        <div class="px-4 py-5 sm:p-6">
-                          <dt class="text-base font-normal text-gray-900">Unique Species</dt>
-                          <dd class="mt-1 flex justify-between items-baseline md:block lg:flex">
-                            <div class="flex items-baseline text-2xl font-semibold text-teal-600">
-                              4
-                            </div>
-                          </dd>
-                        </div>
-
-                        <div class="px-4 py-5 sm:p-6">
-                          <dt class="text-base font-normal text-gray-900">Recorders</dt>
-                          <dd class="mt-1 flex justify-between items-baseline md:block lg:flex">
-                            <div class="flex items-baseline text-2xl font-semibold text-teal-600">
-                              2
-                            </div>
-                          </dd>
-                        </div>
-                      </dl>
-                    </div>
-
-                    <div class="overflow-hidden ring-1 ring-black ring-opacity-5 sm:rounded-b-lg">
-                      <div class="table min-w-full">
-                        <div class="bg-gray-50 table-header-group">
-                          <div class="table-row">
-                            <div class="table-cell border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 pl-4 pr-3 sm:pl-6">
-                              Title
-                            </div>
-                            
-                            <div class="table-cell border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3">
-                              Time
-                            </div>
-                            <div class="border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 hidden sm:table-cell">
-                              Comment
-                            </div>
-                            <div class="border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 hidden lg:table-cell">
-                              Status
-                            </div>
-
-
-                          </div>
-                        </div>
-                        {
-                          newsfeeds.length > 0 ? newsfeeds.map((newsfeeds) => {
-                            return (
-                              <div class="table-header-group bg-white">
-                                <turbo-frame id="row_record_10444" class="contents" target="_top">
-                                  <div class="table-row">
-                                    <div class="table-cell border-b border-gray-200 text-sm w-full max-w-0 py-4 pl-4 pr-3 sm:w-auto sm:max-w-none sm:pl-6 text-gray-900">
-                                      {newsfeeds.blog.tittle}
-                                    </div>
-                                    <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                      {newsfeeds.publicationTime}
-                                    </div>
-                                    <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden lg:table-cell">
-                                      {newsfeeds.blog.comments.length}
-                                    </div>
-                                    <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden sm:table-cell">
-                                      <Switch {...label} defaultChecked />
-                                    </div>
-                                  </div>
-                                </turbo-frame>
-                              </div>
-                            )
-                          }
-                          ) : <div></div>
-                        }
-                      </div>
-                    </div>
-                  </div>
-                </turbo-frame>
               </div>
             </div>
+
+
 
           </div>
         </main>

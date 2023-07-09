@@ -15,6 +15,7 @@ import ModalBasic from '../../components/ModalBasic';
 function JobPost() {
 
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false)
+  const uid = localStorage.getItem("uid")
     let navigate = useNavigate();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -52,10 +53,6 @@ function JobPost() {
                     </div>
                     <div className="text-lg font-bold text-slate-800 mb-1">Revolut Ltd</div>
                     <div className="text-sm text-slate-500 italic">179 Jobs Posted</div>
-                  </div>
-                  <div className="space-y-2 sm:flex sm:space-y-0 sm:space-x-2">
-                    <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white">Become one of us  -&gt;</button>
-                    <button className="btn w-full border-slate-200 hover:border-slate-300 text-slate-600" onClick={e => handleOnClick(e)}>Staff Members</button>
                   </div>
                 </div>
 
@@ -106,7 +103,6 @@ function JobPost() {
                   <p className="font-medium text-slate-800 italic mb-6">Do you have what it takes?</p>
                   <div className="flex justify-between items-center">
                     {/* Apply button */}
-                    <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white whitespace-nowrap">Become one of us   -&gt;</button>
                     {/* Share */}
                     <div className="flex items-center">
                       <div className="text-sm text-slate-500 italic mr-4">Share:</div>
@@ -150,11 +146,14 @@ function JobPost() {
                     <div className="text-sm text-slate-500 italic">430 Members</div>
                   </div>
                   <div className="space-y-2">
-                    <button className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white" aria-controls="feedback-modal" onClick={(e) => { e.stopPropagation(); setFeedbackModalOpen(true); }}>Become one of us -&gt;</button>
+                  {!uid && (
+                    <Link className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white" aria-controls="feedback-modal" to="/signup" >Become one of us -&gt;</Link>
+                  )}
+                    
                     {/* Send Feedback */}
                     <div className="m-1.5">
                       {/* Start */}
-                      <ModalBasic id="feedback-modal" modalOpen={feedbackModalOpen} setModalOpen={setFeedbackModalOpen} title="Become one of us">
+                      <ModalBasic id="feedback-modal" modalOpen={feedbackModalOpen} setModalOpen={setFeedbackModalOpen}  title="Become one of us">
                         {/* Modal content */}
                         <div className="px-5 py-4">
                           <div className="text-sm">

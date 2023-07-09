@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import Tooltip from '../../components/Tooltip';
+import dayjs from 'dayjs';
 
 
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
@@ -16,6 +17,7 @@ import { Link } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { Role } from '../../pages/enum/roleEnum';
 function MeetupCreate() {
     const nav = useNavigate()
     const formats = [
@@ -56,70 +58,101 @@ function MeetupCreate() {
         setToTime(data[1])
         console.log('argument from Child: ', data);
     }
+    
     const handleCreate = (e) => {
         e.preventDefault()
-        Swal.fire({
-          title: 'Xác nhận thông tin',
-          html: 'This will close in a minutes',
-    
-          timerProgressBar: true,
-          didOpen: () => {
-            Swal.showLoading()
-            const b = Swal.getHtmlContainer().querySelector('b')
-          },
-        })
-        var data = JSON.stringify({
-            "name": title,
-            "startTime": fromTime,
-            "endTime": toTime,
-            "location": location,
-            "description": description,
-            "activityType": type,
-            "ownerId": parseInt(uid, 10),
-            "background": "",
-        });
-    console.log(data);
-        var config = {
-          method: 'post',
-          maxBodyLength: Infinity,
-          url: baseURL + '/activities',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data: data
-        };
-    
-        axios(config)
-          .then(function (response) {
-            console.log(response);
-            Swal.close()
+        if (title === '' 
+        || fromTime === null 
+        || toTime === null
+        || startTime === null 
+        || endTime === null
+        || location === ''
+        || description === ''
+        || type === ''
+        || image === '') {
+
             Swal.fire(
-              "Good job!",
-              "You success create a blog!",
-              "success",
+                "Oops!",
+                "Missing some field",
+                "error",
             );
-            nav("/activity/meetups")
-          })
-          .catch(function (error) {
-            console.log();
-            Swal.close()
-           
-          });
-    
-      }
+        } else {            
+            const newFromDate = new Date(fromTime);
+            newFromDate.setUTCHours(dayjs(startTime).hour());
+            newFromDate.setUTCMinutes(dayjs(startTime).minute());
+            const newFromDate1 = newFromDate.toISOString();
+            const newToDate = new Date(toTime);
+            newToDate.setUTCHours(dayjs(endTime).hour());
+            newToDate.setUTCMinutes(dayjs(endTime).minute());
+            const newToDate1 = newToDate.toISOString();
+            Swal.fire({
+                title: 'Xác nhận thông tin',
+                html: 'This will close in a minutes',
+
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                    const b = Swal.getHtmlContainer().querySelector('b')
+                },
+            })
+            var data = JSON.stringify({
+                "name": title,
+                "startTime": newFromDate1,
+                "endTime": newToDate1,
+                "location": location,
+                "description": description,
+                "activityType": type,
+                "ownerId": parseInt(uid, 10),
+                "background": image,
+            });
+            console.log(data);
+            var config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: baseURL + '/activities',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            axios(config)
+                .then(function (response) {
+                    console.log(response);
+                    Swal.close()
+                    Swal.fire(
+                        "Good job!",
+                        "You success create a blog!",
+                        "success",
+                    );
+                    nav("/activity/meetups")
+                })
+                .catch(function (error) {
+                    console.log();
+                    Swal.close()
+                    Swal.fire(
+                        "Oops!",
+                        "Some thing went wrong",
+                        "error",
+                    );
+        
+
+                });
+
+        }
+
+
+    }
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [value, setValue] = useState()
-    const [toggle1, setToggle1] = useState(true);
-    const [toggle2, setToggle2] = useState(false);
-    const [toggle3, setToggle3] = useState(false);
-    const [startTime, setStartTime] = useState('10:00');
-    const [endTime, setEndTime] = useState('10:00');
+    const [startTime, setStartTime] = useState(null);
+    const [endTime, setEndTime] = useState(null);
     const [title, setTile] = useState("");
     const [description, setDescription] = useState("");
     const [fromTime, setFromTime] = useState(null);
     const [toTime, setToTime] = useState(null);
     const [location, setLocation] = useState("");
     const [type, setType] = useState('');
+    const [image, setImage] = useState('');
 
     return (
         <div className="flex h-screen overflow-hidden">
@@ -217,6 +250,10 @@ function MeetupCreate() {
                                         modules={modules}
                                         formats={formats}
                                         value={description} onChange={setDescription} />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1" htmlFor="name">Image URL <span className="text-rose-500">*</span></label>
+                                    <input id="name" className="form-input w-full px-2 py-1" type="text" required onChange={e => setImage(e.target.value)} />
                                 </div>
 
                                 {/* Select */}

@@ -45,7 +45,7 @@ function Records() {
 
                                 <turbo-frame id="filters">
                                     <div data-controller="record-filters">
-                                        
+
                                         <section aria-labelledby="filter-heading" class="relative z-10 grid items-center">
                                             <h2 id="filter-heading" class="sr-only">Filters</h2>
                                             <div class="relative col-start-1 row-start-1 py-4">
@@ -63,63 +63,63 @@ function Records() {
                                                 </div>
                                             </div>
                                             <form class="hidden" data-record-filters-target="form" data-turbo-action="advance" action="/clubs/vn-bird/records" accept-charset="UTF-8" method="get">
-                                                <input data-record-filters-target="open" autocomplete="off" type="hidden" name="open" id="open"/>
-                                                    <div class="border-t border-gray-200 py-10" id="disclosure-1">
-                                                        <div class="max-w-7xl mx-auto  gap-x-4 px-4 text-sm md:gap-x-6">
-                                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-10 lg:grid-cols-3 md:gap-x-6 w-full">
-                                                                <div class="space-y-4">
-                                                                    <div>
-                                                                        <legend class="block font-medium">Reported After</legend>
-                                                                        <div class="mt-1">
-                                                                            <input data-action="change->record-filters#submit" class="min-w-42 block shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500" placeholder="dd/mm/yyyy" type="date" name="reported_after" id="reported_after"/>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div>
-                                                                        <legend class="block font-medium">Reported Before</legend>
-                                                                        <div class="mt-1">
-                                                                            <input data-action="change->record-filters#submit" class="min-w-42 block shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500" placeholder="dd/mm/yyyy" type="date" name="reported_before" id="reported_before"/>
-                                                                        </div>
+                                                <input data-record-filters-target="open" autocomplete="off" type="hidden" name="open" id="open" />
+                                                <div class="border-t border-gray-200 py-10" id="disclosure-1">
+                                                    <div class="max-w-7xl mx-auto  gap-x-4 px-4 text-sm md:gap-x-6">
+                                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-10 lg:grid-cols-3 md:gap-x-6 w-full">
+                                                            <div class="space-y-4">
+                                                                <div>
+                                                                    <legend class="block font-medium">Reported After</legend>
+                                                                    <div class="mt-1">
+                                                                        <input data-action="change->record-filters#submit" class="min-w-42 block shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500" placeholder="dd/mm/yyyy" type="date" name="reported_after" id="reported_after" />
                                                                     </div>
                                                                 </div>
-                                                                <div class="space-y-4">
-                                                                    <div>
-                                                                        <legend class="block font-medium">Family</legend>
-                                                                        <div class="mt-1">
-                                                                            <select data-action="change->record-filters#submit" class="block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none sm:text-sm rounded-md focus:ring-teal-500 focus:border-teal-500" name="family" id="family"><option value="" label=" "></option>
-                                                                                <option value="Pheasants &amp; Allies">Pheasants &amp; Allies</option></select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div>
-                                                                        <legend class="block font-medium">Species</legend>
-                                                                        <div class="mt-1">
-                                                                            <select data-action="change->record-filters#submit" class="block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none sm:text-sm rounded-md focus:ring-teal-500 focus:border-teal-500" name="bird_id" id="bird_id"><option value="" label=" "></option>
-                                                                                <option value="1">Western Capercaillie</option>
-                                                                                <option value="2">Black Grouse</option>
-                                                                                <option value="7">Common Quail</option></select>
-                                                                        </div>
+                                                                <div>
+                                                                    <legend class="block font-medium">Reported Before</legend>
+                                                                    <div class="mt-1">
+                                                                        <input data-action="change->record-filters#submit" class="min-w-42 block shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500" placeholder="dd/mm/yyyy" type="date" name="reported_before" id="reported_before" />
                                                                     </div>
                                                                 </div>
-                                                                <div class="space-y-4">
-                                                                    <div>
-                                                                        <legend class="block font-medium">Location</legend>
-                                                                        <div class="mt-1">
-                                                                            <select data-action="change->record-filters#submit" class="block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none sm:text-sm rounded-md focus:ring-teal-500 focus:border-teal-500" name="location_id" id="location_id"><option value="" label=" "></option>
-                                                                                <option value="1248">At Home</option>
-                                                                                <option value="1247">Out and About</option></select>
-                                                                        </div>
+                                                            </div>
+                                                            <div class="space-y-4">
+                                                                <div>
+                                                                    <legend class="block font-medium">Family</legend>
+                                                                    <div class="mt-1">
+                                                                        <select data-action="change->record-filters#submit" class="block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none sm:text-sm rounded-md focus:ring-teal-500 focus:border-teal-500" name="family" id="family"><option value="" label=" "></option>
+                                                                            <option value="Pheasants &amp; Allies">Pheasants &amp; Allies</option></select>
                                                                     </div>
-                                                                    <div>
-                                                                        <legend class="block font-medium">Member</legend>
-                                                                        <div class="mt-1">
-                                                                            <select data-action="change->record-filters#submit" class="block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none sm:text-sm rounded-md focus:ring-teal-500 focus:border-teal-500" name="member_id" id="member_id"><option value="" label=" "></option>
-                                                                                <option value="806">Thông Hoàng</option>
-                                                                                <option value="805">Triệu Khắc</option></select>
-                                                                        </div>
+                                                                </div>
+                                                                <div>
+                                                                    <legend class="block font-medium">Species</legend>
+                                                                    <div class="mt-1">
+                                                                        <select data-action="change->record-filters#submit" class="block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none sm:text-sm rounded-md focus:ring-teal-500 focus:border-teal-500" name="bird_id" id="bird_id"><option value="" label=" "></option>
+                                                                            <option value="1">Western Capercaillie</option>
+                                                                            <option value="2">Black Grouse</option>
+                                                                            <option value="7">Common Quail</option></select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="space-y-4">
+                                                                <div>
+                                                                    <legend class="block font-medium">Location</legend>
+                                                                    <div class="mt-1">
+                                                                        <select data-action="change->record-filters#submit" class="block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none sm:text-sm rounded-md focus:ring-teal-500 focus:border-teal-500" name="location_id" id="location_id"><option value="" label=" "></option>
+                                                                            <option value="1248">At Home</option>
+                                                                            <option value="1247">Out and About</option></select>
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <legend class="block font-medium">Member</legend>
+                                                                    <div class="mt-1">
+                                                                        <select data-action="change->record-filters#submit" class="block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none sm:text-sm rounded-md focus:ring-teal-500 focus:border-teal-500" name="member_id" id="member_id"><option value="" label=" "></option>
+                                                                            <option value="806">Thông Hoàng</option>
+                                                                            <option value="805">Triệu Khắc</option></select>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
                                             </form>  </section>
                                     </div>
 

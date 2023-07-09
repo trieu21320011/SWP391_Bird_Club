@@ -20,6 +20,8 @@ import Analytics from './pages/Analytics';
 import Fintech from './pages/Fintech';
 import Customers from './pages/ecommerce/Customers';
 import Orders from './pages/ecommerce/Orders';
+import Events from './pages/ecommerce/Event';
+import Blogs from './pages/ecommerce/Blogs';
 import Invoices from './pages/ecommerce/Invoices';
 import Shop from './pages/ecommerce/Shop';
 import Shop2 from './pages/ecommerce/Shop2';
@@ -105,7 +107,7 @@ function App() {
         <Route path="/dashboard/analytics" element={
           <ProtectedRoute
             redirectPath="*"
-            isAllowed={!!authentication.isAuthentication() && role === Role.manager || role === Role.admin}
+            isAllowed={!!authentication.isAuthentication() && (role === Role.manager || role === Role.admin)}
           >
             <Analytics />
           </ProtectedRoute>
@@ -114,9 +116,25 @@ function App() {
         <Route path="/ecommerce/customers" element={
           <ProtectedRoute
             redirectPath="*"
-            isAllowed={!!authentication.isAuthentication() && role === Role.admin}
+            isAllowed={!!authentication.isAuthentication() && (role === Role.manager || role === Role.admin)}
           >
             <Customers />
+          </ProtectedRoute>
+        } />
+        <Route path="/ecommerce/events" element={
+          <ProtectedRoute
+            redirectPath="*"
+            isAllowed={!!authentication.isAuthentication() && (role === Role.manager || role === Role.admin)}
+          >
+            <Events />
+          </ProtectedRoute>
+        } />
+        <Route path="/ecommerce/blogs" element={
+          <ProtectedRoute
+            redirectPath="*"
+            isAllowed={!!authentication.isAuthentication() && (role === Role.manager || role === Role.admin)}
+          >
+            <Blogs />
           </ProtectedRoute>
         } />
         <Route path="/your-event" element={
@@ -130,7 +148,7 @@ function App() {
         <Route path="/your-blog" element={
           <ProtectedRoute
             redirectPath="*"
-            isAllowed={role === Role.staff || role === Role.admin || role === Role.manager}
+            isAllowed={role === Role.staff || role === Role.admin || role === Role.manager || role === Role.member}
           >
             <Invoices />
           </ProtectedRoute>
