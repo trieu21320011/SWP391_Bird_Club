@@ -93,13 +93,17 @@ function DropdownProfile({
           </div>
           <ul>
             <li>
-              <Link
-                className="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3"
-                to="/settings"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-              >
-                Settings
-              </Link>
+              {
+                infor ?
+                <Link
+                  className="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3"
+                  to={"/job/profile?id="+ infor.id }
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                >
+                  Profile
+                </Link>
+                : <div></div>
+              }
             </li>
             <li>
               { name !== null &&(

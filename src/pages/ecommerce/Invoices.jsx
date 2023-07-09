@@ -11,11 +11,14 @@ import NotFoundImage from '../../images/404-illustration.svg';
 import PaginationClassic from '../../components/PaginationClassic';
 import axios from 'axios';
 import moment from 'moment';
+import ModalBlank from '../../components/ModalBlank';
 
 function Invoices() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [dangerModalOpen, setDangerModalOpen] = useState(false)
+  const [blogId, setBlogId] = useState('')
   const [blog, setBlog] = useState([]);
   const totalColor = (status) => {
     switch (status) {
@@ -28,6 +31,23 @@ function Invoices() {
       default:
         return 'text-slate-500';
     }
+  };
+
+  const deleteBlog = (e) => {
+    e.preventDefault();
+    let config = {
+      method: "delete",
+      maxBodyLength: Infinity,
+      url: baseURL + "/blogs/" + blogId,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    axios.request(config).then((response) => {
+      console.log(response);
+      setDangerModalOpen(false)
+      getData();
+    });
   };
 
   const statusColor = (status) => {
@@ -44,6 +64,10 @@ function Invoices() {
   };
   const uid = localStorage.getItem("uid")
   useEffect(() => {
+    getData()
+  }, [])
+
+  const getData = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
@@ -59,8 +83,7 @@ function Invoices() {
       .catch((error) => {
         console.log(error);
       });
-  }, [])
-
+  }
 
 
   return (
@@ -68,6 +91,34 @@ function Invoices() {
 
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <ModalBlank id="danger-modal" modalOpen={dangerModalOpen} setModalOpen={setDangerModalOpen}>
+        <div className="p-5 flex space-x-4">
+          {/* Icon */}
+          <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-rose-100">
+            <svg className="w-4 h-4 shrink-0 fill-current text-rose-500" viewBox="0 0 16 16">
+              <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 12c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1zm1-3H7V4h2v5z" />
+            </svg>
+          </div>
+          {/* Content */}
+          <div>
+            {/* Modal header */}
+            <div className="mb-2">
+              <div className="text-lg font-semibold text-slate-800">Remove the blog ?</div>
+            </div>
+            {/* Modal content */}
+            <div className="text-sm mb-10">
+              <div className="space-y-2">
+                <p>Are you sure you want to remove the blog.</p>
+              </div>
+            </div>
+            {/* Modal footer */}
+            <div className="flex flex-wrap justify-end space-x-2">
+              <button className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600" onClick={(e) => { e.stopPropagation(); setDangerModalOpen(false); }}>Cancel</button>
+              <button onClick={(e) => { e.stopPropagation(); deleteBlog(e); }} className="btn-sm bg-rose-500 hover:bg-rose-600 text-white">Yes, Remove it</button>
+            </div>
+          </div>
+        </div>
+      </ModalBlank>
 
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
@@ -127,13 +178,13 @@ function Invoices() {
                           <div className="font-semibold text-left">Title</div>
                         </th>
                         <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                          <div className="font-semibold text-left">Ngày tạo</div>
+                          <div className="font-semibold text-left">Create date</div>
                         </th>
                         <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                          <div className="font-semibold text-left">Số comment</div>
+                          <div className="font-semibold text-left">Number of comment</div>
                         </th>
                         <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                          <div className="font-semibold text-left">Số like</div>
+                          <div className="font-semibold text-left">Number of like</div>
                         </th>
 
                         <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
@@ -169,7 +220,11 @@ function Invoices() {
                                           <path d="M19.7 8.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM12.6 22H10v-2.6l6-6 2.6 2.6-6 6zm7.4-7.4L17.4 12l1.6-1.6 2.6 2.6-1.6 1.6z" />
                                         </svg>
                                       </button>
-                                      <button className="text-rose-500 hover:text-rose-600 rounded-full">
+                                      <button className="text-rose-500 hover:text-rose-600 rounded-full" onClick={(e) => {
+                                        e.stopPropagation();
+                                        setDangerModalOpen(true);
+                                        setBlogId(b.id);
+                                      }}>
                                         <span className="sr-only">Delete</span>
                                         <svg className="w-8 h-8 fill-current" viewBox="0 0 32 32">
                                           <path d="M13 15h2v6h-2zM17 15h2v6h-2z" />
@@ -187,16 +242,16 @@ function Invoices() {
                       ) : (
                         <tbody className="text-sm divide-y divide-slate-200">
                           <td colSpan={5}>
-                          <div className="max-w-2xl m-auto mt-16">
+                            <div className="max-w-2xl m-auto mt-16">
 
-                            <div className="text-center px-4">
-                              <div className="inline-flex mb-8">
-                                <img src={NotFoundImage} width="176" height="176" alt="404 illustration" />
+                              <div className="text-center px-4">
+                                <div className="inline-flex mb-8">
+                                  <img src={NotFoundImage} width="176" height="176" alt="404 illustration" />
+                                </div>
+                                <div className="mb-6">There is no blog here, let create one</div>
                               </div>
-                              <div className="mb-6">There is no blog here, let create one</div>
-                            </div>
 
-                          </div>
+                            </div>
                           </td>
 
                         </tbody>)}
