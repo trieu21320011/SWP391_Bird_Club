@@ -10,6 +10,7 @@ import { baseURL } from '../../pages/baseUrl';
 import NotFoundImage from '../../images/404-illustration.svg';
 import PaginationClassic from '../../components/PaginationClassic';
 import axios from 'axios';
+import moment from 'moment';
 
 function Invoices() {
 
@@ -90,12 +91,6 @@ function Invoices() {
                 {/* Search form */}
                 <SearchForm placeholder="Search by Blog title" />
                 {/* Create invoice button */}
-                <button className="btn bg-indigo-500 hover:bg-indigo-600 text-white">
-                  <svg className="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
-                    <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
-                  </svg>
-                  <span className="hidden xs:block ml-2">Create Blogs</span>
-                </button>
               </div>
 
             </div>
@@ -158,7 +153,7 @@ function Invoices() {
                                     <div className="font-medium text-sky-500">{b.blog.title}</div>
                                   </td>
                                   <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                                    <div className={`font-medium `}>{b.publicationTime}</div>
+                                    <div className={`font-medium `}>{moment(new Date(b.publicationTime)).format("DD/MM/YYYY, h:mm:ss A")}</div>
                                   </td>
                                   <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                                     <div className="font-medium text-slate-800">{b.blog.comments.length}</div>
@@ -189,20 +184,22 @@ function Invoices() {
                           }
 
                         </tbody>
-                      ) : (<div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+                      ) : (
+                        <tbody className="text-sm divide-y divide-slate-200">
+                          <td colSpan={5}>
+                          <div className="max-w-2xl m-auto mt-16">
 
-                        <div className="max-w-2xl m-auto mt-16">
-
-                          <div className="text-center px-4">
-                            <div className="inline-flex mb-8">
-                              <img src={NotFoundImage} width="176" height="176" alt="404 illustration" />
+                            <div className="text-center px-4">
+                              <div className="inline-flex mb-8">
+                                <img src={NotFoundImage} width="176" height="176" alt="404 illustration" />
+                              </div>
+                              <div className="mb-6">There is no blog here, let create one</div>
                             </div>
-                            <div className="mb-6">Hiện chưa có event nào. Hãy tạo một event đi</div>
+
                           </div>
+                          </td>
 
-                        </div>
-
-                      </div>)}
+                        </tbody>)}
 
                   </table>
 
@@ -210,7 +207,7 @@ function Invoices() {
               </div>
             </div>
 
-            
+
 
           </div>
         </main>

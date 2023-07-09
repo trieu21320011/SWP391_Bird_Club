@@ -246,6 +246,7 @@ function OrdersTable({
                   date={e.startTime}
                   edate={e.endTime}
                   status={e.status}
+                  noRequest={e.requestCount}
                   location={e.location}
                   type={e.activityType}
                   description={e.description}

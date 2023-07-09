@@ -270,6 +270,7 @@ function FeedRightContent(props) {
                   );
                 })}
               </ul>
+              
               <div className="mt-4">
                 {maxViewMember === members.length ? (
                   <button
