@@ -5,36 +5,23 @@ import Sidebar from "../../partials/Sidebar";
 import Header from "../../partials/Header";
 import axios from "axios";
 import { baseURL } from "../../pages/baseUrl";
-
-import MeetupImage from "../../images/meetup-image.jpg";
-import MeetupPhoto01 from "../../images/meetup-photo-01.jpg";
-import MeetupPhoto02 from "../../images/meetup-photo-02.jpg";
-import MeetupPhoto03 from "../../images/meetup-photo-03.jpg";
-import MeetupThumb from "../../images/meetups-thumb-02.jpg";
 import Avatar from "../../images/user-40-02.jpg";
-import UserImage01 from "../../images/user-32-01.jpg";
-import UserImage02 from "../../images/user-32-02.jpg";
-import UserImage03 from "../../images/user-32-03.jpg";
-import UserImage04 from "../../images/user-32-04.jpg";
-import UserImage05 from "../../images/user-32-05.jpg";
-import UserImage06 from "../../images/user-32-06.jpg";
 import UserImage07 from "../../images/user-32-07.jpg";
-import UserImage08 from "../../images/user-32-08.jpg";
-import Avatar02 from "../../images/avatar-02.jpg";
-import Avatar03 from "../../images/avatar-03.jpg";
-import Avatar04 from "../../images/avatar-04.jpg";
 import ModalBlank from "../../components/ModalBlank";
 import moment from "moment";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import Swal from "sweetalert2";
+import ModalBasic from "../../components/ModalBasic";
 import moment2 from "moment/moment";
 import { Role } from "../../pages/enum/roleEnum";
+import Rating from '@mui/material/Rating';
 
 function MeetupsPost() {
   var eventId = window.location.search.split("=")[1];
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
+  const [feedBackModal, setfeedBackModal] = useState(false);
   const [eventDetail, setEventsDetail] = useState(null);
   const [eventDetailAttend, setEventsDetailAttend] = useState([]);
   const [status, setStatus] = useState({});
@@ -499,23 +486,35 @@ function MeetupsPost() {
                         </button>
                       )}
                       {status.message === "ACCEPTED" && (
-                        <button
-                          disabled
-                          className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white"
-                          aria-controls="info-modal"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setInfoModalOpen(true);
-                          }}
-                        >
-                          <svg
-                            className="w-4 h-4 fill-current shrink-0"
-                            viewBox="0 0 16 16"
+                        <div>
+                          <button
+                            disabled
+                            className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white"
+                            aria-controls="info-modal"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setInfoModalOpen(true);
+                            }}
                           >
-                            <path d="m2.457 8.516.969-.99 2.516 2.481 5.324-5.304.985.989-6.309 6.284z" />
-                          </svg>
-                          <span className="ml-1">Accepted</span>
-                        </button>
+                            <svg
+                              className="w-4 h-4 fill-current shrink-0"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="m2.457 8.516.969-.99 2.516 2.481 5.324-5.304.985.989-6.309 6.284z" />
+                            </svg>
+                            <span className="ml-1">Accepted</span>
+                          </button>
+                          <button
+                            className="btn w-full bg-indigo-500 hover:bg-indigo-600 text-white my-3"
+                            aria-controls="info-modal"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setfeedBackModal(true);
+                            }}
+                          >
+                            <span className="ml-1">Feedback</span>
+                          </button>
+                        </div>
                       )}
                       {status.message === "CLOSED" && (
                         <button
@@ -607,6 +606,30 @@ function MeetupsPost() {
                           </div>
                         </div>
                       </ModalBlank>
+                      <ModalBasic id="feedback-modal" modalOpen={feedBackModal} setModalOpen={setfeedBackModal} title="Send Feedback">
+                      {/* Modal content */}
+                      <div className="px-5 py-4">
+                        <div className="text-sm">
+                          <div className="font-medium text-slate-800 mb-3">Let us know what you think 🙌</div>
+                        </div>
+                        <div className="space-y-3">
+                        <Rating name="size-large" defaultValue={2} size="large" />
+                        </div>
+                        <div className="space-y-3">
+                          <div>
+                            <label className="block text-sm font-medium mb-1" htmlFor="feedback">Message <span className="text-rose-500">*</span></label>
+                            <textarea id="feedback" className="form-textarea w-full px-2 py-1" rows="4" required></textarea>
+                          </div>
+                        </div>
+                      </div>
+                      {/* Modal footer */}
+                      <div className="px-5 py-4 border-t border-slate-200">
+                        <div className="flex flex-wrap justify-end space-x-2">
+                          <button className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600" onClick={(e) => { e.stopPropagation(); setfeedBackModal(false); }}>Cancel</button>
+                          <button className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">Send</button>
+                        </div>
+                      </div>
+                    </ModalBasic>
                       {/* End */}
                       {/* <button className="btn w-full border-slate-200 hover:border-slate-300 text-slate-600">
                       <svg className="w-4 h-4 fill-rose-500 shrink-0" viewBox="0 0 16 16">

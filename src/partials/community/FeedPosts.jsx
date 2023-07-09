@@ -4,16 +4,10 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from "react";
-import { Link } from "react-router-dom";
 import EditMenu from "../../components/DropdownEditMenu";
 
 import UserImage02 from "../../images/user-40-02.jpg";
-import UserImage03 from "../../images/user-40-03.jpg";
-import UserImage04 from "../../images/user-40-04.jpg";
-import UserImage06 from "../../images/user-40-06.jpg";
-import UserImage08 from "../../images/user-40-08.jpg";
-import CommenterImage04 from "../../images/user-32-04.jpg";
-import CommenterImage05 from "../../images/user-32-05.jpg";
+import ModalBlank from "../../components/ModalBlank";
 import { Role } from "../../pages/enum/roleEnum";
 import { Pagination } from "@mui/material";
 import { useState } from "react";
@@ -35,16 +29,18 @@ const FeedPosts = forwardRef((props, ref) => {
     };
   });
   const [, updateState] = React.useState();
+  const [blogId, setBlogId] = useState('')
   const forceUpdate = React.useCallback(() => updateState({}), []);
   const [newFeeds, setNewFeeds] = useState(null);
   const [totalPage, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
-  const [size, setSize] = useState(10);
   const [commentContent, setCommentContent] = useState("");
   const [targetNewsfeedId, setTargetNewsfeedId] = useState("");
+  const [dangerModalOpen, setDangerModalOpen] = useState(false)
   const [infor, setInfor] = useState();
   const role = localStorage.getItem('role')
+  const uidNum = parseFloat(localStorage.getItem("uid"))
   const onClickPage = (e, page) => {
     setPage(page);
     getData(page);
@@ -181,6 +177,26 @@ const FeedPosts = forwardRef((props, ref) => {
     });
   };
 
+  const deleteBlog = (e) => {
+    e.preventDefault();
+    let config = {
+      method: "delete",
+      maxBodyLength: Infinity,
+      url: baseURL + "/blogs/" + blogId,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    axios.request(config).then((response) => {
+      console.log(response);
+      getData(page);
+      forceUpdate();
+      setDangerModalOpen(false)
+      setTargetNewsfeedId("");
+      setCommentContent("");
+    });
+  };
+
   const handleChange = (event) => {
     setCommentContent(event.target.value);
   };
@@ -230,6 +246,34 @@ const FeedPosts = forwardRef((props, ref) => {
     );
   return (
     <>
+      <ModalBlank id="danger-modal" modalOpen={dangerModalOpen} setModalOpen={setDangerModalOpen}>
+        <div className="p-5 flex space-x-4">
+          {/* Icon */}
+          <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-rose-100">
+            <svg className="w-4 h-4 shrink-0 fill-current text-rose-500" viewBox="0 0 16 16">
+              <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 12c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1zm1-3H7V4h2v5z" />
+            </svg>
+          </div>
+          {/* Content */}
+          <div>
+            {/* Modal header */}
+            <div className="mb-2">
+              <div className="text-lg font-semibold text-slate-800">Remove the blog ?</div>
+            </div>
+            {/* Modal content */}
+            <div className="text-sm mb-10">
+              <div className="space-y-2">
+                <p>Are you sure you want to remove the blog.</p>
+              </div>
+            </div>
+            {/* Modal footer */}
+            <div className="flex flex-wrap justify-end space-x-2">
+              <button className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600" onClick={(e) => { e.stopPropagation(); setDangerModalOpen(false); }}>Cancel</button>
+              <button onClick={(e) => { e.stopPropagation(); deleteBlog(e); }} className="btn-sm bg-rose-500 hover:bg-rose-600 text-white">Yes, Remove it</button>
+            </div>
+          </div>
+        </div>
+      </ModalBlank>
       {/* Post 1 */}
       {newFeeds &&
         newFeeds.map((n, index) => {
@@ -265,30 +309,37 @@ const FeedPosts = forwardRef((props, ref) => {
                     </div>
                   </div>
                   {/* Menu button */}
-                  <EditMenu
-                    align="right"
-                    className="relative inline-flex shrink-0"
-                  >
-                    <li>
-                      <button
-                        className="font-medium text-sm text-slate-600 hover:text-slate-800 flex py-1 px-3"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleClick(n.id);
-                        }}
-                      >
-                        Edit
-                      </button>
-                    </li>
-                    <li>
-                      <Link
-                        className="font-medium text-sm text-rose-500 hover:text-rose-600 flex py-1 px-3"
-                        to="#0"
-                      >
-                        Remove
-                      </Link>
-                    </li>
-                  </EditMenu>
+                  {uidNum === n.owner.memberId && (
+                    <EditMenu
+                      align="right"
+                      className="relative inline-flex shrink-0"
+                    >
+                      <li>
+                        <button
+                          className="font-medium text-sm text-slate-600 hover:text-slate-800 flex py-1 px-3"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleClick(n.id);
+                          }}
+                        >
+                          Edit
+                        </button>
+                      </li>
+                      <li>
+                        <div
+                          className="font-medium text-sm text-rose-500 hover:text-rose-600 flex py-1 px-3"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDangerModalOpen(true);
+                            setBlogId(n.id);
+                          }}
+                        >
+                          Remove
+                        </div>
+                      </li>
+                    </EditMenu>
+                  )}
+
                 </header>
                 {/* Body */}
                 <div className="text-sm text-slate-800 space-y-2 mb-5">
@@ -478,35 +529,6 @@ const FeedPosts = forwardRef((props, ref) => {
                       </div>
                     </div>
                     {/* Menu button */}
-                    <EditMenu
-                      align="right"
-                      className="relative inline-flex shrink-0"
-                    >
-                      <li>
-                        <Link
-                          className="font-medium text-sm text-slate-600 hover:text-slate-800 flex py-1 px-3"
-                          to="#0"
-                        >
-                          Option 1
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          className="font-medium text-sm text-slate-600 hover:text-slate-800 flex py-1 px-3"
-                          to="#0"
-                        >
-                          Option 2
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          className="font-medium text-sm text-rose-500 hover:text-rose-600 flex py-1 px-3"
-                          to="#0"
-                        >
-                          Remove
-                        </Link>
-                      </li>
-                    </EditMenu>
                   </header>
                   {/* Body */}
                   <div className="text-sm text-slate-800 space-y-2 mb-5">

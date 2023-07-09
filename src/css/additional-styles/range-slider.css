@@ -12,7 +12,9 @@ input[type=range] {
     margin-bottom: (--range-thumb-size - 6px) * 0.5;
     --thumb-size: #{--range-thumb-size};  
 }
-
+.width-64 {
+  max-width: 64rem !important;
+}
 input[type=range]::-webkit-slider-thumb {
     appearance: none;
     -webkit-appearance: none;
