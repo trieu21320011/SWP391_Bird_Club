@@ -6,9 +6,10 @@ import { baseURL } from '../pages/baseUrl';
 import axios from 'axios';
 
 function Analytics({
-
+  BrowseRecordsInfo,
 }) {
   const [records, setRecords] = useState([])
+  const [browserecords, setBrowserecords] = useState(null)
   const getRecords = () => {
     const uid = localStorage.getItem("uid")
     let config = {
@@ -25,8 +26,47 @@ function Analytics({
         console.log(error);
       });
   }
+
+  const [editrecords, setEditrecords] = useState([])
+  const getEditrecords = () => {
+    const uid = localStorage.getItem("uid")
+    let config = {
+      method: 'put',
+      maxBodyLength: Infinity,
+      url: baseURL + '/records/' + uid,
+    };
+
+    axios.request(config)
+      .then((response) => {
+        setEditrecords(response.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  const [delrecords, setDelrecords] = useState([])
+  const getDelrecords = (bookingid) => {
+
+    let config = {
+      method: 'delete',
+      maxBodyLength: Infinity,
+      url: baseURL + '/records/' + bookingid + '/delete-record',
+    };
+
+    axios.request(config)
+      .then((response) => {
+        setDelrecords(response.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   useEffect(() => {
     getRecords()
+    getEditrecords()
+    getDelrecords()
   }, [])
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -110,16 +150,9 @@ function Analytics({
                                     onChange={(e) => setBirdId(e.target.value)}
                                   />
                                 </label>
-                                <br/>
-                                <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                  BirdName:
-                                  <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
-                                    type="text"
-                                    value={bird}
-                                    onChange={(e) => setBirdName(e.target.value)}
-                                  />
-                                </label>
-                                <br/>
+                                <br />
+
+
                                 <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
                                   Species:
                                   <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
@@ -128,7 +161,7 @@ function Analytics({
                                     onChange={(e) => setBirdSpecies(e.target.value)}
                                   />
                                 </label>
-                                <br/>
+                                <br />
                                 <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
                                   Quantity:
                                   <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
@@ -137,17 +170,18 @@ function Analytics({
                                     onChange={(e) => setQuantity(e.target.value)}
                                   />
                                 </label>
-                                <br/>
+                                <br />
 
                                 <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
                                   Picture:
+                                  <br />
                                   <input
                                     type="file"
                                     accept="image/*"
                                     onChange={handlePictureChange}
                                   />
                                 </label>
-                                <br/>
+                                <br />
 
                                 <a type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" href='#'>Submit</a>
                               </form>
@@ -199,13 +233,7 @@ function Analytics({
                         <div class="bg-gray-50 table-header-group">
                           <div class="table-row">
                             <div class="table-cell border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 pl-4 pr-3 sm:pl-6">
-                              Bird ID
-                            </div>
-                            <div class="table-cell border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 relative">
-                              <span class="sr-only">Photo</span>
-                            </div>
-                            <div class="table-cell border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3">
-                              Bird Name
+                              Newsfeed ID
                             </div>
                             <div class="border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 hidden sm:table-cell">
                               Species
@@ -221,6 +249,7 @@ function Analytics({
                             </div>
                           </div>
                         </div>
+
                         {
                           records.length > 0 ? records.map((records) => {
                             return (
@@ -230,32 +259,26 @@ function Analytics({
 
                                   <div class="table-row">
                                     <div class="table-cell border-b border-gray-200 text-sm w-full max-w-0 py-4 pl-4 pr-3 sm:w-auto sm:max-w-none sm:pl-6 text-gray-900">
-                                      {records.birdId}
-                                    </div>
-                                    <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                      <div class="flex flex-row items-center space-x-2">
-                                      </div>
-                                    </div>
-                                    <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                      {records.birdName}
+                                      {records.newsfeedId}
                                     </div>
                                     <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden lg:table-cell">
-                                      <a class="hover:text-gray-900" href="/clubs/vn-bird/locations/at-home">{records.species}</a>
+                                      <a >{records.species}</a>
                                     </div>
                                     <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden sm:table-cell">
-                                      <a class="hover:text-gray-900" href="/clubs/vn-bird/members/806">{records.quantity}</a>
+                                      <a >{records.quantity}</a>
                                     </div>
                                     <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden sm:table-cell">
-                                      <img className='w-20 mt-4' src={records.photo} width="32" height="32" alt="User 08" />
+                                      <img className='w-40 mt-4' src={records.photo} width="32" height="32" alt="User 08" />
                                     </div>
                                     <div class="table-cell border-b border-gray-200 text-sm text-gray-500 pl-3 pr-4  sm:pr-6">
                                       <div >
                                         <div class="relative inline-block">
-                                          <a href='#popup2' id='openPopUp' className='btn-sm bg-indigo-500 hover:bg-indigo-600 text-white m-1'>Edit</a>
+                                          <a href='#popup2' id='openPopUp' className='btn-sm bg-indigo-500 hover:bg-indigo-600 text-white m-1' onClick={() => setBrowserecords(records)}>Edit</a>
 
                                           <div id='popup2' className='overlay'>
                                             <div className='popup'>
                                               <a className='close' href='#'>&times;</a>
+
 
                                               <div class="bg-white shadow sm:rounded-lg">
                                                 <div class="bg-white px-4 py-5 border-b border-gray-200 sm:px-6 sm:rounded-t-lg">
@@ -268,7 +291,6 @@ function Analytics({
                                                         Add as many records as you like and attach any photos you've taken.
                                                       </p>
                                                     </div>
-
                                                   </div>
                                                 </div>
                                                 <div class="bg-white sm:rounded-b-lg sm:rounded-t-lg">
@@ -280,17 +302,8 @@ function Analytics({
                                                           BirdId:
                                                           <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
                                                             type="text"
-                                                            value={bird}
-                                                            onChange={(e) => setBirdId(e.target.value)}
-                                                          />
-                                                        </label>
-                                                        <br />
-                                                        <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                                          BirdName:
-                                                          <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
-                                                            type="text"
-                                                            value={bird}
-                                                            onChange={(e) => setBirdName(e.target.value)}
+                                                            defaultValue={browserecords ? (browserecords.birdId) : ("")}
+                                                            onChange={(e) => getEditrecords(e.target.value)}
                                                           />
                                                         </label>
                                                         <br />
@@ -298,8 +311,8 @@ function Analytics({
                                                           Species:
                                                           <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
                                                             type="text"
-                                                            value={bird}
-                                                            onChange={(e) => setBirdSpecies(e.target.value)}
+                                                            defaultValue={browserecords ? (browserecords.species) : ("")}
+                                                            onChange={(e) => getEditrecords(e.target.value)}
                                                           />
                                                         </label>
                                                         <br />
@@ -307,14 +320,15 @@ function Analytics({
                                                           Quantity:
                                                           <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
                                                             type="number"
-                                                            value={number}
-                                                            onChange={(e) => setQuantity(e.target.value)}
+                                                            defaultValue={browserecords ? (browserecords.quantity) : ("")}
+                                                            onChange={(e) => getEditrecords(e.target.value)}
                                                           />
                                                         </label>
                                                         <br />
 
                                                         <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
                                                           Picture:
+                                                          <br />
                                                           <input
                                                             type="file"
                                                             accept="image/*"
@@ -323,12 +337,13 @@ function Analytics({
                                                         </label>
                                                         <br />
 
-                                                        <a type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" href='#'>Submit</a>
+                                                        <a type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" href='#' onClick={e => getEditrecords(editrecords)}>Submit</a>
                                                       </form>
                                                     </div>
                                                   </div>
                                                 </div>
                                               </div>
+
                                             </div>
                                           </div>
 
@@ -338,12 +353,10 @@ function Analytics({
                                             <div className='popup'>
 
                                               <h1 className='text-center text-2xl mt-4 '> Do you want to Delete this Record? </h1>
-                                              <a className='btn w-full bg-indigo-500 hover:bg-indigo-600 text-white' href='#'>Yes</ a >
+                                              <a className='btn w-full bg-indigo-500 hover:bg-indigo-600 text-white' href='#' onClick={e => getDelrecords(records.newsfeedId)}>Yes</ a >
                                               <a className='btn w-full border-slate-200 hover:border-slate-300 text-slate-600' href='#'>No</a>
                                             </div>
                                           </div>
-
-
                                         </div>
                                       </div>
                                     </div>
