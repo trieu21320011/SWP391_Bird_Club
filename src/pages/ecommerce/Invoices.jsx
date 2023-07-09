@@ -12,8 +12,31 @@ import PaginationClassic from '../../components/PaginationClassic';
 import axios from 'axios';
 import moment from 'moment';
 import ModalBlank from '../../components/ModalBlank';
+import { Switch } from '@mui/material';
 
-function Invoices() {
+function Invoices({
+
+}) {
+  const [newsfeeds, setNewsfeeds] = useState([])
+  const getNewsfeeds = () => {
+    const uid = localStorage.getItem("uid")
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/newsfeeds/by-member/' + uid,
+    };
+
+    axios.request(config)
+      .then((response) => {
+        setNewsfeeds(response.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  useEffect(() => {
+    getNewsfeeds()
+  }, [])
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -126,25 +149,9 @@ function Invoices() {
         {/*  Site header */}
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-        <main>
-          <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+        <main class="pb-8 pt-8">
+          <div class="max-w-3xl mx-auto sm:px-6 lg:max-w-7xl lg:px-8">
 
-            {/* Page header */}
-            <div className="sm:flex sm:justify-between sm:items-center mb-5">
-
-              {/* Left: Title */}
-              <div className="mb-4 sm:mb-0">
-                <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">Your Blogs ✨</h1>
-              </div>
-
-              {/* Right: Actions */}
-              <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
-                {/* Search form */}
-                <SearchForm placeholder="Search by Blog title" />
-                {/* Create invoice button */}
-              </div>
-
-            </div>
 
             {/* More actions */}
             <div className="sm:flex sm:justify-between sm:items-center mb-5">

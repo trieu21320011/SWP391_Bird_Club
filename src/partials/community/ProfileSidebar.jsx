@@ -1,16 +1,7 @@
-import React, { useState, useEffect } from "react";
-
-import ProfileImage from "../../images/user-avatar-32.png";
-import UserImage01 from "../../images/user-32-01.jpg";
-import UserImage02 from "../../images/user-32-02.jpg";
-import UserImage03 from "../../images/user-32-03.jpg";
-import UserImage04 from "../../images/user-32-04.jpg";
-import UserImage05 from "../../images/user-32-05.jpg";
-import UserImage06 from "../../images/user-32-06.jpg";
-import UserImage08 from "../../images/user-32-08.jpg";
-
-import { baseURL } from "../../pages/baseUrl";
-import axios from "axios";
+import React, { useState ,useEffect} from 'react';
+import ProfileImage from '../../images/user-avatar-32.png';
+import { baseURL } from '../../pages/baseUrl';
+import axios from 'axios';
 
 function ProfileSidebar({
   profileSidebarOpen,
