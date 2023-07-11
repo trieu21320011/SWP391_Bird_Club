@@ -17,6 +17,7 @@ function Profile() {
     setProfileId(id);
     getProfile(id)
     childRef.current.onReloadNewsfeed(id)
+    childRef.current.onReloadRecords(id)
   };
   const getProfile = (id) => {
     var config = {
