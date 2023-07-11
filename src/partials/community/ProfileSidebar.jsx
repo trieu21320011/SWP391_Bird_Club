@@ -116,7 +116,9 @@ function ProfileSidebar({
               </div>
               <ul className="mb-6">
                 {members.length > 0 ? (
-                  members.map((member) => {
+                  members
+                  .filter(m => m.membershipStatus === true)
+                  .map((member) => {
                     return (
                       <li className="-mx-2">
                         <button
