@@ -31,7 +31,6 @@ const ProfileBody = forwardRef((props, ref) => {
   const [records, setRecords] = useState([]);
 
   const getRecords = (id) => {
-    setNewFeedsId(id);
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
