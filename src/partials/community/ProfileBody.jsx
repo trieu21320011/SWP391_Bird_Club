@@ -28,6 +28,25 @@ const ProfileBody = forwardRef((props, ref) => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [, updateState] = React.useState();
   const forceUpdate = React.useCallback(() => updateState({}), []);
+  const [records, setRecords] = useState([]);
+
+  const getRecords = (id) => {
+    setNewFeedsId(id);
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/records/by-member/' + id,
+    };
+
+    axios.request(config)
+      .then((response) => {
+        setRecords(response.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   const openEditModal = (id) => {
     setNewFeedsId(id);
     let config = {
@@ -47,7 +66,6 @@ const ProfileBody = forwardRef((props, ref) => {
       });
     setEditModalOpen(true);
   };
-  const [records, setRecords] = useState([]);
   const [open, setOpen] = useState(false);
 
   useImperativeHandle(ref, () => {
@@ -91,6 +109,7 @@ const ProfileBody = forwardRef((props, ref) => {
     };
 
     fetchData();
+    
   }, []);
 
   const [SelectTab, SelectTabinfo] = useState("");
@@ -102,6 +121,10 @@ const ProfileBody = forwardRef((props, ref) => {
       getRecordsByMemberId(id)
     }, 100);
   }, []);
+
+  useEffect(() => {
+    getRecords()
+  }, [])
 
   const tabs = [
     {
@@ -175,9 +198,7 @@ const ProfileBody = forwardRef((props, ref) => {
                     <div>
                       <dl class="sm:rounded-t-lg grid grid-cols-1 bg-white overflow-hidden border-b border-gray-200 divide-y divide-gray-200 md:grid-cols-3 md:divide-y-0 md:divide-x">
                         <div class="px-4 py-5 sm:p-6">
-                          <dt class="text-base font-normal text-gray-900">
-                            Total Records
-                          </dt>
+                          <dt class="text-base font-normal text-gray-900">Total Records</dt>
                           <dd class="mt-1 flex justify-between items-baseline md:block lg:flex">
                             <div class="flex items-baseline text-2xl font-semibold text-teal-600">
                               {records.length}
@@ -197,9 +218,7 @@ const ProfileBody = forwardRef((props, ref) => {
                         </div>
 
                         <div class="px-4 py-5 sm:p-6">
-                          <dt class="text-base font-normal text-gray-900">
-                            Recorders
-                          </dt>
+                          <dt class="text-base font-normal text-gray-900">Number of Species</dt>
                           <dd class="mt-1 flex justify-between items-baseline md:block lg:flex">
                             <div class="flex items-baseline text-2xl font-semibold text-teal-600">
                               2
@@ -261,9 +280,6 @@ const ProfileBody = forwardRef((props, ref) => {
                       </div>
                     </div>
                   </div>
-                  {/* <div class="pt-6 flex items-center justify-between">
-                  <nav class="pagy-nav pagination" aria-label="pager"><span class="page prev disabled">‹&nbsp;Prev</span> <span class="page next disabled">Next&nbsp;›</span></nav>
-                </div> */}
                 </turbo-frame>
               </div>
             </div>

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { convertToRaw, EditorState } from "draft-js";
+
 
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
@@ -26,7 +26,7 @@ function Feed() {
   const [title, setTitle] = useState();
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false)
   const [editModalOpen, setEditModalOpen] = useState(false)
-  const [newFeedsDetail, setNewFeedsDetail] = useState({})
+  
   const [titleEdit, setTitleEdit] = useState("");
   const [valueEdit, setValueEdit] = useState();
   const [newFeedId, setNewFeedsId] = useState();

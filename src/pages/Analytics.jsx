@@ -7,6 +7,7 @@ import axios from 'axios';
 import ModalBasic from '../components/ModalBasic';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import ModalBlank from '../components/ModalBlank';
 
 
 function Analytics(props) {
@@ -14,17 +15,19 @@ function Analytics(props) {
   const [records, setRecords] = useState([])
   const [browserecords, setBrowserecords] = useState(null)
   const [editrecords, setEditrecords] = useState([])
-  const [delrecords, setDelrecords] = useState([])
-  const navigate = useNavigate();
+  const [delrecords, setDelrecords] = useState([false])
+  
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false)
   const [species, setSpecies] = useState("")
   const [imgUrl, setImgUrl] = useState("")
+  const [newspecies, setNewSpecies] = useState("")
+  const [newimgUrl, setNewImgUrl] = useState("")
   const [birds, setBirds] = useState([])
   const [quantity, setQuantity] = useState(0)
-  const handleNavigate = () => {
-    navigate('/activity/create-blog')
-  }
+  const [newquantity, setNewQuantity] = useState(0)
+
   
+
   const getRecords = () => {
     const uid = localStorage.getItem("uid")
     let config = {
@@ -36,10 +39,17 @@ function Analytics(props) {
     axios.request(config)
       .then((response) => {
         setRecords(response.data)
+        console.log(response.data)
       })
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  const handleDecline = (e, id) => {
+    e.preventDefault()
+    setUid(id)
+    setDelrecords(true)
   }
 
   const id = localStorage.getItem('uid')
@@ -92,34 +102,35 @@ function Analytics(props) {
       });
   }
 
-  const getEditrecords = () => {
-    const uid = localStorage.getItem("uid")
+  const setEditRecord = (record) => {
+    setBrowserecords(record)
+    setNewImgUrl(record.photo)
+    setNewQuantity(record.quantity)
+    setNewSpecies(record.birdId)
+  }
+
+
+  const getEditrecords = (browserecords) => {
+    // setRecords(id)
+    var data = JSON.stringify({
+      "birdId": newspecies,
+      "quantity": newquantity,
+      "photo": newimgUrl
+    });
+    console.log(browserecords)
+    // console.log(data)
     let config = {
       method: 'put',
       maxBodyLength: Infinity,
-      url: baseURL + '/records/' + uid,
+      url: baseURL + '/records/' + browserecords.newsfeedId,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
     };
 
     axios.request(config)
       .then((response) => {
-        setEditrecords(response.data)
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  const getDelrecords = (bookingid) => {
-
-    let config = {
-      method: 'delete',
-      maxBodyLength: Infinity,
-      url: baseURL + '/records/' + bookingid + '/delete-record',
-    };
-
-    axios.request(config)
-      .then((response) => {
-        setDelrecords(response.data)
         getRecords()
       })
       .catch((error) => {
@@ -127,10 +138,45 @@ function Analytics(props) {
       });
 
   }
-  useEffect(() => {
-    getRecords()
-    getEditrecords()
-    getDelrecords()
+
+  
+
+  const handleDelete = (e) => {
+    e.preventDefault()
+    var config = {
+      method: 'delete',
+      maxBodyLength: Infinity,
+      url: baseURL + '/record/' + uid + '/delete-record',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(response);
+        setDelrecords(false)
+        Swal.fire(
+          "Good job!",
+          "Success reject!",
+          "success",
+        );
+        getRecords()
+
+      })
+      .catch(function (error) {
+        console.log();
+        setDelrecords(false)
+        getRecords()
+        Swal.fire(
+          "Good job!",
+          "Some thing went wrong!",
+          "error",
+        );
+      });
+  }
+
+  function getBirds() {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
@@ -139,11 +185,16 @@ function Analytics(props) {
 
     axios.request(config)
       .then((response) => {
-        setBirds(response.data)
+        setBirds(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
+  }
+  useEffect(() => {
+    getRecords()
+    getBirds()
+
   }, [])
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -157,7 +208,7 @@ function Analytics(props) {
     console.log('photo', photo);
   };
 
-  
+
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -209,6 +260,35 @@ function Analytics(props) {
           </div>
         </ModalBasic>
 
+        <ModalBlank id="info-modal" modalOpen={delrecords} setModalOpen={setDelrecords}>
+          <div className="p-5 flex space-x-4">
+            {/* Icon */}
+            <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-indigo-100">
+              <svg className="w-4 h-4 shrink-0 fill-current text-indigo-500" viewBox="0 0 16 16">
+                <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm1 12H7V7h2v5zM8 6c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1z" />
+              </svg>
+            </div>
+            {/* Content */}
+            <div>
+              {/* Modal header */}
+              <div className="mb-2">
+                <div className="text-lg font-semibold text-slate-800">Delete this records from the web ?</div>
+              </div>
+              {/* Modal content */}
+              <div className="text-sm mb-10">
+                <div className="space-y-2">
+                  <p>Are you sure about this!!</p>
+                </div>
+              </div>
+              {/* Modal footer */}
+              <div className="flex flex-wrap justify-end space-x-2">
+                <button className="btn-sm border-slate-200 hover:border-slate-300 text-slate-600" onClick={(e) => { e.stopPropagation(); setDelrecords(false); }}>Cancel</button>
+                <button onClick={(e) => handleDelete(e)} className="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">Yes, I'm sure about this</button>
+              </div>
+            </div>
+          </div>
+        </ModalBlank>
+
         <main class="pb-8 pt-8">
           <div class="max-w-3xl mx-auto sm:px-6 lg:max-w-7xl lg:px-8">
 
@@ -239,25 +319,7 @@ function Analytics(props) {
                           <dt class="text-base font-normal text-gray-900">Total Records</dt>
                           <dd class="mt-1 flex justify-between items-baseline md:block lg:flex">
                             <div class="flex items-baseline text-2xl font-semibold text-teal-600">
-                              6
-                            </div>
-                          </dd>
-                        </div>
-
-                        <div class="px-4 py-5 sm:p-6">
-                          <dt class="text-base font-normal text-gray-900">Unique Species</dt>
-                          <dd class="mt-1 flex justify-between items-baseline md:block lg:flex">
-                            <div class="flex items-baseline text-2xl font-semibold text-teal-600">
-                              4
-                            </div>
-                          </dd>
-                        </div>
-
-                        <div class="px-4 py-5 sm:p-6">
-                          <dt class="text-base font-normal text-gray-900">Recorders</dt>
-                          <dd class="mt-1 flex justify-between items-baseline md:block lg:flex">
-                            <div class="flex items-baseline text-2xl font-semibold text-teal-600">
-                              2
+                            <h2 className="font-semibold text-slate-800"><span className="text-slate-400 font-medium">{records.length}</span></h2>                              
                             </div>
                           </dd>
                         </div>
@@ -294,22 +356,22 @@ function Analytics(props) {
 
 
                                   <div class="table-row">
-                                    <div class="table-cell border-b border-gray-200 text-sm w-full max-w-0 py-4 pl-4 pr-3 sm:w-auto sm:max-w-none sm:pl-6 text-gray-900">
+                                    <div class="table-cell border-b border-gray-200 text-sm w-full py-4 pl-10 pr-3  sm:w-auto sm:max-w-none sm:pl-6 text-gray-900 ">
                                       {records.newsfeedId}
                                     </div>
-                                    <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden lg:table-cell">
-                                      <a >{records.species}</a>
+                                    <div class="border-b border-gray-200 text-sm px-3 text-gray-900 hidden lg:table-cell">
+                                      {records.species}
                                     </div>
-                                    <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden sm:table-cell">
-                                      <a >{records.quantity}</a>
+                                    <div class="border-b border-gray-200 text-sm px-3 text-gray-900 hidden sm:table-cell">
+                                      {records.quantity}
                                     </div>
-                                    <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden sm:table-cell">
+                                    <div class="border-b border-gray-200 text-sm px-3 text-gray-900 hidden sm:table-cell">
                                       <img className='w-40 mt-4' src={records.photo} width="32" height="32" alt="User 08" />
                                     </div>
                                     <div class="table-cell border-b border-gray-200 text-sm text-gray-500 pl-3 pr-4  sm:pr-6">
                                       <div >
                                         <div class="relative inline-block">
-                                          <a href='#popup2' id='openPopUp' className='btn-sm bg-indigo-500 hover:bg-indigo-600 text-white m-1' onClick={() => setBrowserecords(records)}>Edit</a>
+                                          <a href='#popup2' id='openPopUp' className='btn-sm bg-indigo-500 hover:bg-indigo-600 text-white m-1' onClick={() => setEditRecord(records)}>Edit</a>
 
                                           <div id='popup2' className='overlay'>
                                             <div className='popup'>
@@ -330,61 +392,65 @@ function Analytics(props) {
                                                   </div>
                                                 </div>
                                                 <div class="bg-white sm:rounded-b-lg sm:rounded-t-lg">
+                                                  {
+                                                    browserecords ?
+                                                      <div class="flex flex-col w-full">
+                                                        <div className='popup-margin'>
+                                                          <form onSubmit={handleSubmit}>
+                                                            <br />
+                                                            <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
+                                                              Species:
+                                                              <select onChange={(e) => {
+                                                                setNewSpecies(e.target.value)
+                                                              }}
+                                                                defaultValue={browserecords ? browserecords.birdId : ''}
+                                                                id="country" className="form-select w-full">
+                                                                {birds && birds.map((n, index) => {
+                                                                  return (
+                                                                    <option value={n.id}>{n.species}</option>
+                                                                  )
+                                                                })}
+                                                              </select>
 
-                                                  <div class="flex flex-col w-full">
-                                                    <div className='popup-margin'>
-                                                      <form onSubmit={handleSubmit}>
-                                                        <br />
-                                                        <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                                          Species:
-                                                          <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
-                                                            type="text"
-                                                            defaultValue={browserecords ? (browserecords.species) : ("")}
-                                                            onChange={(e) => getEditrecords(e.target.value)}
-                                                          />
-                                                        </label>
-                                                        <br />
-                                                        <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                                          Quantity:
-                                                          <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
-                                                            type="number"
+                                                            </label>
+                                                            <br />
+                                                            <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
+                                                              Quantity:
+                                                              <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
+                                                                type="number"
                                                             defaultValue={browserecords ? (browserecords.quantity) : ("")}
-                                                            onChange={(e) => getEditrecords(e.target.value)}
-                                                          />
-                                                        </label>
-                                                        <br />
+                                                            onChange={(e) => setNewQuantity(e.target.value)}
+                                                              />
+                                                            </label>
+                                                            <br />
 
-                                                        <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                                          Picture:
-                                                          <br />
-                                                          <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
-                                                            type="text"
+                                                            <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
+                                                              Picture:
+                                                              <br />
+                                                              <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
+                                                                type="text"
                                                             defaultValue={browserecords ? (browserecords.photo) : ("")}
-                                                            onChange={(e) => getEditrecords(e.target.value)}
-                                                          />
-                                                        </label>
-                                                        <br />
+                                                            onChange={(e) => setNewImgUrl(e.target.value)}
+                                                              />
+                                                            </label>
+                                                            <br />
 
-                                                        <a type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" href='#' onClick={e => getEditrecords(editrecords)}>Submit</a>
-                                                      </form>
-                                                    </div>
-                                                  </div>
+                                                            <a type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" href='#'
+                                                              onClick={() => getEditrecords(browserecords)}>Submit</a>
+                                                          </form>
+                                                        </div>
+                                                      </div>
+                                                      : <div></div>
+                                                  }
                                                 </div>
                                               </div>
 
                                             </div>
                                           </div>
 
-                                          <a href='#popup3' id='openPopUp' className='btn-sm bg-indigo-500 hover:bg-indigo-600 text-white m-1'>Delete</a>
+                                          <button className="btn bg-red-500 hover:border-red-600 text-white" onClick={(e) => { e.stopPropagation(); handleDecline(e, b.id); }}>Delete</button>
 
-                                          <div id='popup3' className='overlay'>
-                                            <div className='popup'>
 
-                                              <h1 className='text-center text-2xl mt-4 '> Do you want to Delete this Record? </h1>
-                                              <a className='btn w-full bg-indigo-500 hover:bg-indigo-600 text-white' href='#' onClick={e => getDelrecords(records.newsfeedId)}>Yes</ a >
-                                              <a className='btn w-full border-slate-200 hover:border-slate-300 text-slate-600' href='#'>No</a>
-                                            </div>
-                                          </div>
                                         </div>
                                       </div>
                                     </div>
