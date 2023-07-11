@@ -95,7 +95,7 @@ function JobListing() {
 
                 {/* Jobs header */}
                 <div className="flex justify-between items-center mb-4">
-                  <div className="text-sm text-slate-500 italic">Showing 289 Jobs</div>
+                  <div className="text-sm text-slate-500 italic">Showing {attendRequest.length} request</div>
                   {/* Sort */}
                   <div className="text-sm">
                     <span>Sort by </span>

@@ -228,7 +228,7 @@ function OrdersTable({
                       <div className="font-semibold text-left">Location</div>
                     </th>
                     <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                      <div className="font-semibold text-left">Duyệt danh sách tham dự</div>
+                      <div className="font-semibold text-left">Approve pending quest</div>
                     </th>
                     <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                       <span className="sr-only">Menu</span>
@@ -266,7 +266,7 @@ function OrdersTable({
                     <div className="inline-flex mb-8">
                       <img src={NotFoundImage} width="176" height="176" alt="404 illustration" />
                     </div>
-                    <div className="mb-6">Hiện chưa có event nào. Hãy tạo một event đi</div>
+                    <div className="mb-6">No event left. Let's create one</div>
                   </div>
 
                 </div>

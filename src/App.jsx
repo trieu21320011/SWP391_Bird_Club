@@ -105,7 +105,7 @@ function App() {
     <>
       <Routes>
         <Route exact path="/" element={<Dashboard />} />
-        <Route path="/dashboard/analytics" element={
+        <Route path="/ecommerce/record" element={
           <ProtectedRoute
             redirectPath="*"
             isAllowed={!!authentication.isAuthentication() && (role === Role.manager || role === Role.admin)}

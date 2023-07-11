@@ -330,9 +330,6 @@ function Analytics(props) {
                       <div class="table min-w-full">
                         <div class="bg-gray-50 table-header-group">
                           <div class="table-row">
-                            <div class="table-cell border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 pl-4 pr-3 sm:pl-6">
-                              Newsfeed ID
-                            </div>
                             <div class="border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 hidden sm:table-cell">
                               Species
                             </div>
@@ -356,9 +353,6 @@ function Analytics(props) {
 
 
                                   <div class="table-row">
-                                    <div class="table-cell border-b border-gray-200 text-sm w-full py-4 pl-10 pr-3  sm:w-auto sm:max-w-none sm:pl-6 text-gray-900 ">
-                                      {records.newsfeedId}
-                                    </div>
                                     <div class="border-b border-gray-200 text-sm px-3 text-gray-900 hidden lg:table-cell">
                                       {records.species}
                                     </div>
