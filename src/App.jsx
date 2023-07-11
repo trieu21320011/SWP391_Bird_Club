@@ -19,6 +19,7 @@ import Dashboard from './pages/Dashboard';
 import Analytics from './pages/Analytics';
 import Fintech from './pages/Fintech';
 import Customers from './pages/ecommerce/Customers';
+import Members from './pages/ecommerce/User';
 import Orders from './pages/ecommerce/Orders';
 import Events from './pages/ecommerce/Event';
 import Blogs from './pages/ecommerce/Blogs';
@@ -119,6 +120,14 @@ function App() {
             isAllowed={!!authentication.isAuthentication() && (role === Role.manager || role === Role.admin)}
           >
             <Customers />
+          </ProtectedRoute>
+        } />
+        <Route path="/ecommerce/members" element={
+          <ProtectedRoute
+            redirectPath="*"
+            isAllowed={!!authentication.isAuthentication() && (role === Role.manager || role === Role.admin)}
+          >
+            <Members />
           </ProtectedRoute>
         } />
         <Route path="/ecommerce/events" element={

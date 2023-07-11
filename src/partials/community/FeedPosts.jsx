@@ -36,8 +36,8 @@ const FeedPosts = forwardRef((props, ref) => {
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
   const [commentContent, setCommentContent] = useState("");
-  const [targetNewsfeedId, setTargetNewsfeedId] = useState("");
   const [dangerModalOpen, setDangerModalOpen] = useState(false)
+  const [targetNewsfeedId, setTargetNewsfeedId] = useState("");
   const [infor, setInfor] = useState();
   const role = localStorage.getItem('role')
   const uidNum = parseFloat(localStorage.getItem("uid"))
