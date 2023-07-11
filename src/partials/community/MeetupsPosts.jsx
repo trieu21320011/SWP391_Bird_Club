@@ -116,7 +116,7 @@ function MeetupsPosts(props) {
                 />
               </div>
               <div className="mb-6">
-                Hiện chưa có event nào. Hãy tạo một event đi
+                No event left. Let's create one
               </div>
             </div>
           </div>
