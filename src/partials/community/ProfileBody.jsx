@@ -21,7 +21,6 @@ import React, {
   forwardRef,
 } from "react";
 import { baseURL } from "../../pages/baseUrl";
-import ModalBasic from "../../components/ModalBasic";
 
 const ProfileBody = forwardRef((props, ref) => {
   const [data, setData] = useState([]);
@@ -98,6 +97,10 @@ const ProfileBody = forwardRef((props, ref) => {
 
   useEffect(() => {
     SelectTabinfo();
+    setTimeout(() => {
+      var id = window.location.search.split('=')[1]
+      getRecordsByMemberId(id)
+    }, 100);
   }, []);
 
   const tabs = [
