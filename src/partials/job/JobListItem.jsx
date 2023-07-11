@@ -95,9 +95,9 @@ function JobListItem(props) {
           <div className="flex flex-wrap items-center -m-1.5">
             <div className="m-1.5">
               {/* Start */}
-              <button className="btn border-slate-200 hover:border-slate-300">
+              <Link className="btn border-slate-200 hover:border-slate-300" to={"/job/profile?id="+ props.id }>
                 <VisibilityIcon />
-              </button>
+              </Link>
               {/* End */}
             </div>
             <div className="m-1.5">

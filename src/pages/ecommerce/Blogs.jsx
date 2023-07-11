@@ -88,7 +88,7 @@ function Blogs() {
     var config = {
       method: "delete",
       maxBodyLength: Infinity,
-      url: baseURL + "/auth/" + uid + "/reject",
+      url: baseURL + "/blogs/" + uid ,
       headers: {
         "Content-Type": "application/json",
       },

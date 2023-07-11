@@ -13,14 +13,39 @@ import TabPanel from "./TabPanel";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import axios from "axios";
-import React, { useEffect, useState, useRef, useImperativeHandle, forwardRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
+import { baseURL } from "../../pages/baseUrl";
 
 const ProfileBody = forwardRef((props, ref) => {
   const [data, setData] = useState([]);
-  const childRef = useRef();
+  const childRef2 = useRef();
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [, updateState] = React.useState();
   const forceUpdate = React.useCallback(() => updateState({}), []);
+  const [records, setRecords] = useState([]);
+
+  const getRecords = (id) => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/records/by-member/' + id,
+    };
+
+    axios.request(config)
+      .then((response) => {
+        setRecords(response.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   const openEditModal = (id) => {
     setNewFeedsId(id);
     let config = {
@@ -40,22 +65,41 @@ const ProfileBody = forwardRef((props, ref) => {
       });
     setEditModalOpen(true);
   };
+  const [open, setOpen] = useState(false);
 
   useImperativeHandle(ref, () => {
     return {
       onReloadNewsfeed: reloadNewsfeed,
+      onReloadRecords: getRecordsByMemberId,
     };
   });
 
   const reloadNewsfeed = (id) => {
-    childRef.current.loadDataNewsfeed(id)
-  }
+    try {
+      childRef2.current.loadDataNewsfeed(id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getRecordsByMemberId = (id) => {
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: baseURL + "/records/by-member/" + id,
+    };
+    axios(config).then((response) => {
+      console.log(response.data);
+      setRecords(response.data);
+    });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://bird-club.azurewebsites.net/api/v1/members/" + props.profileId
+          "https://bird-club.azurewebsites.net/api/v1/members/" +
+            props.profileId
         ); // Replace with your API endpoint
         setData(response.data);
       } catch (error) {
@@ -64,317 +108,41 @@ const ProfileBody = forwardRef((props, ref) => {
     };
 
     fetchData();
+    
   }, []);
 
   const [SelectTab, SelectTabinfo] = useState("");
 
   useEffect(() => {
     SelectTabinfo();
+    setTimeout(() => {
+      var id = window.location.search.split('=')[1]
+      getRecordsByMemberId(id)
+    }, 100);
   }, []);
+
+  useEffect(() => {
+    getRecords()
+  }, [])
 
   const tabs = [
     {
       title: <div>Newsfeed</div>,
       content: (
-        <div className="flex flex-col xl:flex-row xl:space-x-16 pt-8">
+        <div className="flex flex-col xl:flex-row xl:space-x-16 pt-8 justify-between">
           {/* Main content */}
-          <div className="space-y-5 mb-8 xl:mb-0">
+          <div className="space-y-5 mb-8 xl:mb-0 w-full">
             {!props.profile ? (
               <Box sx={{ display: "flex" }}>
                 <CircularProgress />
               </Box>
             ) : (
               <FeedPosts
-                ref={childRef}
+                ref={childRef2}
                 openEditModal={openEditModal}
                 memberId={props.profile ? props.profile.id : 0}
               />
             )}
-            {/* About Me */}
-            <div>
-              <h2 className="text-slate-800 font-semibold mb-2">About Me</h2>
-              <div className="text-sm space-y-2">
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur.
-                </p>
-              </div>
-            </div>
-
-            {/* Departments */}
-            <div>
-              <h2 className="text-slate-800 font-semibold mb-2">Departments</h2>
-              {/* Cards */}
-              <div className="grid xl:grid-cols-2 gap-4">
-                {/* Card */}
-                <div className="bg-white p-4 border border-slate-200 rounded-sm shadow-sm">
-                  {/* Card header */}
-                  <div className="grow flex items-center truncate mb-2">
-                    <div className="w-8 h-8 shrink-0 flex items-center justify-center bg-slate-700 rounded-full mr-2">
-                      <img
-                        className="ml-1"
-                        src={Icon03}
-                        width="14"
-                        height="14"
-                        alt="Icon 03"
-                      />
-                    </div>
-                    <div className="truncate">
-                      <span className="text-sm font-medium text-slate-800">
-                        Acme Marketing
-                      </span>
-                    </div>
-                  </div>
-                  {/* Card content */}
-                  <div className="text-sm mb-3">
-                    Duis aute irure dolor in reprehenderit in voluptate velit
-                    esse cillum dolore.
-                  </div>
-                  {/* Card footer */}
-                  <div className="flex justify-between items-center">
-                    {/* Avatars group */}
-                    <div className="flex -space-x-3 -ml-0.5">
-                      <img
-                        className="rounded-full border-2 border-white box-content"
-                        src={UserImage02}
-                        width="24"
-                        height="24"
-                        alt="Avatar"
-                      />
-                      <img
-                        className="rounded-full border-2 border-white box-content"
-                        src={UserImage03}
-                        width="24"
-                        height="24"
-                        alt="Avatar"
-                      />
-                      <img
-                        className="rounded-full border-2 border-white box-content"
-                        src={UserImage04}
-                        width="24"
-                        height="24"
-                        alt="Avatar"
-                      />
-                      <img
-                        className="rounded-full border-2 border-white box-content"
-                        src={UserImage05}
-                        width="24"
-                        height="24"
-                        alt="Avatar"
-                      />
-                    </div>
-                    {/* Link */}
-                    <div>
-                      <a
-                        className="text-sm font-medium text-indigo-500 hover:text-indigo-600"
-                        href="#0"
-                      >
-                        View -&gt;
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card */}
-                <div className="bg-white p-4 border border-slate-200 rounded-sm shadow-sm">
-                  {/* Card header */}
-                  <div className="grow flex items-center truncate mb-2">
-                    <div className="w-8 h-8 shrink-0 flex items-center justify-center bg-slate-700 rounded-full mr-2">
-                      <img
-                        className="ml-1"
-                        src={Icon02}
-                        width="14"
-                        height="14"
-                        alt="Icon 02"
-                      />
-                    </div>
-                    <div className="truncate">
-                      <span className="text-sm font-medium text-slate-800">
-                        Acme Product
-                      </span>
-                    </div>
-                  </div>
-                  {/* Card content */}
-                  <div className="text-sm mb-3">
-                    Duis aute irure dolor in reprehenderit in voluptate velit
-                    esse cillum dolore.
-                  </div>
-                  {/* Card footer */}
-                  <div className="flex justify-between items-center">
-                    {/* Avatars group */}
-                    <div className="flex -space-x-3 -ml-0.5">
-                      <img
-                        className="rounded-full border-2 border-white box-content"
-                        src={UserImage06}
-                        width="24"
-                        height="24"
-                        alt="Avatar"
-                      />
-                      <img
-                        className="rounded-full border-2 border-white box-content"
-                        src={UserImage03}
-                        width="24"
-                        height="24"
-                        alt="Avatar"
-                      />
-                      <img
-                        className="rounded-full border-2 border-white box-content"
-                        src={UserImage01}
-                        width="24"
-                        height="24"
-                        alt="Avatar"
-                      />
-                    </div>
-                    {/* Link */}
-                    <div>
-                      <a
-                        className="text-sm font-medium text-indigo-500 hover:text-indigo-600"
-                        href="#0"
-                      >
-                        View -&gt;
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Work History */}
-            <div>
-              <h2 className="text-slate-800 font-semibold mb-2">
-                Work History
-              </h2>
-              <div className="bg-white p-4 border border-slate-200 rounded-sm shadow-sm">
-                <ul className="space-y-3">
-                  {/* Item */}
-                  <li className="sm:flex sm:items-center sm:justify-between">
-                    <div className="sm:grow flex items-center text-sm">
-                      {/* Icon */}
-                      <div className="w-8 h-8 rounded-full shrink-0 bg-amber-500 my-2 mr-3">
-                        <svg
-                          className="w-8 h-8 fill-current text-amber-50"
-                          viewBox="0 0 32 32"
-                        >
-                          <path d="M21 14a.75.75 0 0 1-.75-.75 1.5 1.5 0 0 0-1.5-1.5.75.75 0 1 1 0-1.5 1.5 1.5 0 0 0 1.5-1.5.75.75 0 1 1 1.5 0 1.5 1.5 0 0 0 1.5 1.5.75.75 0 1 1 0 1.5 1.5 1.5 0 0 0-1.5 1.5.75.75 0 0 1-.75.75Zm-7 10a1 1 0 0 1-1-1 4 4 0 0 0-4-4 1 1 0 0 1 0-2 4 4 0 0 0 4-4 1 1 0 0 1 2 0 4 4 0 0 0 4 4 1 1 0 0 1 0 2 4 4 0 0 0-4 4 1 1 0 0 1-1 1Z" />
-                        </svg>
-                      </div>
-                      {/* Position */}
-                      <div>
-                        <div className="font-medium text-slate-800">
-                          Senior Product Designer
-                        </div>
-                        <div className="flex flex-nowrap items-center space-x-2 whitespace-nowrap">
-                          <div>Remote</div>
-                          <div className="text-slate-400">·</div>
-                          <div>April, 2020 - Today</div>
-                        </div>
-                      </div>
-                    </div>
-                    {/* Tags */}
-                    <div className="sm:ml-2 mt-2 sm:mt-0">
-                      <ul className="flex flex-wrap sm:justify-end -m-1">
-                        <li className="m-1">
-                          <button className="inline-flex items-center justify-center text-xs font-medium leading-5 rounded-full px-2.5 py-0.5 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out">
-                            Marketing
-                          </button>
-                        </li>
-                        <li className="m-1">
-                          <button className="inline-flex items-center justify-center text-xs font-medium leading-5 rounded-full px-2.5 py-0.5 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out">
-                            +4
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  </li>
-
-                  {/* Item */}
-                  <li className="sm:flex sm:items-center sm:justify-between">
-                    <div className="sm:grow flex items-center text-sm">
-                      {/* Icon */}
-                      <div className="w-8 h-8 rounded-full shrink-0 bg-indigo-500 my-2 mr-3">
-                        <svg
-                          className="w-8 h-8 fill-current text-indigo-50"
-                          viewBox="0 0 32 32"
-                        >
-                          <path d="M8.994 20.006a1 1 0 0 1-.707-1.707l4.5-4.5a1 1 0 0 1 1.414 0l3.293 3.293 4.793-4.793a1 1 0 1 1 1.414 1.414l-5.5 5.5a1 1 0 0 1-1.414 0l-3.293-3.293L9.7 19.713a1 1 0 0 1-.707.293Z" />
-                        </svg>
-                      </div>
-                      {/* Position */}
-                      <div>
-                        <div className="font-medium text-slate-800">
-                          Product Designer
-                        </div>
-                        <div className="flex flex-nowrap items-center space-x-2 whitespace-nowrap">
-                          <div>HCM</div>
-                          <div className="text-slate-400">·</div>
-                          <div>April, 2018 - April 2020</div>
-                        </div>
-                      </div>
-                    </div>
-                    {/* Tags */}
-                    <div className="sm:ml-2 mt-2 sm:mt-0">
-                      <ul className="flex flex-wrap sm:justify-end -m-1">
-                        <li className="m-1">
-                          <button className="inline-flex items-center justify-center text-xs font-medium leading-5 rounded-full px-2.5 py-0.5 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out">
-                            Marketing
-                          </button>
-                        </li>
-                        <li className="m-1">
-                          <button className="inline-flex items-center justify-center text-xs font-medium leading-5 rounded-full px-2.5 py-0.5 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out">
-                            +4
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  </li>
-
-                  {/* Item */}
-                  <li className="sm:flex sm:items-center sm:justify-between">
-                    <div className="sm:grow flex items-center text-sm">
-                      {/* Icon */}
-                      <div className="w-8 h-8 rounded-full shrink-0 bg-indigo-500 my-2 mr-3">
-                        <svg
-                          className="w-8 h-8 fill-current text-indigo-50"
-                          viewBox="0 0 32 32"
-                        >
-                          <path d="M8.994 20.006a1 1 0 0 1-.707-1.707l4.5-4.5a1 1 0 0 1 1.414 0l3.293 3.293 4.793-4.793a1 1 0 1 1 1.414 1.414l-5.5 5.5a1 1 0 0 1-1.414 0l-3.293-3.293L9.7 19.713a1 1 0 0 1-.707.293Z" />
-                        </svg>
-                      </div>
-                      {/* Position */}
-                      <div>
-                        <div className="font-medium text-slate-800">
-                          Product Designer
-                        </div>
-                        <div className="flex flex-nowrap items-center space-x-2 whitespace-nowrap">
-                          <div>Milan, IT</div>
-                          <div className="text-slate-400">·</div>
-                          <div>April, 2018 - April 2020</div>
-                        </div>
-                      </div>
-                    </div>
-                    {/* Tags */}
-                    <div className="sm:ml-2 mt-2 sm:mt-0">
-                      <ul className="flex flex-wrap sm:justify-end -m-1">
-                        <li className="m-1">
-                          <button className="inline-flex items-center justify-center text-xs font-medium leading-5 rounded-full px-2.5 py-0.5 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out">
-                            Marketing
-                          </button>
-                        </li>
-                        <li className="m-1">
-                          <button className="inline-flex items-center justify-center text-xs font-medium leading-5 rounded-full px-2.5 py-0.5 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out">
-                            +4
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
           </div>
 
           {/* Sidebar */}
@@ -406,8 +174,8 @@ const ProfileBody = forwardRef((props, ref) => {
     {
       title: <div>Records</div>,
       content: (
-        <main class="pb-8 pt-8">
-          <div class="max-w-3xl mx-auto sm:px-6 lg:max-w-7xl lg:px-8">
+        <main class="pb-8 pt-6">
+          <div class="max-w-3xl mx-auto sm:px-0 lg:max-w-7xl lg:px-0">
             <div class="grid grid-cols-1 items-start lg:grid-cols-5 lg:gap-8">
               <div class="grid grid-cols-1 gap-4 lg:col-span-5">
                 <div class="sm:flex sm:items-center px-4 sm:px-0">
@@ -416,31 +184,28 @@ const ProfileBody = forwardRef((props, ref) => {
                       Bird Records
                     </h1>
                     <p class="mt-2 text-sm text-gray-700">
-                      A list of all records submitted by members of VN Bird.
+                      A list of all records submitted by{" "}
+                      {props.profile ? props.profile.displayName : ""}.
                     </p>
                   </div>
                 </div>
 
                 <turbo-frame id="filters">
-                  <div data-controller="record-filters">
-                   
-                  </div>
+                  <div data-controller="record-filters"></div>
 
                   <div class="flex flex-col sm:rounded-lg shadow">
                     <div>
                       <dl class="sm:rounded-t-lg grid grid-cols-1 bg-white overflow-hidden border-b border-gray-200 divide-y divide-gray-200 md:grid-cols-3 md:divide-y-0 md:divide-x">
                         <div class="px-4 py-5 sm:p-6">
-                          <dt class="text-base font-normal text-gray-900">
-                            Total Records
-                          </dt>
+                          <dt class="text-base font-normal text-gray-900">Total Records</dt>
                           <dd class="mt-1 flex justify-between items-baseline md:block lg:flex">
                             <div class="flex items-baseline text-2xl font-semibold text-teal-600">
-                              6
+                              {records.length}
                             </div>
                           </dd>
                         </div>
 
-                        <div class="px-4 py-5 sm:p-6">
+                        {/* <div class="px-4 py-5 sm:p-6">
                           <dt class="text-base font-normal text-gray-900">
                             Unique Species
                           </dt>
@@ -452,15 +217,13 @@ const ProfileBody = forwardRef((props, ref) => {
                         </div>
 
                         <div class="px-4 py-5 sm:p-6">
-                          <dt class="text-base font-normal text-gray-900">
-                            Recorders
-                          </dt>
+                          <dt class="text-base font-normal text-gray-900">Number of Species</dt>
                           <dd class="mt-1 flex justify-between items-baseline md:block lg:flex">
                             <div class="flex items-baseline text-2xl font-semibold text-teal-600">
                               2
                             </div>
                           </dd>
-                        </div>
+                        </div> */}
                       </dl>
                     </div>
 
@@ -469,453 +232,53 @@ const ProfileBody = forwardRef((props, ref) => {
                         <div class="bg-gray-50 table-header-group">
                           <div class="table-row">
                             <div class="table-cell border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 pl-4 pr-3 sm:pl-6">
-                              Date
+                              Name
                             </div>
                             <div class="table-cell border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 relative">
-                              <span class="sr-only">Photo</span>
+                              <span>Photo</span>
                             </div>
                             <div class="table-cell border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3">
                               Species
                             </div>
                             <div class="border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 hidden sm:table-cell">
-                              Location
-                            </div>
-                            <div class="border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 hidden lg:table-cell">
-                              Member
-                            </div>
-                            <div class="table-cell border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 relative pl-3 pr-4 sm:pr-6">
-                              <span class="sr-only">Edit</span>
+                              Quantity
                             </div>
                           </div>
                         </div>
                         <div class="table-header-group bg-white">
-                          <turbo-frame
-                            id="row_record_10444"
-                            class="contents"
-                            target="_top"
-                          >
-                            <div class="table-row">
-                              <div class="table-cell border-b border-gray-200 text-sm w-full max-w-0 py-4 pl-4 pr-3 sm:w-auto sm:max-w-none sm:pl-6 text-gray-900">
-                                Jun 22, 2023
-                                <dl class="font-normal lg:hidden">
-                                  <dt class="sr-only">Member</dt>
-                                  <dd class="mt-1 truncate text-gray-700 lg:hidden">
-                                    <a
-                                      class="hover:text-gray-900"
-                                      href="/clubs/vn-bird/members/806"
-                                    >
-                                      Thông Hoàng
-                                    </a>
-                                  </dd>
-                                  <dt class="sr-only">Location</dt>
-                                  <dd class="mt-1 truncate text-gray-500 sm:hidden">
-                                    <a
-                                      class="hover:text-gray-900"
-                                      href="/clubs/vn-bird/locations/at-home"
-                                    >
-                                      At Home
-                                    </a>
-                                  </dd>
-                                </dl>
-                              </div>
-                              <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                <div class="flex flex-row items-center space-x-2"></div>
-                              </div>
-                              <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                5 x Redhead
-                              </div>
-                              <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden lg:table-cell">
-                                <a
-                                  class="hover:text-gray-900"
-                                  href="/clubs/vn-bird/locations/at-home"
-                                >
-                                  At Home
-                                </a>
-                              </div>
-                              <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden sm:table-cell">
-                                <a
-                                  class="hover:text-gray-900"
-                                  href="/clubs/vn-bird/members/806"
-                                >
-                                  Thông Hoàng
-                                </a>
-                              </div>
-                            </div>
-                          </turbo-frame>
-                          <turbo-frame
-                            id="row_record_10039"
-                            class="contents"
-                            target="_top"
-                          >
-                            <div class="table-row">
-                              <div class="table-cell border-b border-gray-200 text-sm w-full max-w-0 py-4 pl-4 pr-3 sm:w-auto sm:max-w-none sm:pl-6 text-gray-900">
-                                May 20, 2023
-                                <dl class="font-normal lg:hidden">
-                                  <dt class="sr-only">Member</dt>
-                                  <dd class="mt-1 truncate text-gray-700 lg:hidden">
-                                    <a
-                                      class="hover:text-gray-900"
-                                      href="/clubs/vn-bird/members/805"
-                                    >
-                                      Triệu Khắc
-                                    </a>
-                                  </dd>
-                                  <dt class="sr-only">Location</dt>
-                                  <dd class="mt-1 truncate text-gray-500 sm:hidden">
+                          {records.map((record, index) => {
+                            return (
+                              <turbo-frame
+                                id="row_record_10444"
+                                class="contents"
+                                target="_top"
+                              >
+                                <div class="table-row">
+                                  <div class="table-cell border-b border-gray-200 text-sm w-full max-w-0 py-4 pl-4 pr-3 sm:w-auto sm:max-w-none sm:pl-6 text-gray-900">
+                                    {record.birdName}
+                                  </div>
+                                  <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
+                                    <img className="max-h-14 mt-4" src={record.photo} />
+                                  </div>
+                                  <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
+                                    {record.species}
+                                  </div>
+                                  <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden lg:table-cell">
                                     <a
                                       class="hover:text-gray-900"
                                       href="/clubs/vn-bird/locations/at-home"
                                     >
-                                      At Home
+                                      {record.quantity}
                                     </a>
-                                  </dd>
-                                </dl>
-                              </div>
-                              <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                <div class="flex flex-row items-center space-x-2"></div>
-                              </div>
-                              <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                132 x Black Grouse
-                              </div>
-                              <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden lg:table-cell">
-                                <a
-                                  class="hover:text-gray-900"
-                                  href="/clubs/vn-bird/locations/at-home"
-                                >
-                                  At Home
-                                </a>
-                              </div>
-                              <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden sm:table-cell">
-                                <a
-                                  class="hover:text-gray-900"
-                                  href="/clubs/vn-bird/members/805"
-                                >
-                                  Triệu Khắc
-                                </a>
-                              </div>
-                            </div>
-                          </turbo-frame>
-                          <turbo-frame
-                            id="row_record_10038"
-                            class="contents"
-                            target="_top"
-                          >
-                            <div class="table-row">
-                              <div class="table-cell border-b border-gray-200 text-sm w-full max-w-0 py-4 pl-4 pr-3 sm:w-auto sm:max-w-none sm:pl-6 text-gray-900">
-                                May 19, 2023
-                                <dl class="font-normal lg:hidden">
-                                  <dt class="sr-only">Member</dt>
-                                  <dd class="mt-1 truncate text-gray-700 lg:hidden">
-                                    <a
-                                      class="hover:text-gray-900"
-                                      href="/clubs/vn-bird/members/805"
-                                    >
-                                      Triệu Khắc
-                                    </a>
-                                  </dd>
-                                  <dt class="sr-only">Location</dt>
-                                  <dd class="mt-1 truncate text-gray-500 sm:hidden">
-                                    <a
-                                      class="hover:text-gray-900"
-                                      href="/clubs/vn-bird/locations/at-home"
-                                    >
-                                      At Home
-                                    </a>
-                                  </dd>
-                                </dl>
-                              </div>
-                              <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                <div class="flex flex-row items-center space-x-2">
-                                  <div class="text-teal-600 -mb-1">
-                                    <a
-                                      class="text-sm font-medium text-teal-600 hover:text-teal-900  focus:outline-none"
-                                      href="/clubs/vn-bird/birding_sessions/2019"
-                                    >
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        class=" w-4 h-4"
-                                      >
-                                        <path
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                          d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                                        ></path>
-                                        <path
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                          d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                                        ></path>
-                                      </svg>
-                                    </a>{" "}
                                   </div>
                                 </div>
-                              </div>
-                              <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                12 x Black Grouse
-                              </div>
-                              <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden lg:table-cell">
-                                <a
-                                  class="hover:text-gray-900"
-                                  href="/clubs/vn-bird/locations/at-home"
-                                >
-                                  At Home
-                                </a>
-                              </div>
-                              <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden sm:table-cell">
-                                <a
-                                  class="hover:text-gray-900"
-                                  href="/clubs/vn-bird/members/805"
-                                >
-                                  Triệu Khắc
-                                </a>
-                              </div>
-                            </div>
-                          </turbo-frame>
-                          <turbo-frame
-                            id="row_record_9936"
-                            class="contents"
-                            target="_top"
-                          >
-                            <div class="table-row">
-                              <div class="table-cell border-b border-gray-200 text-sm w-full max-w-0 py-4 pl-4 pr-3 sm:w-auto sm:max-w-none sm:pl-6 text-gray-900">
-                                May 13, 2023
-                                <dl class="font-normal lg:hidden">
-                                  <dt class="sr-only">Member</dt>
-                                  <dd class="mt-1 truncate text-gray-700 lg:hidden">
-                                    <a
-                                      class="hover:text-gray-900"
-                                      href="/clubs/vn-bird/members/805"
-                                    >
-                                      Triệu Khắc
-                                    </a>
-                                  </dd>
-                                  <dt class="sr-only">Location</dt>
-                                  <dd class="mt-1 truncate text-gray-500 sm:hidden">
-                                    <a
-                                      class="hover:text-gray-900"
-                                      href="/clubs/vn-bird/locations/at-home"
-                                    >
-                                      At Home
-                                    </a>
-                                  </dd>
-                                </dl>
-                              </div>
-                              <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                <div class="flex flex-row items-center space-x-2"></div>
-                              </div>
-                              <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                13 x Western Capercaillie
-                              </div>
-                              <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden lg:table-cell">
-                                <a
-                                  class="hover:text-gray-900"
-                                  href="/clubs/vn-bird/locations/at-home"
-                                >
-                                  At Home
-                                </a>
-                              </div>
-                              <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden sm:table-cell">
-                                <a
-                                  class="hover:text-gray-900"
-                                  href="/clubs/vn-bird/members/805"
-                                >
-                                  Triệu Khắc
-                                </a>
-                              </div>
-                            </div>
-                          </turbo-frame>
-                          <turbo-frame
-                            id="row_record_9935"
-                            class="contents"
-                            target="_top"
-                          >
-                            <div class="table-row">
-                              <div class="table-cell border-b border-gray-200 text-sm w-full max-w-0 py-4 pl-4 pr-3 sm:w-auto sm:max-w-none sm:pl-6 text-gray-900">
-                                May 13, 2023
-                                <dl class="font-normal lg:hidden">
-                                  <dt class="sr-only">Member</dt>
-                                  <dd class="mt-1 truncate text-gray-700 lg:hidden">
-                                    <a
-                                      class="hover:text-gray-900"
-                                      href="/clubs/vn-bird/members/806"
-                                    >
-                                      Thông Hoàng
-                                    </a>
-                                  </dd>
-                                  <dt class="sr-only">Location</dt>
-                                  <dd class="mt-1 truncate text-gray-500 sm:hidden">
-                                    <a
-                                      class="hover:text-gray-900"
-                                      href="/clubs/vn-bird/locations/at-home"
-                                    >
-                                      At Home
-                                    </a>
-                                  </dd>
-                                </dl>
-                              </div>
-                              <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                <div class="flex flex-row items-center space-x-2">
-                                  <div class="text-teal-600 -mb-1">
-                                    <a
-                                      class="text-sm font-medium text-teal-600 hover:text-teal-900  focus:outline-none"
-                                      href="/clubs/vn-bird/birding_sessions/1991"
-                                    >
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        class=" w-4 h-4"
-                                      >
-                                        <path
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                          d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                                        ></path>
-                                        <path
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                          d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                                        ></path>
-                                      </svg>
-                                    </a>{" "}
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                1 x Western Capercaillie
-                              </div>
-                              <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden lg:table-cell">
-                                <a
-                                  class="hover:text-gray-900"
-                                  href="/clubs/vn-bird/locations/at-home"
-                                >
-                                  At Home
-                                </a>
-                              </div>
-                              <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden sm:table-cell">
-                                <a
-                                  class="hover:text-gray-900"
-                                  href="/clubs/vn-bird/members/806"
-                                >
-                                  Thông Hoàng
-                                </a>
-                              </div>
-                            </div>
-                          </turbo-frame>
-                          <turbo-frame
-                            id="row_record_9937"
-                            class="contents"
-                            target="_top"
-                          >
-                            <div class="table-row">
-                              <div class="table-cell border-b border-gray-200 text-sm w-full max-w-0 py-4 pl-4 pr-3 sm:w-auto sm:max-w-none sm:pl-6 text-gray-900">
-                                May 13, 2023
-                                <dl class="font-normal lg:hidden">
-                                  <dt class="sr-only">Member</dt>
-                                  <dd class="mt-1 truncate text-gray-700 lg:hidden">
-                                    <a
-                                      class="hover:text-gray-900"
-                                      href="/clubs/vn-bird/members/806"
-                                    >
-                                      Thông Hoàng
-                                    </a>
-                                  </dd>
-                                  <dt class="sr-only">Location</dt>
-                                  <dd class="mt-1 truncate text-gray-500 sm:hidden">
-                                    <a
-                                      class="hover:text-gray-900"
-                                      href="/clubs/vn-bird/locations/out-and-about"
-                                    >
-                                      Out and About
-                                    </a>
-                                  </dd>
-                                </dl>
-                              </div>
-                              <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                <div class="flex flex-row items-center space-x-2">
-                                  <div class="text-teal-600 -mb-1">
-                                    <a
-                                      class="text-sm font-medium text-teal-600 hover:text-teal-900  focus:outline-none"
-                                      href="/clubs/vn-bird/birding_sessions/1995"
-                                    >
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        class=" w-4 h-4"
-                                      >
-                                        <path
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                          d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                                        ></path>
-                                        <path
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                          d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                                        ></path>
-                                      </svg>
-                                    </a>{" "}
-                                  </div>
-                                  <div class="text-teal-600 -mb-1">
-                                    <a
-                                      class="text-sm font-medium text-teal-600 hover:text-teal-900  focus:outline-none"
-                                      href="/clubs/vn-bird/birding_sessions/1995"
-                                    >
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        class=" w-4 h-4"
-                                      >
-                                        <path
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                          d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-                                        ></path>
-                                      </svg>
-                                    </a>{" "}
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="table-cell border-b border-gray-200 text-sm px-3 text-gray-500">
-                                2 x Common Quail
-                              </div>
-                              <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden lg:table-cell">
-                                <a
-                                  class="hover:text-gray-900"
-                                  href="/clubs/vn-bird/locations/out-and-about"
-                                >
-                                  Out and About
-                                </a>
-                              </div>
-                              <div class="border-b border-gray-200 text-sm px-3 text-gray-500 hidden sm:table-cell">
-                                <a
-                                  class="hover:text-gray-900"
-                                  href="/clubs/vn-bird/members/806"
-                                >
-                                  Thông Hoàng
-                                </a>
-                              </div>
-                            </div>
-                          </turbo-frame>
+                              </turbo-frame>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>
                   </div>
-                  {/* <div class="pt-6 flex items-center justify-between">
-                  <nav class="pagy-nav pagination" aria-label="pager"><span class="page prev disabled">‹&nbsp;Prev</span> <span class="page next disabled">Next&nbsp;›</span></nav>
-                </div> */}
                 </turbo-frame>
               </div>
             </div>
@@ -1024,7 +387,9 @@ const ProfileBody = forwardRef((props, ref) => {
             </svg>
           </div>
           {/* Bio */}
-          <div className="text-sm mb-3">{props.profile ? props.profile.about : ""}</div>
+          <div className="text-sm mb-3">
+            {props.profile ? props.profile.about : ""}
+          </div>
           {/* Meta */}
           <div className="flex flex-wrap justify-center sm:justify-start space-x-4">
             <div className="flex items-center">
@@ -1059,6 +424,6 @@ const ProfileBody = forwardRef((props, ref) => {
       </div>
     </div>
   );
-})
+});
 
 export default ProfileBody;

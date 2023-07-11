@@ -128,7 +128,7 @@ function Sidebar({
                 </NavLink>
               </li>
               
-              <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/dashboard/analytics'  && 'bg-slate-900'}`}>
+              {/* <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/dashboard/analytics'  && 'bg-slate-900'}`}>
                 <NavLink
                   end
                   to='/dashboard/analytics'
@@ -185,7 +185,7 @@ function Sidebar({
                     </span>
                   </div>
                 </NavLink>
-              </li>
+              </li> */}
               <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname.includes('club') && 'bg-slate-900'}`}>
                 <NavLink
                   end
@@ -444,6 +444,19 @@ function Sidebar({
                             <li className="mb-1 last:mb-0">
                               <NavLink
                                 end
+                                to="/ecommerce/members"
+                                className={({ isActive }) =>
+                                  'block text-slate-400 hover:text-slate-200 transition duration-150 truncate ' + (isActive ? '!text-indigo-500' : '')
+                                }
+                              >
+                                <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                                   Members
+                                </span>
+                              </NavLink>
+                            </li>
+                            <li className="mb-1 last:mb-0">
+                              <NavLink
+                                end
                                 to="/ecommerce/events"
                                 className={({ isActive }) =>
                                   'block text-slate-400 hover:text-slate-200 transition duration-150 truncate ' + (isActive ? '!text-indigo-500' : '')
@@ -464,6 +477,19 @@ function Sidebar({
                               >
                                 <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
                                   Blogs
+                                </span>
+                              </NavLink>
+                            </li>
+                            <li className="mb-1 last:mb-0">
+                              <NavLink
+                                end
+                                to="/ecommerce/record"
+                                className={({ isActive }) =>
+                                  'block text-slate-400 hover:text-slate-200 transition duration-150 truncate ' + (isActive ? '!text-indigo-500' : '')
+                                }
+                              >
+                                <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                                   Records
                                 </span>
                               </NavLink>
                             </li>

@@ -1,7 +1,7 @@
-import React, { useState ,useEffect} from 'react';
-import ProfileImage from '../../images/user-avatar-32.png';
-import { baseURL } from '../../pages/baseUrl';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import ProfileImage from "../../images/user-avatar-32.png";
+import { baseURL } from "../../pages/baseUrl";
+import axios from "axios";
 
 function ProfileSidebar({
   profileSidebarOpen,

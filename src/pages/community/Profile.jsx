@@ -13,10 +13,12 @@ function Profile() {
   const [profileSidebarOpen, setProfileSidebarOpen] = useState(false);
   const [profileId, setProfileId] = useState("");
   const [profile, setProfile] = useState();
+  const [records, setRecords] = useState([]);
   const onSetProfileId = (id) => {
     setProfileId(id);
     getProfile(id)
     childRef.current.onReloadNewsfeed(id)
+    childRef.current.onReloadRecords(id)
   };
   const getProfile = (id) => {
     var config = {
@@ -64,6 +66,7 @@ function Profile() {
               setProfileSidebarOpen={setProfileSidebarOpen}
               profileId={profileId}
               profile={profile}
+              records={records}
               ref={childRef}
             />
           </div>
