@@ -3,11 +3,9 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import DeleteButton from '../../partials/actions/DeleteButton';
-import DateSelect from '../../components/DateSelect';
-import FilterButton from '../../components/DropdownFilter';
-import CustomersTable from '../../partials/customers/CustomersTable';
+
 import axios from 'axios';
-import PaginationClassic from '../../components/PaginationClassic';
+
 import { baseURL } from '../baseUrl';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ModalBlank from '../../components/ModalBlank';
@@ -21,6 +19,23 @@ function Customers() {
   const [infoModalOpen, setInfoModalOpen] = useState(false)
   const [rejectModal, setRejectModal] = useState(false)
   const [uid, setUid] = useState('')
+  const [numberrecords, setNumberRecords] = useState([])
+
+  const getNumberRecords = () => {
+
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/auth',
+    };
+    axios.request(config)
+      .then((response) => {
+        setNumberRecords(response.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   const handleSelectedItems = (selectedItems) => {
     setSelectedItems([...selectedItems]);
@@ -29,6 +44,7 @@ function Customers() {
 
   useEffect(() => {
     getData()
+    getNumberRecords()
   }, [])
 
   const getData = () => {
@@ -63,7 +79,7 @@ function Customers() {
     var config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: baseURL + '/auth/'+uid+'/approve',
+      url: baseURL + '/auth/' + uid + '/approve',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -79,7 +95,7 @@ function Customers() {
           "success",
         );
         getData()
-      
+
       })
       .catch(function (error) {
         console.log();
@@ -94,7 +110,7 @@ function Customers() {
     var config = {
       method: 'delete',
       maxBodyLength: Infinity,
-      url: baseURL + '/auth/'+uid+'/reject',
+      url: baseURL + '/auth/' + uid + '/reject',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -110,7 +126,7 @@ function Customers() {
           "success",
         );
         getData()
-      
+
       })
       .catch(function (error) {
         console.log();
@@ -219,9 +235,37 @@ function Customers() {
 
             {/* Table */}
             <div className="bg-white shadow-lg rounded-sm border border-slate-200 relative">
-              <header className="px-5 py-4">
-                <h2 className="font-semibold text-slate-800">All Guest <span className="text-slate-400 font-medium">{guest.length}</span></h2>
-              </header>
+              {/* <h2 className="font-semibold text-slate-800">All Guest <span className="text-slate-400 font-medium">{guest.length}</span></h2> */}
+              <div>
+                <dl class="sm:rounded-t-lg grid grid-cols-1 bg-white overflow-hidden border-b border-gray-200 divide-y divide-gray-200 md:grid-cols-3 md:divide-y-0 md:divide-x">
+                  <div class="px-4 py-5 sm:p-6">
+                    <dt class="text-base font-normal text-gray-900">Total</dt>
+                    <dd class="mt-1 flex justify-between items-baseline md:block lg:flex">
+                      <div class="flex items-baseline text-2xl font-semibold text-teal-600">
+                        {numberrecords.total}
+                      </div>
+                    </dd>
+                  </div>
+
+                  <div class="px-4 py-5 sm:p-6">
+                    <dt class="text-base font-normal text-gray-900">Guest</dt>
+                    <dd class="mt-1 flex justify-between items-baseline md:block lg:flex">
+                      <div class="flex items-baseline text-2xl font-semibold text-teal-600">
+                        {numberrecords.guest}
+                      </div>
+                    </dd>
+                  </div>
+
+                  <div class="px-4 py-5 sm:p-6">
+                    <dt class="text-base font-normal text-gray-900">Members</dt>
+                    <dd class="mt-1 flex justify-between items-baseline md:block lg:flex">
+                      <div class="flex items-baseline text-2xl font-semibold text-teal-600">
+                        {numberrecords.member}
+                      </div>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
               <div>
 
                 {/* Table */}
