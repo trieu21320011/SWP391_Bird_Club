@@ -98,11 +98,11 @@ function Sidebar({
             </h3>
             <ul className="mt-3">
               {/* Dashboard */}
-              <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/'  && 'bg-slate-900'}`}>
+              <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/' && 'bg-slate-900'}`}>
                 <NavLink
                   end
                   to='/'
-                  className={`block text-slate-200 hover:text-white truncate transition duration-150 ${pathname === '/'  && 'hover:text-slate-200'
+                  className={`block text-slate-200 hover:text-white truncate transition duration-150 ${pathname === '/' && 'hover:text-slate-200'
                     }`}
                 >
                   <div className="flex items-center">
@@ -127,7 +127,7 @@ function Sidebar({
                   </div>
                 </NavLink>
               </li>
-              
+
               {/* <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname === '/dashboard/analytics'  && 'bg-slate-900'}`}>
                 <NavLink
                   end
@@ -304,28 +304,28 @@ function Sidebar({
               </SidebarLinkGroup>
               {(role === Role.member || role === Role.admin || role === Role.manager || role === Role.staff) && (
                 <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname.includes('calendar') && 'bg-slate-900'}`}>
-                <NavLink
-                  end
-                  to="/calendar"
-                  className={`block text-slate-200 hover:text-white truncate transition duration-150 ${pathname.includes('calendar') && 'hover:text-slate-200'
-                    }`}
-                >
-                  <div className="flex items-center">
-                    <svg className="shrink-0 h-6 w-6" viewBox="0 0 24 24">
-                      <path className={`fill-current text-slate-600 ${pathname.includes('calendar') && 'text-indigo-500'}`} d="M1 3h22v20H1z" />
-                      <path
-                        className={`fill-current text-slate-400 ${pathname.includes('calendar') && 'text-indigo-300'}`}
-                        d="M21 3h2v4H1V3h2V1h4v2h10V1h4v2Z"
-                      />
-                    </svg>
-                    <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                      Calendar
-                    </span>
-                  </div>
-                </NavLink>
-              </li>
+                  <NavLink
+                    end
+                    to="/calendar"
+                    className={`block text-slate-200 hover:text-white truncate transition duration-150 ${pathname.includes('calendar') && 'hover:text-slate-200'
+                      }`}
+                  >
+                    <div className="flex items-center">
+                      <svg className="shrink-0 h-6 w-6" viewBox="0 0 24 24">
+                        <path className={`fill-current text-slate-600 ${pathname.includes('calendar') && 'text-indigo-500'}`} d="M1 3h22v20H1z" />
+                        <path
+                          className={`fill-current text-slate-400 ${pathname.includes('calendar') && 'text-indigo-300'}`}
+                          d="M21 3h2v4H1V3h2V1h4v2h10V1h4v2Z"
+                        />
+                      </svg>
+                      <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                        Calendar
+                      </span>
+                    </div>
+                  </NavLink>
+                </li>
               )}
-              
+
 
               {(role === Role.admin || role === Role.manager || role === Role.staff) && (
                 <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname.includes('your-event') && 'bg-slate-900'}`}>
@@ -353,7 +353,39 @@ function Sidebar({
                   </NavLink>
                 </li>
               )}
-              {(role === Role.admin || role === Role.manager || role === Role.member || role === Role.staff ) && (
+              {(role === Role.admin || role === Role.manager || role === Role.staff || role === Role.member) && (
+                <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname.includes('your-record') && 'bg-slate-900'}`}>
+                  <NavLink
+                    end
+                    to="/your-record"
+                    className={`block text-slate-200 hover:text-white truncate transition duration-150 ${pathname.includes('your-record') && 'hover:text-slate-200'
+                      }`}
+                  >
+                    <div className="flex items-center">
+                      <svg className="shrink-0 h-6 w-6" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-feather" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path  className={`fill-current text-slate-600 ${pathname.includes('your-record') && 'text-indigo-500'}`}
+                        d="M4 20l10 -10m0 -5v5h5m-9 -1v5h5m-9 -1v5h5m-5 -5l4 -4l4 -4" />
+                        <path  className={`fill-current text-slate-600 ${pathname.includes('your-record') && 'text-indigo-500'}`}
+                        d="M19 10c.638 -.636 1 -1.515 1 -2.486a3.515 3.515 0 0 0 -3.517 -3.514c-.97 0 -1.847 .367 -2.483 1m-3 13l4 -4l4 -4" />
+                      </svg>
+                      {/* <svg className="shrink-0 h-6 w-6" viewBox="0 0 24 24">
+                        <path
+                          
+                          d="M20 7a.75.75 0 01-.75-.75 1.5 1.5 0 00-1.5-1.5.75.75 0 110-1.5 1.5 1.5 0 001.5-1.5.75.75 0 111.5 0 1.5 1.5 0 001.5 1.5.75.75 0 110 1.5 1.5 1.5 0 00-1.5 1.5A.75.75 0 0120 7zM4 23a.75.75 0 01-.75-.75 1.5 1.5 0 00-1.5-1.5.75.75 0 110-1.5 1.5 1.5 0 001.5-1.5.75.75 0 111.5 0 1.5 1.5 0 001.5 1.5.75.75 0 110 1.5 1.5 1.5 0 00-1.5 1.5A.75.75 0 014 23z"
+                        />
+                        <path
+                          className={`fill-current text-slate-400 ${pathname.includes('your-record') && 'text-indigo-300'}`}
+                          d="M17 23a1 1 0 01-1-1 4 4 0 00-4-4 1 1 0 010-2 4 4 0 004-4 1 1 0 012 0 4 4 0 004 4 1 1 0 010 2 4 4 0 00-4 4 1 1 0 01-1 1zM7 13a1 1 0 01-1-1 4 4 0 00-4-4 1 1 0 110-2 4 4 0 004-4 1 1 0 112 0 4 4 0 004 4 1 1 0 010 2 4 4 0 00-4 4 1 1 0 01-1 1z"
+                        />
+                      </svg> */}
+                      <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                        Your records
+                      </span>
+                    </div>
+                  </NavLink>
+                </li>
+              )}
+              {(role === Role.admin || role === Role.manager || role === Role.member || role === Role.staff) && (
                 <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname.includes('your-blog') && 'bg-slate-900'}`}>
                   <NavLink
                     end
@@ -437,7 +469,7 @@ function Sidebar({
                                 }
                               >
                                 <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                   Guest
+                                  Guest
                                 </span>
                               </NavLink>
                             </li>
@@ -450,7 +482,7 @@ function Sidebar({
                                 }
                               >
                                 <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                   Members
+                                  Members
                                 </span>
                               </NavLink>
                             </li>
@@ -463,7 +495,7 @@ function Sidebar({
                                 }
                               >
                                 <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Event
+                                  Event
                                 </span>
                               </NavLink>
                             </li>
@@ -477,19 +509,6 @@ function Sidebar({
                               >
                                 <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
                                   Blogs
-                                </span>
-                              </NavLink>
-                            </li>
-                            <li className="mb-1 last:mb-0">
-                              <NavLink
-                                end
-                                to="/ecommerce/record"
-                                className={({ isActive }) =>
-                                  'block text-slate-400 hover:text-slate-200 transition duration-150 truncate ' + (isActive ? '!text-indigo-500' : '')
-                                }
-                              >
-                                <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                   Records
                                 </span>
                               </NavLink>
                             </li>

@@ -240,7 +240,10 @@ function FeedRightContent(props) {
                 Who to follow
               </div>
               <ul className="space-y-3">
-                {members.slice(0, maxViewMember).map((member, index) => {
+                {members
+                .filter(m => m.membershipStatus === true)
+                .slice(0, maxViewMember)
+                .map((member, index) => {
                   return (
                     <li>
                       <div className="flex items-center justify-between">

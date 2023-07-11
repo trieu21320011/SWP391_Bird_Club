@@ -105,10 +105,10 @@ function App() {
     <>
       <Routes>
         <Route exact path="/" element={<Dashboard />} />
-        <Route path="/ecommerce/record" element={
+        <Route path="/your-record" element={
           <ProtectedRoute
             redirectPath="*"
-            isAllowed={!!authentication.isAuthentication() && (role === Role.manager || role === Role.admin)}
+            isAllowed={!!authentication.isAuthentication() && (role === Role.manager || role === Role.admin || role === Role.staff || role === Role.member)}
           >
             <Analytics />
           </ProtectedRoute>
