@@ -16,7 +16,7 @@ function Analytics(props) {
   const [browserecords, setBrowserecords] = useState(null)
   const [editrecords, setEditrecords] = useState([])
   const [delrecords, setDelrecords] = useState([false])
-  
+
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false)
   const [species, setSpecies] = useState("")
   const [imgUrl, setImgUrl] = useState("")
@@ -25,8 +25,8 @@ function Analytics(props) {
   const [birds, setBirds] = useState([])
   const [quantity, setQuantity] = useState(0)
   const [newquantity, setNewQuantity] = useState(0)
+  const [uid, setUid] = useState('')
 
-  
 
   const getRecords = () => {
     const uid = localStorage.getItem("uid")
@@ -139,14 +139,14 @@ function Analytics(props) {
 
   }
 
-  
+
 
   const handleDelete = (e) => {
     e.preventDefault()
     var config = {
       method: 'delete',
       maxBodyLength: Infinity,
-      url: baseURL + '/record/' + uid + '/delete-record',
+      url: baseURL + '/records/' + uid + '/delete-record',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -234,7 +234,7 @@ function Analytics(props) {
                 <select onChange={(e) => setSpecies(e.target.value)} id="country" className="form-select w-full">
                   {birds && birds.map((n, index) => {
                     return (
-                      <option value={n.id}>{n.species}</option>
+                      <option value={n.id}>{n.name}</option>
                     )
                   })}
                 </select>
@@ -319,7 +319,7 @@ function Analytics(props) {
                           <dt class="text-base font-normal text-gray-900">Total Records</dt>
                           <dd class="mt-1 flex justify-between items-baseline md:block lg:flex">
                             <div class="flex items-baseline text-2xl font-semibold text-teal-600">
-                            <h2 className="font-semibold text-slate-800"><span className="text-slate-400 font-medium">{records.length}</span></h2>                              
+                              <h2 className="font-semibold text-slate-800"><span className="text-slate-400 font-medium">{records.length}</span></h2>
                             </div>
                           </dd>
                         </div>
@@ -331,6 +331,9 @@ function Analytics(props) {
                         <div class="bg-gray-50 table-header-group">
                           <div class="table-row">
                             <div class="border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 hidden sm:table-cell">
+                              Name
+                            </div>
+                            <div class="border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 hidden sm:table-cell">
                               Species
                             </div>
                             <div class="border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 hidden lg:table-cell">
@@ -339,8 +342,11 @@ function Analytics(props) {
                             <div class="border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 hidden lg:table-cell">
                               Picture
                             </div>
-                            <div class="table-cell border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 relative pl-3 pr-4 sm:pr-6">
-                              <span class="sr-only">Edit</span>
+                            <div class="border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 hidden lg:table-cell">
+                              Edit
+                            </div>
+                            <div class="border-b border-gray-300 py-3.5 text-left text-sm font-semibold text-gray-900 px-3 hidden lg:table-cell">
+                              Delete
                             </div>
                           </div>
                         </div>
@@ -353,6 +359,9 @@ function Analytics(props) {
 
 
                                   <div class="table-row">
+                                    <div class="border-b border-gray-200 text-sm px-3 text-gray-900 hidden lg:table-cell">
+                                      {records.birdName}
+                                    </div>
                                     <div class="border-b border-gray-200 text-sm px-3 text-gray-900 hidden lg:table-cell">
                                       {records.species}
                                     </div>
@@ -401,7 +410,7 @@ function Analytics(props) {
                                                                 id="country" className="form-select w-full">
                                                                 {birds && birds.map((n, index) => {
                                                                   return (
-                                                                    <option value={n.id}>{n.species}</option>
+                                                                    <option value={n.id}>{n.name}</option>
                                                                   )
                                                                 })}
                                                               </select>
@@ -412,8 +421,8 @@ function Analytics(props) {
                                                               Quantity:
                                                               <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
                                                                 type="number"
-                                                            defaultValue={browserecords ? (browserecords.quantity) : ("")}
-                                                            onChange={(e) => setNewQuantity(e.target.value)}
+                                                                defaultValue={browserecords ? (browserecords.quantity) : ("")}
+                                                                onChange={(e) => setNewQuantity(e.target.value)}
                                                               />
                                                             </label>
                                                             <br />
@@ -423,16 +432,28 @@ function Analytics(props) {
                                                               <br />
                                                               <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
                                                                 type="text"
-                                                            defaultValue={browserecords ? (browserecords.photo) : ("")}
-                                                            onChange={(e) => setNewImgUrl(e.target.value)}
+                                                                defaultValue={browserecords ? (browserecords.photo) : ("")}
+                                                                onChange={(e) => setNewImgUrl(e.target.value)}
+                                                              />
+                                                            </label>
+                                                            <br />
+                                                            <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
+                                                              Picture:
+                                                              <br />
+                                                              <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
+                                                                type="text"
+                                                                defaultValue={browserecords ? (browserecords.photo) : ("")}
+                                                                onChange={(e) => setNewImgUrl(e.target.value)}
                                                               />
                                                             </label>
                                                             <br />
 
-                                                            <a type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" href='#'
-                                                              onClick={() => getEditrecords(browserecords)}>Submit</a>
+
+                                                            
+
                                                           </form>
                                                         </div>
+
                                                       </div>
                                                       : <div></div>
                                                   }
@@ -442,11 +463,14 @@ function Analytics(props) {
                                             </div>
                                           </div>
 
-                                          <button className="btn bg-red-500 hover:border-red-600 text-white" onClick={(e) => { e.stopPropagation(); handleDecline(e, b.id); }}>Delete</button>
+
 
 
                                         </div>
                                       </div>
+                                    </div>
+                                    <div class="border-b border-gray-200 text-sm px-3 text-gray-900 hidden sm:table-cell">
+                                    <button className="btn bg-red-500 hover:border-red-600 text-white" onClick={(e) => { e.stopPropagation(); handleDecline(e, records.newsfeedId); }}>Delete</button>
                                     </div>
                                   </div>
 

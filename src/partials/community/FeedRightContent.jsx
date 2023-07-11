@@ -138,7 +138,7 @@ function FeedRightContent(props) {
               >
                 {birds &&
                   birds.map((n, index) => {
-                    return <option value={n.id}>{n.species}</option>;
+                    return <option value={n.id}>{n.name}</option>;
                   })}
               </select>
             </div>
