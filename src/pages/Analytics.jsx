@@ -56,7 +56,7 @@ function Analytics(props) {
   const handleCreate = (e) => {
     e.preventDefault()
     Swal.fire({
-      title: 'Xác nhận thông tin',
+      title: 'Loading',
       html: 'This will close in a minutes',
 
       timerProgressBar: true,

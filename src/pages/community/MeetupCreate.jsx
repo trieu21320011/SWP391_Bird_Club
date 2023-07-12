@@ -86,7 +86,7 @@ function MeetupCreate() {
             newToDate.setUTCMinutes(dayjs(endTime).minute());
             const newToDate1 = newToDate.toISOString();
             Swal.fire({
-                title: 'Xác nhận thông tin',
+                title: 'Loading',
                 html: 'This will close in a minutes',
 
                 timerProgressBar: true,

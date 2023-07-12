@@ -22,7 +22,7 @@ function Signup() {
     const birthday = e.target.birthday.value
 
     Swal.fire({
-      title: 'Xác nhận thông tin',
+      title: 'Loading',
       html: 'This will close in a minutes',
 
       timerProgressBar: true,
