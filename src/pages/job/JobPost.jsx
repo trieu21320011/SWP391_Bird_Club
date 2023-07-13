@@ -143,7 +143,7 @@ function JobPost() {
                       <img className="w-16 h-16 rounded-full" src="https://www.bird.club/assets/avatars/thrush-0c3b012d5b61ac56781c674e26281202be20fb57ebe4ca0e8fb06f82214c6064.png" width="64" height="64" alt="Company 01" />
                     </div>
                     <div className="text-lg font-bold text-slate-800 mb-1">Bird club</div>
-                    <div className="text-sm text-slate-500 italic">430 Members</div>
+                    
                   </div>
                   <div className="space-y-2">
                   {!uid && (
