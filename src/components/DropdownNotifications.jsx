@@ -2,8 +2,19 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Transition from "../utils/Transition";
 import FirebaseApp from "../firebase";
-import { getDatabase, ref, set, push, onValue } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  get,
+  update,
+  onChildAdded,
+  onChildChanged,
+  off,
+} from "firebase/database";
 import moment from "moment/moment";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function DropdownNotifications({ align }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -12,6 +23,9 @@ function DropdownNotifications({ align }) {
   const trigger = useRef(null);
   const dropdown = useRef(null);
 
+  const uid = localStorage.getItem("uid");
+  var firebaseDatabase = getDatabase(FirebaseApp);
+  const noti = ref(firebaseDatabase, "users/" + uid + "/notifications");
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }) => {
@@ -22,7 +36,8 @@ function DropdownNotifications({ align }) {
         trigger.current.contains(target)
       )
         return;
-      setDropdownOpen(false);
+
+      closeDropdown();
     };
     document.addEventListener("click", clickHandler);
     return () => document.removeEventListener("click", clickHandler);
@@ -32,25 +47,38 @@ function DropdownNotifications({ align }) {
   useEffect(() => {
     const keyHandler = ({ keyCode }) => {
       if (!dropdownOpen || keyCode !== 27) return;
-      setDropdownOpen(false);
+      closeDropdown();
     };
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
   });
 
   useEffect(() => {
-    const uid = localStorage.getItem("uid");
-    var firebaseDatabase = getDatabase(FirebaseApp);
-    const notifications = ref(
-      firebaseDatabase,
-      "users/" + uid + "/notifications"
-    );
-    onValue(notifications, (snapshot) => {
+    onValue(noti, (snapshot) => {
       const data = snapshot.val();
-      console.log(Object.values(data));
-      setNotifications(Object.values(data));
+      const orderByData = Object.values(data);
+      orderByData.sort((a, b) => new Date(b.DateTime) - new Date(a.DateTime));
+      setNotifications(orderByData);
+      if (orderByData.length > notifications.length) {
+        notifications.length > 0 && toast(notifications[notifications.length - 1].Message)
+      }
     });
   }, []);
+
+  function closeDropdown() {
+    get(noti).then((snapshot) => {
+      if (snapshot.exists()) {
+        const notifs = snapshot.val();
+        Object.keys(notifs).forEach((key) => {
+          const notif = notifs[key];
+          notif.IsRead = true;
+        });
+
+        update(noti, notifs);
+      }
+    });
+    setDropdownOpen(false);
+  }
 
   return (
     <div className="relative inline-flex">
@@ -60,7 +88,13 @@ function DropdownNotifications({ align }) {
           dropdownOpen && "bg-slate-200"
         }`}
         aria-haspopup="true"
-        onClick={() => setDropdownOpen(!dropdownOpen)}
+        onClick={() => {
+          if (!dropdownOpen) {
+            setDropdownOpen(true);
+          } else {
+            closeDropdown();
+          }
+        }}
         aria-expanded={dropdownOpen}
       >
         <span className="sr-only">Notifications</span>
@@ -78,10 +112,9 @@ function DropdownNotifications({ align }) {
             d="M16 9.5c0-.987-.429-1.897-1.147-2.639C14.124 10.348 10.66 13 6.5 13c-.103 0-.202-.018-.305-.021C7.231 13.617 8.556 14 10 14c.449 0 .886-.04 1.307-.11L15 16v-4h-.012C15.627 11.285 16 10.425 16 9.5z"
           />
         </svg>
-        {
-          !notifications.every(e => e.IsRead == true) &&
-        <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-rose-500 border-2 border-white rounded-full"></div>
-        }
+        {!notifications.every((e) => e.IsRead == true) && (
+          <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-rose-500 border-2 border-white rounded-full"></div>
+        )}
       </button>
 
       <Transition
@@ -99,12 +132,14 @@ function DropdownNotifications({ align }) {
         <div
           ref={dropdown}
           onFocus={() => setDropdownOpen(true)}
-          onBlur={() => setDropdownOpen(false)}
+          onBlur={() => {
+            closeDropdown();
+          }}
         >
           <div className="text-xs font-semibold text-slate-400 uppercase pt-1.5 pb-2 px-4">
             Notifications
           </div>
-          <ul>
+          <ul className="max-h-96 overflow-auto">
             {notifications &&
               notifications.map((notification, index) => {
                 return (
@@ -113,7 +148,10 @@ function DropdownNotifications({ align }) {
                     className="border-b border-slate-200 last:border-0"
                   >
                     <Link
-                      className={"block py-2 px-4 hover:bg-slate-50 " + (!notification.IsRead ? "bg-indigo-100" : "")} 
+                      className={
+                        "block py-2 px-4 hover:bg-slate-50 " +
+                        (!notification.IsRead ? "bg-indigo-100" : "")
+                      }
                       to="#0"
                       onClick={() => setDropdownOpen(!dropdownOpen)}
                     >
@@ -136,6 +174,7 @@ function DropdownNotifications({ align }) {
           </ul>
         </div>
       </Transition>
+      <ToastContainer position="bottom-right"/>
     </div>
   );
 }
