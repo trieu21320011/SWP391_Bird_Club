@@ -39,7 +39,7 @@ function JobPost() {
             <div className="max-w-5xl mx-auto flex flex-col lg:flex-row lg:space-x-8 xl:space-x-16">
               {/* Content */}
               <div>
-                <div className="text-sm text-slate-500 italic mb-2">Posted Jan 6, 2022</div>
+                <div className="text-sm text-slate-500 italic mb-2">Posted Jan 6, 2023</div>
                 <header className="mb-4">
                   {/* Title */}
                   <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">Your bird club online</h1>

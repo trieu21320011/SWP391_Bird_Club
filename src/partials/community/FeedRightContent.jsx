@@ -193,7 +193,7 @@ function FeedRightContent(props) {
       <div className="lg:sticky lg:top-16 lg:h-[calc(100vh-64px)] lg:overflow-x-hidden lg:overflow-y-auto no-scrollbar">
         <div className="md:py-8">
           {/* Search form */}
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <form className="relative">
               <label htmlFor="feed-search-desktop" className="sr-only">
                 Search
@@ -219,7 +219,7 @@ function FeedRightContent(props) {
                 </svg>
               </button>
             </form>
-          </div>
+          </div> */}
 
           {/* Blocks */}
           <div className="space-y-4">

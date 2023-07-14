@@ -285,7 +285,7 @@ function MeetupEdit() {
                                     <select defaultValue={type} value={type} onChange={(e) => setType(e.target.value)} id="country" className="form-select">
                                         <option value={"ONLINE"}>Online Event</option>
                                         <option value={"OFFLINE"}>Offline Event</option>
-                                        <option value={"TOURAMENT"}>Tourament</option>
+                                        <option value={"TOURNAMENT"}>Tournament</option>
                                     </select>
                                 </div>
                             </div>

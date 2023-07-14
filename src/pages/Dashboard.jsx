@@ -3,6 +3,7 @@ import TabPanel from './TabPanel';
 
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
+import { Link } from 'react-router-dom';
 
 function Dashboard() {
 
@@ -63,12 +64,12 @@ function Dashboard() {
             </p>
 
             <div class="mt-10 mb-36 lg:mb-44 flex justify-center space-x-6">
-              <a class="px-4 py-2 text-sm text-white shadow-sm border-transparent bg-teal-600 hover:bg-teal-700 focus:ring-teal-500 inline-flex items-center border font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2" href="/signin">
+              <Link class="px-4 py-2 text-sm text-white shadow-sm border-transparent bg-teal-600 hover:bg-teal-700 focus:ring-teal-500 inline-flex items-center border font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2" to="/signup">
                 Join Us
-              </a>
-              <a class="px-4 py-2 text-sm border-gray-300 text-gray-700 bg-white hover:border-gray-500 focus:ring-teal-500 inline-flex items-center border font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2" href="/signin">
+              </Link>
+              <Link class="px-4 py-2 text-sm border-gray-300 text-gray-700 bg-white hover:border-gray-500 focus:ring-teal-500 inline-flex items-center border font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2" to="/club">
                 Tell me more
-              </a>
+              </Link>
             </div>
 
             <div class="relative flex items-center mx-auto self-center justify-center overflow-x-hidden">

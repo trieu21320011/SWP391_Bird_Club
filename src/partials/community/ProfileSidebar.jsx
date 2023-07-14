@@ -70,21 +70,21 @@ function ProfileSidebar({
                   </div>
                 </div>
                 {/* Add button */}
-                <button className="p-1.5 shrink-0 rounded border border-slate-200 hover:border-slate-300 shadow-sm ml-2">
+                {/* <button className="p-1.5 shrink-0 rounded border border-slate-200 hover:border-slate-300 shadow-sm ml-2">
                   <svg
                     className="w-4 h-4 fill-current text-indigo-500"
                     viewBox="0 0 16 16"
                   >
                     <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1Z" />
                   </svg>
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
           {/* Group body */}
           <div className="px-5 py-4">
             {/* Search form */}
-            <form className="relative">
+            {/* <form className="relative">
               <label htmlFor="profile-search" className="sr-only">
                 Search
               </label>
@@ -108,7 +108,7 @@ function ProfileSidebar({
                   <path d="M15.707 14.293L13.314 11.9a8.019 8.019 0 01-1.414 1.414l2.393 2.393a.997.997 0 001.414 0 .999.999 0 000-1.414z" />
                 </svg>
               </button>
-            </form>
+            </form> */}
             {/* Team members */}
             <div className="mt-4">
               <div className="text-xs font-semibold text-slate-400 uppercase mb-3">

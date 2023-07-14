@@ -338,7 +338,7 @@ const ProfileBody = forwardRef((props, ref) => {
             </div>
 
             {/* Actions */}
-            <div className="flex space-x-2 sm:mb-2">
+            {/* <div className="flex space-x-2 sm:mb-2">
               <button className="p-1.5 shrink-0 rounded border border-slate-200 hover:border-slate-300 shadow-sm">
                 <svg
                   className="w-4 h-1 fill-current text-slate-400"
@@ -368,7 +368,7 @@ const ProfileBody = forwardRef((props, ref) => {
                 </svg>
                 <span className="ml-2">Following</span>
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
 
