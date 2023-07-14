@@ -68,7 +68,7 @@ function UsersTiles() {
               {/* Right: Actions */}
               <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
                 {/* Search form */}
-                <SearchForm />
+                {/* <SearchForm /> */}
                 {/* Add member button */}
               </div>
 
@@ -96,9 +96,9 @@ function UsersTiles() {
             </div>
 
             {/* Pagination */}
-            <div className="mt-8">
+            {/* <div className="mt-8">
               <PaginationNumeric />
-            </div>
+            </div> */}
 
           </div>
         </main>

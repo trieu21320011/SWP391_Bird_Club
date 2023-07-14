@@ -61,6 +61,7 @@ function MeetupCreate() {
     
     const handleCreate = (e) => {
         e.preventDefault()
+        debugger
         if (title === '' 
         || fromTime === null 
         || toTime === null
@@ -80,10 +81,12 @@ function MeetupCreate() {
             const newFromDate = new Date(fromTime);
             newFromDate.setUTCHours(dayjs(startTime).hour());
             newFromDate.setUTCMinutes(dayjs(startTime).minute());
+            newFromDate.setDate(newFromDate.getDate() + 1)
             const newFromDate1 = newFromDate.toISOString();
             const newToDate = new Date(toTime);
             newToDate.setUTCHours(dayjs(endTime).hour());
             newToDate.setUTCMinutes(dayjs(endTime).minute());
+            newToDate.setDate(newToDate.getDate() + 1)
             const newToDate1 = newToDate.toISOString();
             Swal.fire({
                 title: 'Loading',
@@ -264,7 +267,7 @@ function MeetupCreate() {
                                     <select value={type} onChange={(e) => setType(e.target.value)} id="country" className="form-select">
                                         <option value={"ONLINE"}>Online Event</option>
                                         <option value={"OFFLINE"}>Offline Event</option>
-                                        <option value={"TOURAMENT"}>Tourament</option>
+                                        <option value={"TOURNAMENT"}>Tournament</option>
                                     </select>
                                 </div>
                             </div>

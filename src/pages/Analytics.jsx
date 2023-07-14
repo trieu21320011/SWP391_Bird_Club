@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
@@ -14,7 +14,7 @@ function Analytics(props) {
 
   const [records, setRecords] = useState([])
   const [browserecords, setBrowserecords] = useState(null)
-  const [editrecords, setEditrecords] = useState([])
+  const [editrecords, setEditrecords] = useState(true)
   const [delrecords, setDelrecords] = useState([false])
 
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false)
@@ -110,7 +110,7 @@ function Analytics(props) {
   }
 
 
-  const getEditrecords = (browserecords) => {
+  const getEditrecords = () => {
     // setRecords(id)
     var data = JSON.stringify({
       "birdId": newspecies,
@@ -352,7 +352,7 @@ function Analytics(props) {
                         </div>
 
                         {
-                          records.length > 0 ? records.map((records) => {
+                          records.length > 0 ? records.map((record) => {
                             return (
                               <div class="table-header-group bg-white">
                                 <turbo-frame id="row_record_10444" class="contents" target="_top">
@@ -360,27 +360,26 @@ function Analytics(props) {
 
                                   <div class="table-row">
                                     <div class="border-b border-gray-200 text-sm px-3 text-gray-900 hidden lg:table-cell">
-                                      {records.birdName}
+                                      {record.birdName}
                                     </div>
                                     <div class="border-b border-gray-200 text-sm px-3 text-gray-900 hidden lg:table-cell">
-                                      {records.species}
+                                      {record.species}
                                     </div>
                                     <div class="border-b border-gray-200 text-sm px-3 text-gray-900 hidden sm:table-cell">
-                                      {records.quantity}
+                                      {record.quantity}
                                     </div>
                                     <div class="border-b border-gray-200 text-sm px-3 text-gray-900 hidden sm:table-cell">
-                                      <img className='w-40 mt-4' src={records.photo} width="32" height="32" alt="User 08" />
+                                      <img className='w-40 mt-4' src={record.photo} width="32" height="32" alt="User 08" />
                                     </div>
                                     <div class="table-cell border-b border-gray-200 text-sm text-gray-500 pl-3 pr-4  sm:pr-6">
                                       <div >
                                         <div class="relative inline-block">
-                                          <a href='#popup2' id='openPopUp' className='btn-sm bg-indigo-500 hover:bg-indigo-600 text-white m-1' onClick={() => setEditRecord(records)}>Edit</a>
-
-                                          <div id='popup2' className='overlay'>
+                                          <a href='#popup2' id='openPopUp' className='btn w-20 bg-indigo-500 hover:bg-indigo-600 text-white m-1' onClick={() => setEditRecord(record)}>Edit</a>
+                                        </div>
+                                      </div>
+                                         <div id='popup2' className='overlay z-60'>
                                             <div className='popup'>
                                               <a className='close' href='#'>&times;</a>
-
-
                                               <div class="bg-white shadow sm:rounded-lg">
                                                 <div class="bg-white px-4 py-5 border-b border-gray-200 sm:px-6 sm:rounded-t-lg">
                                                   <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
@@ -396,17 +395,16 @@ function Analytics(props) {
                                                 </div>
                                                 <div class="bg-white sm:rounded-b-lg sm:rounded-t-lg">
                                                   {
-                                                    browserecords ?
                                                       <div class="flex flex-col w-full">
                                                         <div className='popup-margin'>
-                                                          <form onSubmit={handleSubmit}>
+                                                          <form onSubmit={getEditrecords}>
                                                             <br />
                                                             <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
                                                               Species:
                                                               <select onChange={(e) => {
                                                                 setNewSpecies(e.target.value)
                                                               }}
-                                                                defaultValue={browserecords ? browserecords.birdId : ''}
+                                                                value={newspecies}
                                                                 id="country" className="form-select w-full">
                                                                 {birds && birds.map((n, index) => {
                                                                   return (
@@ -419,9 +417,9 @@ function Analytics(props) {
                                                             <br />
                                                             <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
                                                               Quantity:
-                                                              <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
+                                                              <input class="w-full rounded-md border bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
                                                                 type="number"
-                                                                defaultValue={browserecords ? (browserecords.quantity) : ("")}
+                                                                value={newquantity}
                                                                 onChange={(e) => setNewQuantity(e.target.value)}
                                                               />
                                                             </label>
@@ -430,47 +428,27 @@ function Analytics(props) {
                                                             <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
                                                               Picture:
                                                               <br />
-                                                              <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
+                                                              <input class="w-full rounded-md border bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
                                                                 type="text"
-                                                                defaultValue={browserecords ? (browserecords.photo) : ("")}
+                                                                value={newimgUrl}
                                                                 onChange={(e) => setNewImgUrl(e.target.value)}
                                                               />
                                                             </label>
                                                             <br />
-                                                            <label class="block text-sm font-medium text-gray-700" for="birding_session_location_id">
-                                                              Picture:
-                                                              <br />
-                                                              <input class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-12 shadow-sm focus:outline-none focus:ring-1 sm:text-sm border-gray-300 focus:ring-teal-500 focus:border-teal-500"
-                                                                type="text"
-                                                                defaultValue={browserecords ? (browserecords.photo) : ("")}
-                                                                onChange={(e) => setNewImgUrl(e.target.value)}
-                                                              />
-                                                            </label>
-                                                            <br />
-
-
-                                                            
-
+                                                            <button type='submit' className="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3" >Edit</button>
                                                           </form>
                                                         </div>
 
                                                       </div>
-                                                      : <div></div>
                                                   }
                                                 </div>
                                               </div>
 
                                             </div>
                                           </div>
-
-
-
-
-                                        </div>
-                                      </div>
                                     </div>
                                     <div class="border-b border-gray-200 text-sm px-3 text-gray-900 hidden sm:table-cell">
-                                    <button className="btn bg-red-500 hover:border-red-600 text-white" onClick={(e) => { e.stopPropagation(); handleDecline(e, records.newsfeedId); }}>Delete</button>
+                                    <button className="btn w-20 bg-red-500 hover:border-red-600 text-white" onClick={(e) => { e.stopPropagation(); handleDecline(e, records.newsfeedId); }}>Delete</button>
                                     </div>
                                   </div>
 

@@ -229,6 +229,7 @@ function Feed() {
                                 className="form-input w-full bg-slate-100 border-transparent focus:bg-white focus:border-slate-300 placeholder-slate-500"
                                 type="text"
                                 placeholder={"What's happening, " + name + "?"}
+                                onClick={(e) => { e.stopPropagation(); setFeedbackModalOpen(true); }}
                               />
                             </div>
                           </div>
