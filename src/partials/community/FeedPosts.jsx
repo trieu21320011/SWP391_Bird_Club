@@ -62,7 +62,7 @@ const FeedPosts = forwardRef((props, ref) => {
           baseURL +
           "/newsfeeds?limit=50&page=" +
           page +
-          "&size=10" +
+          "&size=30" +
           (uid ? "&memberId=" + uid : ""),
       };
 
@@ -80,7 +80,7 @@ const FeedPosts = forwardRef((props, ref) => {
         });
         setNewFeeds(result);
         setTotalCount(response.data.total);
-        setTotalPages(Math.ceil(response.data.total / 10));
+        setTotalPages(Math.ceil(response.data.total / 30));
       })
       .catch((error) => {
         console.log(error);
