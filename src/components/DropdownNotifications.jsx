@@ -58,10 +58,10 @@ function DropdownNotifications({ align }) {
       const data = snapshot.val();
       const orderByData = Object.values(data);
       orderByData.sort((a, b) => new Date(b.DateTime) - new Date(a.DateTime));
+      // if (orderByData.length > notifications.length) {
+      //   orderByData.length > 0 && toast(orderByData[orderByData.length - 1].Message)
+      // }
       setNotifications(orderByData);
-      if (orderByData.length > notifications.length) {
-        orderByData.length > 0 && toast(orderByData[orderByData.length - 1].Message)
-      }
     });
   }, []);
 
