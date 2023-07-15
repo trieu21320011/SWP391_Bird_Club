@@ -233,7 +233,9 @@ function Members() {
                         {/* Table */}
                         <div className="bg-white shadow-lg rounded-sm border border-slate-200 relative">
                             <header className="px-5 py-4">
-                                <h2 className="font-semibold text-slate-800">All Member <span className="text-slate-400 font-medium">{guest.length}</span></h2>
+                                <h2 className="font-semibold text-slate-800">All Member 
+                                {/* <span className="text-slate-400 font-medium">{guest.length}</span> */}
+                                </h2>
                             </header>
                             <div>
 
@@ -267,7 +269,7 @@ function Members() {
                                         <tbody className="text-sm divide-y divide-slate-200">
                                             {
                                                 guest
-                                                .filter(g => !(g.userType === 'ADMIN' || g.userType === 'MANAGER'))
+                                                // .filter(g => !(g.userType === 'ADMIN' || g.userType === 'MANAGER'))
                                                 .map(g => {
                                                     return (
                                                         <tr>
@@ -287,6 +289,8 @@ function Members() {
                                                                 <div className="text-left">{g.userType}</div>
                                                             </td>
                                                             <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                                                {
+                                                                    !(g.userType === 'ADMIN' || g.userType === 'MANAGER') &&
                                                                 <div className="flex flex-wrap items-center -m-1.5">
                                                                     {g.membershipStatus ? (
                                                                         <div className="m-1.5">
@@ -306,6 +310,7 @@ function Members() {
                                                                         {/* End */}
                                                                     </div>)}
                                                                 </div>
+                                                                }
                                                             </td>
 
 
