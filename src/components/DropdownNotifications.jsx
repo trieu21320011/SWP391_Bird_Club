@@ -60,7 +60,7 @@ function DropdownNotifications({ align }) {
       orderByData.sort((a, b) => new Date(b.DateTime) - new Date(a.DateTime));
       setNotifications(orderByData);
       if (orderByData.length > notifications.length) {
-        notifications.length > 0 && toast(notifications[notifications.length - 1].Message)
+        orderByData.length > 0 && toast(orderByData[orderByData.length - 1].Message)
       }
     });
   }, []);
@@ -174,7 +174,7 @@ function DropdownNotifications({ align }) {
           </ul>
         </div>
       </Transition>
-      <ToastContainer position="bottom-right"/>
+      <ToastContainer position="bottom-right" limit={1}/>
     </div>
   );
 }
